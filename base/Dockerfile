@@ -18,6 +18,7 @@ ENV NB_GID=100
 
 RUN mkdir /files
 
+COPY assets /files
 COPY conf/ipython /files
 COPY conf/jupyter /files
 COPY conf/jupyterlab /files
