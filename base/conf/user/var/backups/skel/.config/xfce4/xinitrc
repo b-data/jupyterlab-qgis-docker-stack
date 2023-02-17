@@ -1,0 +1,8 @@
+#!/bin/sh
+# Copyright (c) 2023 b-data GmbH.
+# Distributed under the terms of the MIT License.
+
+if [ -f "$HOME/.i18n" ]; then
+  . "$HOME/.i18n"
+fi
+. /etc/xdg/xfce4/xinitrc
