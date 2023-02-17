@@ -217,28 +217,28 @@ build-manifest:latest-ltr-linux-multiarch:
   script:
     - |
       for i in $OS_ARCH; do
-        export CI_MANIFEST_LIST="$CI_MANIFEST_LIST $CI_APP_REPO:$CI_APP_TAG-ltr-$i"
-        export CI_MANIFEST_LIST_ROOT="$CI_MANIFEST_LIST_ROOT $CI_APP_REPO:$CI_APP_TAG-ltr-root-$i"
+        export CI_MANIFEST_LIST="$CI_MANIFEST_LIST $CI_APP_REPO:$CI_APP_TAG-$i"
+        export CI_MANIFEST_LIST_ROOT="$CI_MANIFEST_LIST_ROOT $CI_APP_REPO:$CI_APP_TAG-root-$i"
       done
     - |
-      docker manifest create $CI_APP_REPO:$CI_APP_TAG-ltr $CI_MANIFEST_LIST
-      docker manifest create $CI_APP_REPO:$CI_APP_TAG-ltr-root $CI_MANIFEST_LIST_ROOT
+      docker manifest create $CI_APP_REPO:$CI_APP_TAG $CI_MANIFEST_LIST
+      docker manifest create $CI_APP_REPO:$CI_APP_TAG-root $CI_MANIFEST_LIST_ROOT
       if echo $OS_ARCH | grep "linux-arm64v8" >/dev/null ; then
-        docker manifest annotate --variant v8 $CI_APP_REPO:$CI_APP_TAG-ltr \
-          $CI_APP_REPO:$CI_APP_TAG-ltr-linux-arm64v8
-        docker manifest annotate --variant v8 $CI_APP_REPO:$CI_APP_TAG-ltr-root \
-          $CI_APP_REPO:$CI_APP_TAG-ltr-root-linux-arm64v8
+        docker manifest annotate --variant v8 $CI_APP_REPO:$CI_APP_TAG \
+          $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
+        docker manifest annotate --variant v8 $CI_APP_REPO:$CI_APP_TAG-root \
+          $CI_APP_REPO:$CI_APP_TAG-root-linux-arm64v8
       fi
-      docker manifest push $CI_APP_REPO:$CI_APP_TAG-ltr
-      docker manifest push $CI_APP_REPO:$CI_APP_TAG-ltr-root
+      docker manifest push $CI_APP_REPO:$CI_APP_TAG
+      docker manifest push $CI_APP_REPO:$CI_APP_TAG-root
     - |
       docker manifest create $CI_APP_REPO:latest-ltr $CI_MANIFEST_LIST
       docker manifest create $CI_APP_REPO:latest-ltr-root $CI_MANIFEST_LIST_ROOT
       if echo $OS_ARCH | grep "linux-arm64v8" >/dev/null ; then
         docker manifest annotate --variant v8 $CI_APP_REPO:latest-ltr \
-          $CI_APP_REPO:$CI_APP_TAG-ltr-linux-arm64v8
+          $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
         docker manifest annotate --variant v8 $CI_APP_REPO:latest-ltr-root \
-          $CI_APP_REPO:$CI_APP_TAG-ltr-root-linux-arm64v8
+          $CI_APP_REPO:$CI_APP_TAG-root-linux-arm64v8
       fi
       docker manifest push $CI_APP_REPO:latest-ltr
       docker manifest push $CI_APP_REPO:latest-ltr-root
@@ -247,9 +247,9 @@ build-manifest:latest-ltr-linux-multiarch:
       docker manifest create $CI_APP_REPO:$VERSION_MAJ_MIN-ltr-root $CI_MANIFEST_LIST_ROOT
       if echo $OS_ARCH | grep "linux-arm64v8" >/dev/null ; then
         docker manifest annotate --variant v8 $CI_APP_REPO:$VERSION_MAJ_MIN-ltr \
-          $CI_APP_REPO:$CI_APP_TAG-ltr-linux-arm64v8
+          $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
         docker manifest annotate --variant v8 $CI_APP_REPO:$VERSION_MAJ_MIN-ltr-root \
-          $CI_APP_REPO:$CI_APP_TAG-ltr-root-linux-arm64v8
+          $CI_APP_REPO:$CI_APP_TAG-root-linux-arm64v8
       fi
       docker manifest push $CI_APP_REPO:$VERSION_MAJ_MIN-ltr
       docker manifest push $CI_APP_REPO:$VERSION_MAJ_MIN-ltr-root
@@ -258,9 +258,9 @@ build-manifest:latest-ltr-linux-multiarch:
       docker manifest create $CI_APP_REPO:$VERSION_MAJ-ltr-root $CI_MANIFEST_LIST_ROOT
       if echo $OS_ARCH | grep "linux-arm64v8" >/dev/null ; then
         docker manifest annotate --variant v8 $CI_APP_REPO:$VERSION_MAJ-ltr \
-          $CI_APP_REPO:$CI_APP_TAG-ltr-linux-arm64v8
+          $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
         docker manifest annotate --variant v8 $CI_APP_REPO:$VERSION_MAJ-ltr-root \
-          $CI_APP_REPO:$CI_APP_TAG-ltr-root-linux-arm64v8
+          $CI_APP_REPO:$CI_APP_TAG-root-linux-arm64v8
       fi
       docker manifest push $CI_APP_REPO:$VERSION_MAJ-ltr
       docker manifest push $CI_APP_REPO:$VERSION_MAJ-ltr-root
