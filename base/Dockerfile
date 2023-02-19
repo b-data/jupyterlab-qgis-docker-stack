@@ -1,7 +1,6 @@
 ARG BASE_IMAGE=debian
 ARG BASE_IMAGE_TAG=bullseye
 ARG QGIS_VERSION
-ARG SAGA_VERSION
 
 ARG NB_USER=jovyan
 ARG NB_UID=1000
@@ -9,11 +8,57 @@ ARG JUPYTERHUB_VERSION=3.1.1
 ARG JUPYTERLAB_VERSION=3.5.3
 ARG GIT_VERSION
 ARG PYTHON_VERSION
+ARG SAGA_VERSION
+ARG OTB_VERSION
+ARG OTB_PREFIX=/opt/otb
 ARG TURBOVNC_VERSION=3.0.2
+
+FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} as otb
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+ARG OTB_VERSION
+ARG OTB_PREFIX
+
+ENV OTB_PYTHON_EXE=/usr/bin/python3
+
+RUN apt-get update \
+  && apt-get -y install --no-install-recommends \
+    ## To extract OTB from the archive
+    ca-certificates \
+    curl \
+    file \
+    python3 \
+    python3-dev \
+    python3-numpy \
+    ## To run OTB GUI tools and recompile the Python bindings
+    '^libxcb.*-dev' \
+    libx11-xcb-dev \
+    libglu1-mesa-dev \
+    libxrender-dev \
+    libxi-dev \
+    libxkbcommon-dev \
+    libxkbcommon-x11-dev \
+    ## To recompile the Python bindings
+    g++ \
+    cmake \
+    make
+
+RUN if [ "$(uname -m)" = "x86_64" ]; then \
+    mkdir -p ${OTB_PREFIX}; \
+    curl -sSLO https://www.orfeo-toolbox.org/packages/archives/OTB/OTB-${OTB_VERSION}-Linux64.run; \
+    chmod +x OTB-${OTB_VERSION}-Linux64.run; \
+    ./OTB-${OTB_VERSION}-Linux64.run --target ${OTB_PREFIX}; \
+    . ${OTB_PREFIX}/otbenv.profile; \
+    ctest -S ${OTB_PREFIX}/share/otb/swig/build_wrapping.cmake -VV; \
+  else \
+    mkdir -p ${OTB_PREFIX}; \
+  fi
 
 FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} as files
 
 ARG NB_UID
+ARG OTB_PREFIX
 ENV NB_GID=100
 
 RUN mkdir /files
@@ -30,9 +75,9 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
     ## QGIS Desktop: Set OTB application folder and OTB folder
     qgis3Ini="/files/var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini"; \
     echo "\n[Processing]" >> ${qgis3Ini}; \
-    echo "Configuration\OTB_APP_FOLDER=/usr/lib/$(uname -m)-linux-gnu/otb/applications" >> \
+    echo "Configuration\OTB_APP_FOLDER=$OTB_PREFIX/lib/otb/applications" >> \
       ${qgis3Ini}; \
-    echo "Configuration\OTB_FOLDER=/usr\n" >> ${qgis3Ini}; \
+    echo "Configuration\OTB_FOLDER=$OTB_PREFIX\n" >> ${qgis3Ini}; \
   fi \
   && chown -R ${NB_UID}:${NB_GID} /files/var/backups/skel \
   ## Ensure file modes are correct when using CI
@@ -65,6 +110,8 @@ ARG JUPYTERHUB_VERSION
 ARG JUPYTERLAB_VERSION
 ARG GIT_VERSION
 ARG PYTHON_VERSION
+ARG OTB_VERSION
+ARG OTB_PREFIX
 ARG TURBOVNC_VERSION
 ARG BUILD_START
 
@@ -78,6 +125,7 @@ ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
     JUPYTERLAB_VERSION=${JUPYTERLAB_VERSION} \
     GIT_VERSION=${GIT_VERSION} \
     PYTHON_VERSION=${PYTHON_VERSION} \
+    OTB_VERSION=${OTB_VERSION} \
     TURBOVNC_VERSION=${TURBOVNC_VERSION} \
     BUILD_DATE=${BUILD_START}
 
@@ -96,6 +144,14 @@ COPY --from=saga-gissi /usr/local /usr/local
 COPY --from=gsi /usr/local /usr/local
 ## Install Python
 COPY --from=psi /usr/local /usr/local
+## Install Orfeo Toolbox
+COPY --from=otb ${OTB_PREFIX} ${OTB_PREFIX}
+ENV CMAKE_PREFIX_PATH=${OTB_VERSION:+$OTB_PREFIX} \
+    GDAL_DRIVER_PATH=${OTB_VERSION:+disable} \
+    GDAL_DATA=${OTB_VERSION:+$OTB_PREFIX/share/gdal} \
+    PROJ_LIB=${OTB_VERSION:+$OTB_PREFIX/share/proj} \
+    PATH=${OTB_VERSION:+$OTB_PREFIX/bin:}$PATH \
+    OTB_APPLICATION_PATH=${OTB_VERSION:+$OTB_PREFIX/lib/otb/applications}
 
 USER root
 
@@ -221,11 +277,6 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     librsvg2-common \
     tumbler \
     xdg-user-dirs \
-  && if [ ${dpkgArch} = "amd64" ]; then \
-    ## Install ORFEO Toolbox
-    apt-get -y install --no-install-recommends \
-      otb-*; \
-  fi \
   ## Update locale and add en_GB.UTF-8 for SAGA GIS
   && sed -i "s/# $LANG/$LANG/g" /etc/locale.gen \
   && sed -i "s/# en_GB.UTF-8/en_GB.UTF-8/g" /etc/locale.gen \
@@ -369,6 +420,8 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 ## Copy files as late as possible to avoid cache busting
 COPY --from=files /files /
 COPY --from=files /files/var/backups/skel ${HOME}
+
+ENV PYTHONPATH=${OTB_VERSION:+$OTB_PREFIX/lib/python}
 
 EXPOSE 8888
 

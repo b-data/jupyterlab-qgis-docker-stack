@@ -2,6 +2,7 @@
   variables:
     PYTHON_VERSION: "3.10.10"
     GIT_VERSION: "2.39.2"
+    OTB_VERSION: "8.1.1"
 
 .before-script-build: &before-script-build
   - |
@@ -53,6 +54,7 @@ build:latest-linux-amd64:
       cd base && docker build --pull
       --build-arg BASE_IMAGE
       --build-arg BASE_IMAGE_TAG
+      --build-arg OTB_VERSION
       --build-arg QGIS_VERSION
       --build-arg PYTHON_VERSION
       --build-arg GIT_VERSION
@@ -109,6 +111,7 @@ build:latest-ltr-linux-amd64:
       cd base && docker build --pull
       --build-arg BASE_IMAGE
       --build-arg BASE_IMAGE_TAG
+      --build-arg OTB_VERSION
       --build-arg QGIS_VERSION
       --build-arg PYTHON_VERSION
       --build-arg GIT_VERSION
