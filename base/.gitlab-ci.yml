@@ -54,10 +54,10 @@ build:latest-linux-amd64:
       cd base && docker build --pull
       --build-arg BASE_IMAGE
       --build-arg BASE_IMAGE_TAG
-      --build-arg OTB_VERSION
       --build-arg QGIS_VERSION
       --build-arg PYTHON_VERSION
       --build-arg GIT_VERSION
+      --build-arg OTB_VERSION
       --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -t $CI_APP_REPO:latest-linux-amd64
@@ -111,10 +111,10 @@ build:latest-ltr-linux-amd64:
       cd base && docker build --pull
       --build-arg BASE_IMAGE
       --build-arg BASE_IMAGE_TAG
-      --build-arg OTB_VERSION
       --build-arg QGIS_VERSION
       --build-arg PYTHON_VERSION
       --build-arg GIT_VERSION
+      --build-arg OTB_VERSION
       --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -t $CI_APP_REPO:latest-ltr-linux-amd64

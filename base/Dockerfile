@@ -10,55 +10,11 @@ ARG GIT_VERSION
 ARG PYTHON_VERSION
 ARG SAGA_VERSION
 ARG OTB_VERSION
-ARG OTB_PREFIX=/opt/otb
 ARG TURBOVNC_VERSION=3.0.2
-
-FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} as otb
-
-ARG DEBIAN_FRONTEND=noninteractive
-
-ARG OTB_VERSION
-ARG OTB_PREFIX
-
-ENV OTB_PYTHON_EXE=/usr/bin/python3
-
-RUN apt-get update \
-  && apt-get -y install --no-install-recommends \
-    ## To extract OTB from the archive
-    ca-certificates \
-    curl \
-    file \
-    python3 \
-    python3-dev \
-    python3-numpy \
-    ## To run OTB GUI tools and recompile the Python bindings
-    '^libxcb.*-dev' \
-    libx11-xcb-dev \
-    libglu1-mesa-dev \
-    libxrender-dev \
-    libxi-dev \
-    libxkbcommon-dev \
-    libxkbcommon-x11-dev \
-    ## To recompile the Python bindings
-    g++ \
-    cmake \
-    make
-
-RUN if [ "$(uname -m)" = "x86_64" ]; then \
-    mkdir -p ${OTB_PREFIX}; \
-    curl -sSLO https://www.orfeo-toolbox.org/packages/archives/OTB/OTB-${OTB_VERSION}-Linux64.run; \
-    chmod +x OTB-${OTB_VERSION}-Linux64.run; \
-    ./OTB-${OTB_VERSION}-Linux64.run --target ${OTB_PREFIX}; \
-    . ${OTB_PREFIX}/otbenv.profile; \
-    ctest -S ${OTB_PREFIX}/share/otb/swig/build_wrapping.cmake -VV; \
-  else \
-    mkdir -p ${OTB_PREFIX}; \
-  fi
 
 FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} as files
 
 ARG NB_UID
-ARG OTB_PREFIX
 ENV NB_GID=100
 
 RUN mkdir /files
@@ -75,9 +31,9 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
     ## QGIS Desktop: Set OTB application folder and OTB folder
     qgis3Ini="/files/var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini"; \
     echo "\n[Processing]" >> ${qgis3Ini}; \
-    echo "Configuration\OTB_APP_FOLDER=$OTB_PREFIX/lib/otb/applications" >> \
+    echo "Configuration\OTB_APP_FOLDER=/usr/local/lib/otb/applications" >> \
       ${qgis3Ini}; \
-    echo "Configuration\OTB_FOLDER=$OTB_PREFIX\n" >> ${qgis3Ini}; \
+    echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis3Ini}; \
   fi \
   && chown -R ${NB_UID}:${NB_GID} /files/var/backups/skel \
   ## Ensure file modes are correct when using CI
@@ -87,9 +43,10 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
   && find /files/usr/local/bin -type f -exec chmod 755 {} \;
 
 FROM registry.gitlab.b-data.ch/qgis/qgissi/${QGIS_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as qgissi
-FROM registry.gitlab.b-data.ch/saga-gis/saga-gissi${SAGA_VERSION:+/}${SAGA_VERSION:-:none}${SAGA_VERSION:+/$BASE_IMAGE}${SAGA_VERSION:+:$BASE_IMAGE_TAG} as saga-gissi
 FROM registry.gitlab.b-data.ch/git/gsi${GIT_VERSION:+/}${GIT_VERSION:-:none}${GIT_VERSION:+/$BASE_IMAGE}${GIT_VERSION:+:$BASE_IMAGE_TAG} as gsi
 FROM registry.gitlab.b-data.ch/python/psi${PYTHON_VERSION:+/}${PYTHON_VERSION:-:none}${PYTHON_VERSION:+/$BASE_IMAGE}${PYTHON_VERSION:+:$BASE_IMAGE_TAG} as psi
+FROM registry.gitlab.b-data.ch/saga-gis/saga-gissi${SAGA_VERSION:+/}${SAGA_VERSION:-:none}${SAGA_VERSION:+/$BASE_IMAGE}${SAGA_VERSION:+:$BASE_IMAGE_TAG} as saga-gissi
+FROM registry.gitlab.b-data.ch/orfeotoolbox/otbsi${OTB_VERSION:+/}${OTB_VERSION:-:none}${OTB_VERSION:+/$BASE_IMAGE}${OTB_VERSION:+:$BASE_IMAGE_TAG} as otbsi
 
 FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG}
 
@@ -102,7 +59,6 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ARG BASE_IMAGE
 ARG BASE_IMAGE_TAG
-ARG SAGA_VERSION
 ARG QGIS_VERSION
 ARG NB_USER
 ARG NB_UID
@@ -110,21 +66,21 @@ ARG JUPYTERHUB_VERSION
 ARG JUPYTERLAB_VERSION
 ARG GIT_VERSION
 ARG PYTHON_VERSION
+ARG SAGA_VERSION
 ARG OTB_VERSION
-ARG OTB_PREFIX
 ARG TURBOVNC_VERSION
 ARG BUILD_START
 
 ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
     PARENT_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
     QGIS_VERSION=${QGIS_VERSION} \
-    SAGA_VERSION=${SAGA_VERSION} \
     NB_USER=${NB_USER} \
     NB_UID=${NB_UID} \
     JUPYTERHUB_VERSION=${JUPYTERHUB_VERSION} \
     JUPYTERLAB_VERSION=${JUPYTERLAB_VERSION} \
     GIT_VERSION=${GIT_VERSION} \
     PYTHON_VERSION=${PYTHON_VERSION} \
+    SAGA_VERSION=${SAGA_VERSION} \
     OTB_VERSION=${OTB_VERSION} \
     TURBOVNC_VERSION=${TURBOVNC_VERSION} \
     BUILD_DATE=${BUILD_START}
@@ -138,20 +94,16 @@ ENV NB_GID=100 \
 
 ## Install QGIS
 COPY --from=qgissi /usr /usr
-## Install SAGA GIS
-COPY --from=saga-gissi /usr/local /usr/local
 ## Install Git
 COPY --from=gsi /usr/local /usr/local
 ## Install Python
 COPY --from=psi /usr/local /usr/local
+## Install SAGA GIS
+COPY --from=saga-gissi /usr/local /usr/local
 ## Install Orfeo Toolbox
-COPY --from=otb ${OTB_PREFIX} ${OTB_PREFIX}
-ENV CMAKE_PREFIX_PATH=${OTB_VERSION:+$OTB_PREFIX} \
-    GDAL_DRIVER_PATH=${OTB_VERSION:+disable} \
-    GDAL_DATA=${OTB_VERSION:+$OTB_PREFIX/share/gdal} \
-    PROJ_LIB=${OTB_VERSION:+$OTB_PREFIX/share/proj} \
-    PATH=${OTB_VERSION:+$OTB_PREFIX/bin:}$PATH \
-    OTB_APPLICATION_PATH=${OTB_VERSION:+$OTB_PREFIX/lib/otb/applications}
+COPY --from=otbsi /usr/local /usr/local
+ENV GDAL_DRIVER_PATH=${OTB_VERSION:+disable} \
+    OTB_APPLICATION_PATH=${OTB_VERSION:+/usr/local/lib/otb/applications}
 
 USER root
 
@@ -199,12 +151,6 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     ## Git: Additional runtime recommendations
     less \
     ssh-client \
-    ## SAGA GIS: Additional runtime dependencies [^1]
-    libdxflib3 \
-    libhpdf-2.3.0 \
-    libsvm3 \
-    libwxgtk3.*-dev \
-    $(test -z $SAGA_VERSION && echo "saga") \
     ## QGIS Desktop: Additional runtime dependencies
     '^libexiv2-[0-9]+$' \
     '^libgdal[0-9]+$' \
@@ -277,14 +223,25 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     librsvg2-common \
     tumbler \
     xdg-user-dirs \
-  ## Update locale and add en_GB.UTF-8 for SAGA GIS
-  && sed -i "s/# $LANG/$LANG/g" /etc/locale.gen \
-  && sed -i "s/# en_GB.UTF-8/en_GB.UTF-8/g" /etc/locale.gen \
-  && locale-gen \
-  && update-locale LANG=$LANG \
-  ## [^1]: libvigraimpex11 is not available for jammy
-  && if $(! grep "jammy" /etc/os-release); then \
-    apt-get -y install --no-install-recommends '^libvigraimpex[0-9]+$'; \
+    ## SAGA GIS: Supplementary runtime dependencies [^1]
+    libdxflib3 \
+    libhpdf-2.3.0 \
+    libsvm3 \
+    libwxgtk3.*-dev \
+    $(test -z $SAGA_VERSION && echo "saga") \
+  ## Orfeo Toolbox: Supplementary runtime dependencies
+  && if [ "$(uname -m)" = "x86_64" ]; then \
+    apt-get -y install --no-install-recommends \
+      '^libboost-filesystem[0-9].[0-9]+.[0-9]$' \
+      '^libboost-serialization[0-9].[0-9]+.[0-9]$' \
+      libglew2.* \
+      '^libinsighttoolkit4.[0-9]+$' \
+      libmuparser2v5 \
+      libmuparserx4.* \
+      '^libopencv-core[0-9][0-9.][0-9][a-z]?$' \
+      '^libopencv-ml[0-9][0-9.][0-9][a-z]?$' \
+      libtinyxml-dev \
+      $(test -z $OTB_VERSION && echo "otb-*"); \
   fi \
   ## Older distros: rebind.so might be named differently...
   && if [ ! -f "/usr/lib/websockify/rebind.so" ]; then \
@@ -298,6 +255,15 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   ## Xfce: Disable Ctrl+Alt+Del to trigger session logout
   && sed -i "/xfce4-session-logout/d" \
     /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml \
+  ## SAGA GIS: Update locale and add en_GB.UTF-8
+  && sed -i "s/# $LANG/$LANG/g" /etc/locale.gen \
+  && sed -i "s/# en_GB.UTF-8/en_GB.UTF-8/g" /etc/locale.gen \
+  && locale-gen \
+  && update-locale LANG=$LANG \
+  ## [^1]: SAGA GIS: libvigraimpex11 is not available for jammy
+  && if $(! grep "jammy" /etc/os-release); then \
+    apt-get -y install --no-install-recommends '^libvigraimpex[0-9]+$'; \
+  fi \
   ## Additional python-dev dependencies
   && if [ -z "$PYTHON_VERSION" ]; then \
     apt-get -y install --no-install-recommends \
@@ -421,7 +387,7 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 COPY --from=files /files /
 COPY --from=files /files/var/backups/skel ${HOME}
 
-ENV PYTHONPATH=${OTB_VERSION:+$OTB_PREFIX/lib/python}
+ENV PYTHONPATH=${PYTHONPATH:+$PYTHONPATH:}${OTB_VERSION:+/usr/local/lib/otb/python}
 
 EXPOSE 8888
 
