@@ -101,7 +101,7 @@ build:latest-linux-arm64v8:
   rules:
     - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_TRIGGERED && $CI_BUILD_PLATFORMS =~ /(linux\/arm64\/v8)/
 
-build:latest-ltr-linux-amd64:
+build:ltr-linux-amd64:
   extends: .build
   tags:
     - arch:amd64
@@ -117,20 +117,20 @@ build:latest-ltr-linux-amd64:
       --build-arg OTB_VERSION
       --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
-      -t $CI_APP_REPO:latest-ltr-linux-amd64
+      -t $CI_APP_REPO:ltr-linux-amd64
       -f Dockerfile .
     - >
       docker build
       --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG-linux-amd64
       --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-root-linux-amd64
-      -t $CI_APP_REPO:latest-ltr-root-linux-amd64
+      -t $CI_APP_REPO:ltr-root-linux-amd64
       -f ../common/subtags/root/Dockerfile .
     - docker push -a $CI_APP_REPO
   rules:
     - if: $CI_COMMIT_BRANCH == "ltr" && $CI_PIPELINE_TRIGGERED && $CI_BUILD_PLATFORMS =~ /(linux\/amd64)/
 
-build:latest-ltr-linux-arm64v8:
+build:ltr-linux-arm64v8:
   extends: .build
   tags:
     - arch:arm64/v8
@@ -145,14 +145,14 @@ build:latest-ltr-linux-arm64v8:
       --build-arg GIT_VERSION
       --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
-      -t $CI_APP_REPO:latest-ltr-linux-arm64v8
+      -t $CI_APP_REPO:ltr-linux-arm64v8
       -f Dockerfile .
     - >
       docker build
       --build-arg BUILD_ON_IMAGE=$CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
       --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-root-linux-arm64v8
-      -t $CI_APP_REPO:latest-ltr-root-linux-arm64v8
+      -t $CI_APP_REPO:ltr-root-linux-arm64v8
       -f ../common/subtags/root/Dockerfile .
     - docker push -a $CI_APP_REPO
   rules:
@@ -214,9 +214,9 @@ build-manifest:latest-linux-multiarch:
   rules:
     - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_TRIGGERED
 
-build-manifest:latest-ltr-linux-multiarch:
+build-manifest:ltr-linux-multiarch:
   extends: .build
-  needs: ["build:latest-ltr-linux-amd64", "build:latest-ltr-linux-arm64v8"]
+  needs: ["build:ltr-linux-amd64", "build:ltr-linux-arm64v8"]
   script:
     - |
       for i in $OS_ARCH; do
@@ -235,16 +235,16 @@ build-manifest:latest-ltr-linux-multiarch:
       docker manifest push $CI_APP_REPO:$CI_APP_TAG
       docker manifest push $CI_APP_REPO:$CI_APP_TAG-root
     - |
-      docker manifest create $CI_APP_REPO:latest-ltr $CI_MANIFEST_LIST
-      docker manifest create $CI_APP_REPO:latest-ltr-root $CI_MANIFEST_LIST_ROOT
+      docker manifest create $CI_APP_REPO:ltr $CI_MANIFEST_LIST
+      docker manifest create $CI_APP_REPO:ltr-root $CI_MANIFEST_LIST_ROOT
       if echo $OS_ARCH | grep "linux-arm64v8" >/dev/null ; then
-        docker manifest annotate --variant v8 $CI_APP_REPO:latest-ltr \
+        docker manifest annotate --variant v8 $CI_APP_REPO:ltr \
           $CI_APP_REPO:$CI_APP_TAG-linux-arm64v8
-        docker manifest annotate --variant v8 $CI_APP_REPO:latest-ltr-root \
+        docker manifest annotate --variant v8 $CI_APP_REPO:ltr-root \
           $CI_APP_REPO:$CI_APP_TAG-root-linux-arm64v8
       fi
-      docker manifest push $CI_APP_REPO:latest-ltr
-      docker manifest push $CI_APP_REPO:latest-ltr-root
+      docker manifest push $CI_APP_REPO:ltr
+      docker manifest push $CI_APP_REPO:ltr-root
     - |
       docker manifest create $CI_APP_REPO:$VERSION_MAJ_MIN-ltr $CI_MANIFEST_LIST
       docker manifest create $CI_APP_REPO:$VERSION_MAJ_MIN-ltr-root $CI_MANIFEST_LIST_ROOT
