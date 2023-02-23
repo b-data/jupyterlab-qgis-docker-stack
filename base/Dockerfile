@@ -111,6 +111,10 @@ USER root
 RUN dpkgArch="$(dpkg --print-architecture)" \
   && export $(cat /etc/os-release | grep "^ID=debian" | xargs) \
     > /dev/null \
+  ## Unminimise if the system has been minimised
+  && if [ $(command -v unminimize) ]; then \
+    yes | unminimize; \
+  fi \
   && apt-get update \
   && apt-get -y install --no-install-recommends \
     ## Language ver-tagged images
