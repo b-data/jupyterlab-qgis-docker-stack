@@ -133,7 +133,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     g++ \
     gcc \
     gfortran \
-    $(test -z $GIT_VERSION && echo "git") \
+    $(test -z "${GIT_VERSION}" && echo "git") \
     gnupg \
     htop \
     info \
@@ -236,7 +236,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     libhpdf-2.3.0 \
     libsvm3 \
     libwxgtk3.*-dev \
-    $(test -z $SAGA_VERSION && echo "saga") \
+    $(test -z "${SAGA_VERSION}" && echo "saga") \
   ## Orfeo Toolbox: Supplementary runtime dependencies
   && if [ "$(uname -m)" = "x86_64" ]; then \
     apt-get -y install --no-install-recommends \
@@ -249,7 +249,12 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
       '^libopencv-core[0-9][0-9.][0-9][a-z]?$' \
       '^libopencv-ml[0-9][0-9.][0-9][a-z]?$' \
       libtinyxml-dev \
-      $(test -z $OTB_VERSION && echo "otb-*"); \
+      $(test -z "${OTB_VERSION}" && echo "otb-*"); \
+    if [[ ! -z "${OTB_VERSION}" && "${OTB_VERSION}" < "8" ]]; then \
+      apt-get -y install --no-install-recommends \
+        '^libopenthreads[0-9]+$' \
+        libossim1; \
+    fi \
   fi \
   ## Older distros: rebind.so might be named differently...
   && if [ ! -f "/usr/lib/websockify/rebind.so" ]; then \
@@ -263,7 +268,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   ## Xfce: Disable Ctrl+Alt+Del to trigger session logout
   && sed -i "/xfce4-session-logout/d" \
     /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml \
-  ## SAGA GIS: Update locale and add en_GB.UTF-8
+  ## SAGA GIS: Add en_GB.UTF-8 and update locale
   && sed -i "s/# $LANG/$LANG/g" /etc/locale.gen \
   && sed -i "s/# en_GB.UTF-8/en_GB.UTF-8/g" /etc/locale.gen \
   && locale-gen \
