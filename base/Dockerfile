@@ -216,11 +216,14 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     ## Xfce Lightweight Desktop Environment
     adwaita-icon-theme* \
     firefox${ID:+-esr} \
+    mousepad \
+    ristretto \
     websockify \
     xfce4 \
     xfce4-panel \
     xfce4-session \
     xfce4-settings \
+    xfce4-taskmanager \
     xfce4-terminal \
     xorg \
     ## xfdesktop4 recommends
