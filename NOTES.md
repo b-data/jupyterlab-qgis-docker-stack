@@ -59,7 +59,8 @@ unattended computations.
 * `GRASS_PYTHON`: Set to `/usr/bin/python3`
 
 Otherwise, `grass` would use `/user/local/bin/python3`.  
-:information_source: `grass` was built against Python and packages from the distro's package repository.
+:information_source: `grass` was built against Python and packages from the
+distro's package repository.
 
 **Orfeo Toolbox**
 
@@ -106,7 +107,8 @@ The default shell is Zsh, further enhanced with
   * Set `FontName=MesloLGS NF 12` and `Encoding=UTF-8`.
 * [QGIS Desktop](base/conf/user/var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini):
   * Append `/usr/lib/python3/dist-packages` to `PYTHONPATH`.  
-    :information_source: One distro refused to find the Python bindings to QGIS (at `/usr/lib/python3/dist-packages/qgis`)...
+    :information_source: One distro refused to find the Python bindings to QGIS
+    (at `/usr/lib/python3/dist-packages/qgis`)...
 * Zsh
   * Oh My Zsh: `~/.zshrc`
     * Set PATH so it includes user's private bin if it exists
