@@ -2,7 +2,7 @@
 
 # JupyterLab QGIS docker stack
 
-Multi-arch (`linux/amd64`, `linux/arm64/v8`) images:
+Multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
 
 * [`registry.gitlab.b-data.ch/jupyterlab/qgis/base`](https://gitlab.b-data.ch/jupyterlab/qgis/base/container_registry)
 
@@ -10,18 +10,25 @@ Multi-arch (`linux/amd64`, `linux/arm64/v8`) images:
 
 * **JupyterLab**: A web-based interactive development environment for Jupyter
   notebooks, code, and data. The images include
-  * **Xfce (via noVNC + TurboVNC)**: A lightweight desktop environment for UNIX-like operating systems.
-    * **GRASS GIS**: A free and open source Geographic Information System (GIS).
-    * **Orfeo Toolbox**: An open-source project for state-of-the-art remote sensing.  
-      :information_source: amd64 only
-    * **QGIS**: A free, open source, cross platform (lin/win/mac) geographical information system (GIS).
-    * **SAGA GIS**: A Geographic Information System (GIS) software with immense capabilities for geodata processing and analysis.
   * **Git**: A distributed version-control system for tracking changes in source
     code.
   * **Python**: An interpreted, object-oriented, high-level programming language
     with dynamic semantics.
+  * **TurboVNC**: A high-speed version of VNC derived from TightVNC.  
+    :information_source: Tuned to maximize performance for image-intensive
+    applications.
   * **Zsh**: A shell designed for interactive use, although it is also a
     powerful scripting language.
+  * **Xfce (via noVNC + TurboVNC)**: A lightweight desktop environment for
+    UNIX-like operating systems.
+    * **GRASS GIS**: A free and open source Geographic Information System (GIS).
+    * **Orfeo Toolbox**: An open-source project for state-of-the-art remote
+      sensing.  
+      :information_source: amd64 only
+    * **QGIS**: A free, open source, cross platform (lin/win/mac) geographical
+      information system (GIS).
+    * **SAGA GIS**: A Geographic Information System (GIS) software with immense
+      capabilities for geodata processing and analysis.
 
 Images considered stable for QGIS versions ≥ 3.28.3 and ≥ 3.22.16 (LTR).
 
@@ -53,7 +60,7 @@ To install docker, follow the instructions for your platform:
 
 ### Build image (base)
 
-latest:
+*latest*:
 
 ```bash
 cd base && docker build \
@@ -65,9 +72,21 @@ cd base && docker build \
   -f Dockerfile .
 ```
 
+*ltr*:
+
+```bash
+cd base && docker build \
+  --build-arg QGIS_VERSION=3.22.16 \
+  --build-arg PYTHON_VERSION=3.10.10 \
+  --build-arg GIT_VERSION=2.39.2 \
+  --build-arg OTB_VERSION=8.1.1 \
+  -t jupyterlab/qgis/base:ltr \
+  -f Dockerfile .
+```
+
 ### Run container
 
-self built:
+self built *latest*:
 
 ```bash
 docker run -it --rm \
@@ -76,19 +95,36 @@ docker run -it --rm \
   jupyterlab/qgis/base
 ```
 
+self built *ltr*:
+
+```bash
+docker run -it --rm \
+  -p 8888:8888 \
+  -v $PWD:/home/jovyan \
+  jupyterlab/qgis/base:ltr
+```
+
 from the project's GitLab Container Registries:
 
 * [`jupyterlab/qgis/base`](https://gitlab.b-data.ch/jupyterlab/qgis/base/container_registry)  
+  *latest*:  
   ```bash
   docker run -it --rm \
     -p 8888:8888 \
     -v $PWD:/home/jovyan \
-    registry.gitlab.b-data.ch/jupyterlab/qgis/base[:MAJOR[.MINOR[.PATCH]]]
+    registry.gitlab.b-data.ch/jupyterlab/qgis/base
+  ```
+  *ltr*:  
+  ```bash
+  docker run -it --rm \
+    -p 8888:8888 \
+    -v $PWD:/home/jovyan \
+    registry.gitlab.b-data.ch/jupyterlab/qgis/base:ltr
   ```
 
 The use of the `-v` flag in the command mounts the current working directory on
-the host (`$PWD` in the example command) as `/home/jovyan` in the container.  
-The server logs appear in the terminal.
+the host (`$PWD` in the example command) as `/home/jovyan` in the container. The
+server logs appear in the terminal.
 
 ## Similar project
 
@@ -101,6 +137,8 @@ What makes this project different:
    [Ubuntu](https://hub.docker.com/_/ubuntu)
 1. Just Python – no [Conda](https://github.com/conda/conda) /
    [Mamba](https://github.com/mamba-org/mamba)
+
+See [Notes](NOTES.md) for tweaks, settings, etc.
 
 ## Contributing
 
