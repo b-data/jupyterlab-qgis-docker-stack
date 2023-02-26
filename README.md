@@ -6,6 +6,8 @@ Multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
 
 * [`registry.gitlab.b-data.ch/jupyterlab/qgis/base`](https://gitlab.b-data.ch/jupyterlab/qgis/base/container_registry)
 
+![Screenshot](assets/screenshot.png)
+
 **Features**
 
 * **JupyterLab**: A web-based interactive development environment for Jupyter
