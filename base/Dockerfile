@@ -216,6 +216,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     ## Xfce Lightweight Desktop Environment
     adwaita-icon-theme* \
     firefox${ID:+-esr} \
+    gnome-themes-extra \
     mousepad \
     ristretto \
     websockify \
@@ -268,6 +269,9 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   ## Xfce: Disable Ctrl+Alt+Del to trigger session logout
   && sed -i "/xfce4-session-logout/d" \
     /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml \
+  ## Xfce Panel: Set dark mode to false by default
+  && sed -i 's/name="dark-mode" type="bool" value="true"/name="dark-mode" type="bool" value="false"/g' \
+    /etc/xdg/xfce4/panel/default.xml \
   ## SAGA GIS: Add en_GB.UTF-8 and update locale
   && sed -i "s/# $LANG/$LANG/g" /etc/locale.gen \
   && sed -i "s/# en_GB.UTF-8/en_GB.UTF-8/g" /etc/locale.gen \
