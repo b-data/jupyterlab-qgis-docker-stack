@@ -44,6 +44,17 @@ if [ "$(id -u)" == 0 ] ; then
     su $NB_USER -c "cp -a /var/backups/skel/.config/xfce4/terminal/terminalrc \
       .config/xfce4/terminal/terminalrc"
   fi
+  ## Xfce Appearance: Set style to Adwaita-dark
+  su $NB_USER -c "mkdir -p .config/xfce4/xfconf/xfce-perchannel-xml"
+  if [[ ! -f ".config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" ]]; then
+    su $NB_USER -c "cp -a /var/backups/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml \
+      .config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml"
+  fi
+  ## Xfce Desktop: Set background to black
+  if [[ ! -f ".config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" ]]; then
+    su $NB_USER -c "cp -a /var/backups/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml \
+      .config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml"
+  fi
 
   ## QGIS Desktop: Put inital settings in place
   su $NB_USER -c "mkdir -p .local/share/QGIS/QGIS3/profiles/default/QGIS"
@@ -86,6 +97,17 @@ else
   if [[ ! -f ".config/xfce4/terminal/terminalrc" ]]; then
     cp -a /var/backups/skel/.config/xfce4/terminal/terminalrc \
       .config/xfce4/terminal/terminalrc
+  fi
+  ## Xfce Appearance: Set style to Adwaita-dark
+  mkdir -p .config/xfce4/xfconf/xfce-perchannel-xml
+  if [[ ! -f ".config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" ]]; then
+    cp -a /var/backups/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml \
+      .config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
+  fi
+  ## Xfce Desktop: Set background to black
+  if [[ ! -f ".config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" ]]; then
+    cp -a /var/backups/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml \
+      .config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
   fi
 
   ## QGIS Desktop: Put inital settings in place
