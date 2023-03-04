@@ -257,6 +257,20 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
         libossim1; \
     fi \
   fi \
+  ## Ubuntu: Install Firefox from PPA as snap installation does not work
+  && if [ $(command -v snap) ]; then \
+    apt-get -y purge firefox; \
+    apt-get update; \
+    apt-get -y install --no-install-recommends software-properties-common; \
+    add-apt-repository ppa:mozillateam/ppa; \
+    echo "Package: firefox*" >> /etc/apt/preferences.d/mozilla-firefox; \
+    echo "Pin: release o=LP-PPA-mozillateam" >> /etc/apt/preferences.d/mozilla-firefox; \
+    echo "Pin-Priority: 501" >> /etc/apt/preferences.d/mozilla-firefox; \
+    apt-get update; \
+    apt-get -y install --no-install-recommends firefox; \
+    apt-get -y purge software-properties-common; \
+    apt-get -y autoremove; \
+  fi \
   ## Older distros: rebind.so might be named differently...
   && if [ ! -f "/usr/lib/websockify/rebind.so" ]; then \
     ln -rs /usr/lib/websockify/rebind*.so /usr/lib/websockify/rebind.so; \
