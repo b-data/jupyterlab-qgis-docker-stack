@@ -86,6 +86,16 @@ cd base && docker build \
   -f Dockerfile .
 ```
 
+*version*:
+
+```bash
+cd base && docker build \
+  -t jupyterlab/qgis/base:MAJOR.MINOR.PATCH \
+  -f MAJOR.MINOR.PATCH.Dockerfile .
+```
+
+For `MAJOR.MINOR.PATCH` ≥ `3.28.3` and `MAJOR.MINOR.PATCH` ≥ `3.22.16` (LTR versions).
+
 ### Run container
 
 self built *latest*:
@@ -106,6 +116,15 @@ docker run -it --rm \
   jupyterlab/qgis/base:ltr
 ```
 
+self built *version*:
+
+```bash
+docker run -it --rm \
+  -p 8888:8888 \
+  -v $PWD:/home/jovyan \
+  jupyterlab/qgis/base:MAJOR.MINOR.PATCH
+```
+
 from the project's GitLab Container Registries:
 
 * [`jupyterlab/qgis/base`](https://gitlab.b-data.ch/jupyterlab/qgis/base/container_registry)  
@@ -122,6 +141,13 @@ from the project's GitLab Container Registries:
     -p 8888:8888 \
     -v $PWD:/home/jovyan \
     registry.gitlab.b-data.ch/jupyterlab/qgis/base:ltr
+  ```
+  *version*:
+  ```bash
+  docker run -it --rm \
+    -p 8888:8888 \
+    -v $PWD:/home/jovyan \
+    registry.gitlab.b-data.ch/jupyterlab/qgis/base:MAJOR[.MINOR[.PATCH]]
   ```
 
 The use of the `-v` flag in the command mounts the current working directory on
