@@ -251,10 +251,12 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
       '^libopencv-ml[0-9][0-9.][0-9][a-z]?$' \
       libtinyxml-dev \
       $(test -z "${OTB_VERSION}" && echo "otb-*"); \
-    if [ ! -z "${OTB_VERSION}" -a "${OTB_VERSION:0:1}" -lt "8" ]; then \
-      apt-get -y install --no-install-recommends \
-        '^libopenthreads[0-9]+$' \
-        libossim1; \
+    if [ ! -z "${OTB_VERSION}" ]; then \
+      if [ "$(echo ${OTB_VERSION} | cut -c 1)" -lt "8" ]; then \
+        apt-get -y install --no-install-recommends \
+          '^libopenthreads[0-9]+$' \
+          libossim1; \
+      fi \
     fi \
   fi \
   ## Older distros: rebind.so might be named differently...
