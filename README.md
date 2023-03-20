@@ -4,7 +4,7 @@
 
 Multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
 
-* [`registry.gitlab.b-data.ch/jupyterlab/qgis/base`](https://gitlab.b-data.ch/jupyterlab/qgis/base/container_registry)
+* [`glcr.b-data.ch/jupyterlab/qgis/base`](https://gitlab.b-data.ch/jupyterlab/qgis/base/container_registry)
 
 ![Screenshot](assets/screenshot.png)
 
@@ -133,21 +133,21 @@ from the project's GitLab Container Registries:
   docker run -it --rm \
     -p 8888:8888 \
     -v $PWD:/home/jovyan \
-    registry.gitlab.b-data.ch/jupyterlab/qgis/base
+    glcr.b-data.ch/jupyterlab/qgis/base
   ```
   *ltr*:  
   ```bash
   docker run -it --rm \
     -p 8888:8888 \
     -v $PWD:/home/jovyan \
-    registry.gitlab.b-data.ch/jupyterlab/qgis/base:ltr
+    glcr.b-data.ch/jupyterlab/qgis/base:ltr
   ```
   *version*:
   ```bash
   docker run -it --rm \
     -p 8888:8888 \
     -v $PWD:/home/jovyan \
-    registry.gitlab.b-data.ch/jupyterlab/qgis/base:MAJOR[.MINOR[.PATCH]]
+    glcr.b-data.ch/jupyterlab/qgis/base:MAJOR[.MINOR[.PATCH]]
   ```
 
 The use of the `-v` flag in the command mounts the current working directory on
