@@ -68,7 +68,7 @@ To install docker, follow the instructions for your platform:
 cd base && docker build \
   --build-arg QGIS_VERSION=3.30.0 \
   --build-arg PYTHON_VERSION=3.10.10 \
-  --build-arg GIT_VERSION=2.39.2 \
+  --build-arg GIT_VERSION=2.40.0 \
   --build-arg OTB_VERSION=8.1.1 \
   -t jupyterlab/qgis/base \
   -f Dockerfile .
@@ -80,7 +80,7 @@ cd base && docker build \
 cd base && docker build \
   --build-arg QGIS_VERSION=3.28.4 \
   --build-arg PYTHON_VERSION=3.10.10 \
-  --build-arg GIT_VERSION=2.39.2 \
+  --build-arg GIT_VERSION=2.40.0 \
   --build-arg OTB_VERSION=8.1.1 \
   -t jupyterlab/qgis/base:ltr \
   -f Dockerfile .
@@ -96,63 +96,79 @@ cd base && docker build \
 
 For `MAJOR.MINOR.PATCH` ≥ `3.28.3` and `MAJOR.MINOR.PATCH` ≥ `3.22.16` (LTR versions).
 
+### Create home directory
+
+Create an empty directory:
+
+```bash
+mkdir jupyterlab-jovyan
+sudo chown 1000:100 jupyterlab-jovyan
+cd jupyterlab-jovyan
+```
+
+It will be *bind mounted* as the JupyterLab user's home directory and
+automatically populated on first run.
+
 ### Run container
 
-self built *latest*:
+self built:
 
 ```bash
 docker run -it --rm \
   -p 8888:8888 \
-  -v $PWD:/home/jovyan \
-  jupyterlab/qgis/base
-```
-
-self built *ltr*:
-
-```bash
-docker run -it --rm \
-  -p 8888:8888 \
-  -v $PWD:/home/jovyan \
-  jupyterlab/qgis/base:ltr
-```
-
-self built *version*:
-
-```bash
-docker run -it --rm \
-  -p 8888:8888 \
-  -v $PWD:/home/jovyan \
-  jupyterlab/qgis/base:MAJOR.MINOR.PATCH
+  -u root \
+  -v "${PWD}":/home/jovyan \
+  -e NB_UID=$(id -u) \
+  -e NB_GID=$(id -g) \
+  -e CHOWN_HOME=yes \
+  -e CHOWN_HOME_OPTS='-R' \
+  jupyterlab/qgis/base{:ltr,:MAJOR[.MINOR[.PATCH]]}
 ```
 
 from the project's GitLab Container Registries:
 
-* [`jupyterlab/qgis/base`](https://gitlab.b-data.ch/jupyterlab/qgis/base/container_registry)  
-  *latest*:  
   ```bash
   docker run -it --rm \
     -p 8888:8888 \
-    -v $PWD:/home/jovyan \
-    glcr.b-data.ch/jupyterlab/qgis/base
-  ```
-  *ltr*:  
-  ```bash
-  docker run -it --rm \
-    -p 8888:8888 \
-    -v $PWD:/home/jovyan \
-    glcr.b-data.ch/jupyterlab/qgis/base:ltr
-  ```
-  *version*:
-  ```bash
-  docker run -it --rm \
-    -p 8888:8888 \
-    -v $PWD:/home/jovyan \
-    glcr.b-data.ch/jupyterlab/qgis/base:MAJOR[.MINOR[.PATCH]]
+    -u root \
+    -v "${PWD}":/home/jovyan \
+    -e NB_UID=$(id -u) \
+    -e NB_GID=$(id -g) \
+    -e CHOWN_HOME=yes \
+    -e CHOWN_HOME_OPTS='-R' \
+    IMAGE{:ltr,:MAJOR[.MINOR[.PATCH]]}
   ```
 
+`IMAGE` being one of
+
+* [`glcr.b-data.ch/jupyterlab/qgis/base`](https://gitlab.b-data.ch/jupyterlab/qgis/base/container_registry)
+
 The use of the `-v` flag in the command mounts the current working directory on
-the host (`$PWD` in the example command) as `/home/jovyan` in the container. The
-server logs appear in the terminal.
+the host (`${PWD}` in the command) as `/home/jovyan` in the container.
+
+`-e NB_UID=$(id -u) -e NB_GID=$(id -g)` instructs the startup script to switch
+the user ID and the primary group ID of `${NB_USER}` to the user and group ID of
+the one executing the command.
+
+`-e CHOWN_HOME=yes -e CHOWN_HOME_OPTS='-R'` instructs the startup script to
+recursively change the `${NB_USER}` home directory owner and group to the
+current value of `${NB_UID}` and `${NB_GID}`.  
+:information_source: This is only required for the first run.
+
+The server logs appear in the terminal.
+
+**Using Docker Desktop**
+
+`sudo chown 1000:100 jupyterlab-jovyan` *might* not be required. Also
+
+```bash
+docker run -it --rm \
+  -p 8888:8888 \
+  -v "${PWD}":/home/jovyan \
+  IMAGE{:ltr,:MAJOR[.MINOR[.PATCH]]}
+```
+
+*might* be sufficient.
 
 ## Similar project
 
