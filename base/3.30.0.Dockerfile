@@ -1,15 +1,15 @@
 ARG BASE_IMAGE=debian
 ARG BASE_IMAGE_TAG=bullseye
-ARG QGIS_VERSION=3.28.3
+ARG QGIS_VERSION=3.30.0
 
 ARG SAGA_VERSION
 
 ARG NB_USER=jovyan
 ARG NB_UID=1000
 ARG JUPYTERHUB_VERSION=3.1.1
-ARG JUPYTERLAB_VERSION=3.6.1
+ARG JUPYTERLAB_VERSION=3.6.3
 ARG PYTHON_VERSION=3.10.10
-ARG GIT_VERSION=2.39.2
+ARG GIT_VERSION=2.40.0
 ARG OTB_VERSION=8.1.1
 ARG TURBOVNC_VERSION=3.0.3
 
@@ -43,11 +43,11 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
   && find /files -type f -exec chmod 644 {} \; \
   && find /files/usr/local/bin -type f -exec chmod 755 {} \;
 
-FROM registry.gitlab.b-data.ch/qgis/qgissi/${QGIS_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as qgissi
-FROM registry.gitlab.b-data.ch/saga-gis/saga-gissi${SAGA_VERSION:+/}${SAGA_VERSION:-:none}${SAGA_VERSION:+/$BASE_IMAGE}${SAGA_VERSION:+:$BASE_IMAGE_TAG} as saga-gissi
-FROM registry.gitlab.b-data.ch/python/psi${PYTHON_VERSION:+/}${PYTHON_VERSION:-:none}${PYTHON_VERSION:+/$BASE_IMAGE}${PYTHON_VERSION:+:$BASE_IMAGE_TAG} as psi
-FROM registry.gitlab.b-data.ch/git/gsi${GIT_VERSION:+/}${GIT_VERSION:-:none}${GIT_VERSION:+/$BASE_IMAGE}${GIT_VERSION:+:$BASE_IMAGE_TAG} as gsi
-FROM registry.gitlab.b-data.ch/orfeotoolbox/otbsi${OTB_VERSION:+/}${OTB_VERSION:-:none}${OTB_VERSION:+/$BASE_IMAGE}${OTB_VERSION:+:$BASE_IMAGE_TAG} as otbsi
+FROM glcr.b-data.ch/qgis/qgissi/${QGIS_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} as qgissi
+FROM glcr.b-data.ch/saga-gis/saga-gissi${SAGA_VERSION:+/}${SAGA_VERSION:-:none}${SAGA_VERSION:+/$BASE_IMAGE}${SAGA_VERSION:+:$BASE_IMAGE_TAG} as saga-gissi
+FROM glcr.b-data.ch/python/psi${PYTHON_VERSION:+/}${PYTHON_VERSION:-:none}${PYTHON_VERSION:+/$BASE_IMAGE}${PYTHON_VERSION:+:$BASE_IMAGE_TAG} as psi
+FROM glcr.b-data.ch/git/gsi${GIT_VERSION:+/}${GIT_VERSION:-:none}${GIT_VERSION:+/$BASE_IMAGE}${GIT_VERSION:+:$BASE_IMAGE_TAG} as gsi
+FROM glcr.b-data.ch/orfeotoolbox/otbsi${OTB_VERSION:+/}${OTB_VERSION:-:none}${OTB_VERSION:+/$BASE_IMAGE}${OTB_VERSION:+:$BASE_IMAGE_TAG} as otbsi
 
 FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG}
 
