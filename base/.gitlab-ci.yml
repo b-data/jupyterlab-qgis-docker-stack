@@ -1,7 +1,7 @@
 .env:
   variables:
     PYTHON_VERSION: "3.10.11"
-    GIT_VERSION: "2.40.0"
+    GIT_VERSION: "2.40.1"
     OTB_VERSION: "8.1.1"
 
 .before-script-build: &before-script-build
@@ -28,7 +28,7 @@
     sed -n "s|\([[:digit:]]\+\).*|\1|p"`
 
 .build:
-  image: glcr.b-data.ch/docker/docker:latest
+  image: glcr.b-data.ch/docker/docker:dind
   extends: .env
   stage: build
   services:
@@ -43,7 +43,7 @@
   retry: 2
 
 .post:
-  image: glcr.b-data.ch/docker/docker:latest
+  image: glcr.b-data.ch/docker/docker:dind
   stage: .post
 
 build:latest-linux-amd64:
