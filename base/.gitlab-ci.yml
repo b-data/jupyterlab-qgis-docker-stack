@@ -1,6 +1,6 @@
 .env:
   variables:
-    PYTHON_VERSION: "3.10.11"
+    PYTHON_VERSION: "3.11.3"
     GIT_VERSION: "2.40.1"
     OTB_VERSION: "8.1.1"
 
