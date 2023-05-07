@@ -142,8 +142,6 @@ The default shell is Zsh, further enhanced with
   `~/.ipython/profile_default/ipython_kernel_config.py`
   * Valid figure formats: `png`, `retina`, `jpeg`, `svg`, `pdf`.
 * JupyterLab: Settings > Advanced Settings Editor
-* code-server: Manage > Settings
-
 * Zsh
   * Oh My Zsh: Edit `~/.zshrc`.
   * Powerlevel10k: Run `p10k configure` or edit `~/.p10k.zsh`.
