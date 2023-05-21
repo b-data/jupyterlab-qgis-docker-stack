@@ -43,7 +43,7 @@ Images considered stable for QGIS versions ≥ 3.28.3 and ≥ 3.22.16 (LTR).
 * [Prerequisites](#prerequisites)
 * [Install](#install)
 * [Usage](#usage)
-* [Similar project](#similar-project)
+* [Similar projects](#similar-projects)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -174,9 +174,10 @@ docker run -it --rm \
 
 *might* be sufficient.
 
-## Similar project
+## Similar projects
 
 * [pangeo-data/jupyter-earth](https://github.com/pangeo-data/jupyter-earth)
+* [geocompx/docker](https://github.com/geocompx/docker)
 
 What makes this project different:
 
