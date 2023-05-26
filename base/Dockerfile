@@ -3,6 +3,7 @@ ARG BASE_IMAGE_TAG=bullseye
 ARG QGIS_VERSION
 
 ARG SAGA_VERSION
+ARG OTB_VERSION
 
 ARG NB_USER=jovyan
 ARG NB_UID=1000
@@ -10,7 +11,6 @@ ARG JUPYTERHUB_VERSION=4.0.0
 ARG JUPYTERLAB_VERSION=3.6.3
 ARG PYTHON_VERSION
 ARG GIT_VERSION
-ARG OTB_VERSION
 ARG TURBOVNC_VERSION=3.0.3
 
 FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} as files
@@ -350,8 +350,8 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/* \
-    $HOME/.cache \
-    $HOME/.grass*
+    ${HOME}/.cache \
+    ${HOME}/.grass*
 
 ## Install JupyterLab
 RUN pip install --force \
@@ -371,7 +371,20 @@ RUN pip install --force \
   && sed -i 's|</head>|<link rel="stylesheet" type="text/css" href="{{page_config.fullStaticUrl}}/assets/css/fonts.css"></head>|g' /usr/local/share/jupyter/lab/static/index.html \
   ## Clean up
   && rm -rf /tmp/* \
-    $HOME/.cache
+    ${HOME}/.cache
+
+## Install QGIS related stuff
+RUN apt-get update \
+  ## Install QGIS-Plugin-Manager
+  && apt-get -y install --no-install-recommends python3-pip \
+  && /usr/bin/pip install qgis-plugin-manager \
+  ## Clean up
+  && apt-get -y purge python3-pip \
+  && apt-get -y autoremove \
+  && rm -rf /var/lib/apt/lists/* \
+    ${HOME}/.cache \
+    ${HOME}/.config \
+    ${HOME}/.local
 
 ENV PATH=/opt/TurboVNC/bin:$PATH
 
@@ -382,7 +395,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   ## Clean up
   && rm -rf /var/lib/apt/lists/* \
     turbovnc.deb \
-    $HOME/.wget-hsts
+    ${HOME}/.wget-hsts
 
 ## Switch back to ${NB_USER} to avoid accidental container runs as root
 USER ${NB_USER}
@@ -395,30 +408,43 @@ WORKDIR ${HOME}
 
 ## Install Oh My Zsh with Powerlevel10k theme
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended \
-  && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git .oh-my-zsh/custom/themes/powerlevel10k \
-  && sed -i 's/ZSH="\/home\/jovyan\/.oh-my-zsh"/ZSH="$HOME\/.oh-my-zsh"/g' .zshrc \
-  && sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' .zshrc \
-  && echo "\n# set PATH so it includes user's private bin if it exists\nif [ -d \"\$HOME/bin\" -a \"\$SHLVL\" = 1 -a ! \"\$TERM_PROGRAM\" = \"vscode\" ] ; then\n    PATH=\"\$HOME/bin:\$PATH\"\nfi" >> .zshrc \
-  && echo "\n# set PATH so it includes user's private bin if it exists\nif [ -d \"\$HOME/.local/bin\" -a \"\$SHLVL\" = 1 -a ! \"\$TERM_PROGRAM\" = \"vscode\" ] ; then\n    PATH=\"\$HOME/.local/bin:\$PATH\"\nfi" >> .zshrc \
-  && echo "\n# Update last-activity timestamps while in screen/tmux session\nif [ ! -z \"\$TMUX\" -o ! -z \"\$STY\" ] ; then\n    busy &\nfi" >> .bashrc \
-  && echo "\n# Update last-activity timestamps while in screen/tmux session\nif [ ! -z \"\$TMUX\" -o ! -z \"\$STY\" ] ; then\n    setopt nocheckjobs\n    busy &\nfi" >> .zshrc \
-  && echo "\n# To customize prompt, run \`p10k configure\` or edit ~/.p10k.zsh." >> .zshrc \
-  && echo "[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh" >> .zshrc \
-  ## QGIS Desktop: Install plugin 'Processing Saga NextGen Provider'
-  && curl -sSL https://plugins.qgis.org/plugins/processing_saga_nextgen/version/0.0.7/download \
-    -o processing_saga_nextgen.zip \
-  && mkdir -p .local/share/QGIS/QGIS3/profiles/default/python/plugins \
-  && unzip -q processing_saga_nextgen.zip \
-    -d .local/share/QGIS/QGIS3/profiles/default/python/plugins \
-  && rm processing_saga_nextgen.zip \
+  && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k \
+  && sed -i 's/ZSH="\/home\/jovyan\/.oh-my-zsh"/ZSH="${HOME}\/.oh-my-zsh"/g' ${HOME}/.zshrc \
+  && sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' ${HOME}/.zshrc \
+  && echo "\n# set PATH so it includes user's private bin if it exists\nif [ -d \"\${HOME}/bin\" -a \"\$SHLVL\" = 1 -a ! \"\$TERM_PROGRAM\" = \"vscode\" ] ; then\n    PATH=\"\${HOME}/bin:\$PATH\"\nfi" >> ${HOME}/.zshrc \
+  && echo "\n# set PATH so it includes user's private bin if it exists\nif [ -d \"\${HOME}/.local/bin\" -a \"\$SHLVL\" = 1 -a ! \"\$TERM_PROGRAM\" = \"vscode\" ] ; then\n    PATH=\"\${HOME}/.local/bin:\$PATH\"\nfi" >> ${HOME}/.zshrc \
+  && echo "\n# Update last-activity timestamps while in screen/tmux session\nif [ ! -z \"\$TMUX\" -o ! -z \"\$STY\" ] ; then\n    busy &\nfi" >> ${HOME}/.bashrc \
+  && echo "\n# Update last-activity timestamps while in screen/tmux session\nif [ ! -z \"\$TMUX\" -o ! -z \"\$STY\" ] ; then\n    setopt nocheckjobs\n    busy &\nfi" >> ${HOME}/.zshrc \
+  && echo "\n# To customize prompt, run \`p10k configure\` or edit ~/.p10k.zsh." >> ${HOME}/.zshrc \
+  && echo "[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh" >> ${HOME}/.zshrc \
   ## Create user's private bin
-  && mkdir -p .local/bin \
-  ## Create backup of home directory
-  && cp -a $HOME/. /var/backups/skel
+  && mkdir -p ${HOME}/.local/bin
 
 ## Copy files as late as possible to avoid cache busting
 COPY --from=files /files /
 COPY --from=files /files/var/backups/skel ${HOME}
+
+## QGIS Desktop: Install plugin 'Processing Saga NextGen Provider'
+RUN export QT_QPA_PLATFORM=offscreen \
+  && mkdir -p ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
+  && cd ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
+  && qgis-plugin-manager init \
+  && qgis-plugin-manager update \
+  && qgis-plugin-manager install 'Processing Saga NextGen Provider' \
+  && rm -rf .cache_qgis_plugin_manager \
+  ## Enable QGIS plugins
+  && qgis_process plugins enable processing_saga_nextgen \
+  && qgis_process plugins enable grassprovider \
+  && if [ "$(uname -m)" = "x86_64" ]; then \
+    qgis_process plugins enable otbprovider; \
+  fi \
+  ## Clean up
+  && rm -rf \
+    ${HOME}/.cache \
+    ${HOME}/.config \
+    ${HOME}/.grass* \
+  ## Create backup of home directory
+  && cp -a ${HOME}/. /var/backups/skel
 
 ENV PYTHONPATH=${PYTHONPATH:+$PYTHONPATH:}${OTB_VERSION:+/usr/local/lib/otb/python}
 
