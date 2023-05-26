@@ -34,40 +34,40 @@ if [ "$(id -u)" == 0 ] ; then
   fi
 
   ## Xfce: Use custom xinitrc
-  su $NB_USER -c "mkdir -p .config/xfce4/terminal"
-  if [[ ! -f ".config/xfce4/xinitrc" ]]; then
+  su $NB_USER -c "mkdir -p /home/$NB_USER/.config/xfce4/terminal"
+  if [[ ! -f "/home/$NB_USER/.config/xfce4/xinitrc" ]]; then
     su $NB_USER -c "cp -a /var/backups/skel/.config/xfce4/xinitrc \
-      .config/xfce4/xinitrc"
+      /home/$NB_USER/.config/xfce4/xinitrc"
   fi
   ## Xfce Terminal: Font MesloLGS NF, Size 12, Encoding UTF-8
-  if [[ ! -f ".config/xfce4/terminal/terminalrc" ]]; then
+  if [[ ! -f "/home/$NB_USER/.config/xfce4/terminal/terminalrc" ]]; then
     su $NB_USER -c "cp -a /var/backups/skel/.config/xfce4/terminal/terminalrc \
-      .config/xfce4/terminal/terminalrc"
+      /home/$NB_USER/.config/xfce4/terminal/terminalrc"
   fi
   ## Xfce Appearance: Set style to Adwaita-dark
-  su $NB_USER -c "mkdir -p .config/xfce4/xfconf/xfce-perchannel-xml"
-  if [[ ! -f ".config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" ]]; then
+  su $NB_USER -c "mkdir -p /home/$NB_USER/.config/xfce4/xfconf/xfce-perchannel-xml"
+  if [[ ! -f "/home/$NB_USER/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" ]]; then
     su $NB_USER -c "cp -a /var/backups/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml \
-      .config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml"
+      /home/$NB_USER/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml"
   fi
   ## Xfce Desktop: Set background to black
-  if [[ ! -f ".config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" ]]; then
+  if [[ ! -f "/home/$NB_USER/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" ]]; then
     su $NB_USER -c "cp -a /var/backups/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml \
-      .config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml"
+      /home/$NB_USER/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml"
   fi
 
   ## QGIS Desktop: Put inital settings in place
-  su $NB_USER -c "mkdir -p .local/share/QGIS/QGIS3/profiles/default/QGIS"
-  if [[ ! -f ".local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini" ]]; then
+  su $NB_USER -c "mkdir -p /home/$NB_USER/.local/share/QGIS/QGIS3/profiles/default/QGIS"
+  if [[ ! -f "/home/$NB_USER/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini" ]]; then
     su $NB_USER -c "cp -a /var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini \
-      .local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini"
+      /home/$NB_USER/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini"
   fi
 
   ## QGIS Desktop: Copy plugin 'Processing Saga NextGen Provider'
-  su $NB_USER -c "mkdir -p .local/share/QGIS/QGIS3/profiles/default/python/plugins"
-  if [[ ! -d ".local/share/QGIS/QGIS3/profiles/default/python/plugins/processing_saga_nextgen" ]]; then
+  su $NB_USER -c "mkdir -p /home/$NB_USER/.local/share/QGIS/QGIS3/profiles/default/python/plugins"
+  if [[ ! -d "/home/$NB_USER/.local/share/QGIS/QGIS3/profiles/default/python/plugins/processing_saga_nextgen" ]]; then
     su $NB_USER -c "cp -a /var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/python/plugins/processing_saga_nextgen \
-      .local/share/QGIS/QGIS3/profiles/default/python/plugins"
+      /home/$NB_USER/.local/share/QGIS/QGIS3/profiles/default/python/plugins"
   fi
 else
   # Warn if the user wants to change the timezone but hasn't started the
@@ -88,42 +88,42 @@ else
   fi
 
   ## Xfce: Use custom xinitrc
-  mkdir -p .config/xfce4/terminal
-  if [[ ! -f ".config/xfce4/xinitrc" ]]; then
+  mkdir -p /home/$NB_USER/.config/xfce4/terminal
+  if [[ ! -f "/home/$NB_USER/.config/xfce4/xinitrc" ]]; then
     cp -a /var/backups/skel/.config/xfce4/xinitrc \
-      .config/xfce4/xinitrc
+      /home/$NB_USER/.config/xfce4/xinitrc
   fi
   ## Xfce Terminal: Font MesloLGS NF, Size 12, Encoding UTF-8
-  if [[ ! -f ".config/xfce4/terminal/terminalrc" ]]; then
+  if [[ ! -f "/home/$NB_USER/.config/xfce4/terminal/terminalrc" ]]; then
     cp -a /var/backups/skel/.config/xfce4/terminal/terminalrc \
-      .config/xfce4/terminal/terminalrc
+      /home/$NB_USER/.config/xfce4/terminal/terminalrc
   fi
   ## Xfce Appearance: Set style to Adwaita-dark
-  mkdir -p .config/xfce4/xfconf/xfce-perchannel-xml
-  if [[ ! -f ".config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" ]]; then
+  mkdir -p /home/$NB_USER/.config/xfce4/xfconf/xfce-perchannel-xml
+  if [[ ! -f "/home/$NB_USER/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" ]]; then
     cp -a /var/backups/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml \
-      .config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
+      /home/$NB_USER/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
   fi
   ## Xfce Desktop: Set background to black
-  if [[ ! -f ".config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" ]]; then
+  if [[ ! -f "/home/$NB_USER/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" ]]; then
     cp -a /var/backups/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml \
-      .config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
+      /home/$NB_USER/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml
   fi
 
   ## QGIS Desktop: Put inital settings in place
-  mkdir -p .local/share/QGIS/QGIS3/profiles/default/QGIS
-  if [[ ! -f ".local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini" ]]; then
+  mkdir -p /home/$NB_USER/.local/share/QGIS/QGIS3/profiles/default/QGIS
+  if [[ ! -f "/home/$NB_USER/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini" ]]; then
     cp -a /var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini \
-      .local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini
+      /home/$NB_USER/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini
   fi
 
   ## QGIS Desktop: Copy plugin 'Processing Saga NextGen Provider'
-  mkdir -p .local/share/QGIS/QGIS3/profiles/default/python/plugins
-  if [[ ! -d ".local/share/QGIS/QGIS3/profiles/default/python/plugins/processing_saga_nextgen" ]]; then
+  mkdir -p /home/$NB_USER/.local/share/QGIS/QGIS3/profiles/default/python/plugins
+  if [[ ! -d "/home/$NB_USER/.local/share/QGIS/QGIS3/profiles/default/python/plugins/processing_saga_nextgen" ]]; then
     cp -a /var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/python/plugins/processing_saga_nextgen \
-      .local/share/QGIS/QGIS3/profiles/default/python/plugins
+      /home/$NB_USER/.local/share/QGIS/QGIS3/profiles/default/python/plugins
   fi
 fi
 
 # Remove old .zcompdump files
-rm -f .zcompdump*
+rm -f /home/$NB_USER/.zcompdump*
