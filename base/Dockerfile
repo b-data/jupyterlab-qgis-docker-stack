@@ -379,8 +379,10 @@ RUN apt-get update \
   && apt-get -y install --no-install-recommends python3-pip \
   && /usr/bin/pip install qgis-plugin-manager \
   ## Clean up
-  && apt-get -y purge python3-pip \
-  && apt-get -y autoremove \
+  && if [ ! -z "$PYTHON_VERSION" ]; then \
+    apt-get -y purge python3-pip; \
+    apt-get -y autoremove; \
+  fi \
   && rm -rf /var/lib/apt/lists/* \
     ${HOME}/.cache \
     ${HOME}/.config \
