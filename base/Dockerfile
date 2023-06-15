@@ -1,5 +1,5 @@
 ARG BASE_IMAGE=debian
-ARG BASE_IMAGE_TAG=bullseye
+ARG BASE_IMAGE_TAG=12
 ARG QGIS_VERSION
 
 ARG SAGA_VERSION
@@ -341,7 +341,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     userdel $(id -un 1000); \
   fi \
   ## Add user
-  && useradd -l -m -s /bin/bash -N -u ${NB_UID} ${NB_USER} \
+  && useradd -l -m -s $(which zsh) -N -u ${NB_UID} ${NB_USER} \
   && mkdir -p /var/backups/skel \
   && chown ${NB_UID}:${NB_GID} /var/backups/skel \
   ## Install Tini
@@ -354,7 +354,8 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     ${HOME}/.grass*
 
 ## Install JupyterLab
-RUN pip install --force \
+RUN export PIP_BREAK_SYSTEM_PACKAGES=1 \
+  && pip install --force \
     git+https://github.com/b-data/jupyter-remote-desktop-proxy.git@QGIS \
     jupyterhub==${JUPYTERHUB_VERSION} \
     jupyterlab==${JUPYTERLAB_VERSION} \
@@ -377,7 +378,17 @@ RUN pip install --force \
 RUN apt-get update \
   ## Install QGIS-Plugin-Manager
   && apt-get -y install --no-install-recommends python3-pip \
+  && export PIP_BREAK_SYSTEM_PACKAGES=1 \
   && /usr/bin/pip install qgis-plugin-manager \
+  ## QGIS: Make sure qgis_mapserver and qgis_process find the qgis module
+  && cp -a $(which qgis_mapserver) $(which qgis_mapserver)_ \
+  && echo '#!/bin/bash' > $(which qgis_mapserver) \
+  && echo "PYTHONPATH=/usr/lib/python3/dist-packages $(which qgis_mapserver)_ \"\${@}\"" >> \
+    $(which qgis_mapserver) \
+  && cp -a $(which qgis_process) $(which qgis_process)_ \
+  && echo '#!/bin/bash' > $(which qgis_process) \
+  && echo "PYTHONPATH=/usr/lib/python3/dist-packages $(which qgis_process)_ \"\${@}\"" >> \
+    $(which qgis_process) \
   ## Clean up
   && if [ ! -z "$PYTHON_VERSION" ]; then \
     apt-get -y purge python3-pip; \
