@@ -355,7 +355,8 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     ${HOME}/.grass*
 
 ## Install JupyterLab
-RUN pip install --force \
+RUN export PIP_BREAK_SYSTEM_PACKAGES=1 \
+  && pip install --force \
     git+https://github.com/b-data/jupyter-remote-desktop-proxy.git@QGIS \
     jupyterhub==${JUPYTERHUB_VERSION} \
     jupyterlab==${JUPYTERLAB_VERSION} \
@@ -378,6 +379,7 @@ RUN pip install --force \
 RUN apt-get update \
   ## Install QGIS-Plugin-Manager
   && apt-get -y install --no-install-recommends python3-pip \
+  && export PIP_BREAK_SYSTEM_PACKAGES=1 \
   && /usr/bin/pip install qgis-plugin-manager \
   ## Clean up
   && if [ ! -z "$PYTHON_VERSION" ]; then \
