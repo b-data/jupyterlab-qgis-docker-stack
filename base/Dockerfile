@@ -111,7 +111,7 @@ COPY --from=saga-gissi /usr/local /usr/local
 COPY --from=otbsi /usr/local /usr/local
 ENV GDAL_DRIVER_PATH=${OTB_VERSION:+disable} \
     OTB_APPLICATION_PATH=${OTB_VERSION:+/usr/local/lib/otb/applications}
-ENV OTB_APPLICATION_PATH=${OTB_APPLICATION_PATH:-/usr/lib/x86_64-linux-gnu/otb/applications}
+ENV OTB_APPLICATION_PATH=${OTB_APPLICATION_PATH:-/usr/lib/otb/applications}
 
 USER root
 
@@ -264,6 +264,10 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
           '^libopenthreads[0-9]+$' \
           libossim1; \
       fi \
+    else \
+      mkdir -p /usr/lib/otb; \
+      ln -rs /usr/lib/$(uname -m)-linux-gnu/otb/applications \
+        /usr/lib/otb/applications; \
     fi \
   fi \
   ## Ubuntu: Install Firefox from PPA as snap installation does not work
