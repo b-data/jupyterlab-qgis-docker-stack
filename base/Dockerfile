@@ -305,7 +305,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   && locale-gen \
   && update-locale LANG=$LANG \
   ## [^1]: SAGA GIS: libvigraimpex11 is not available for jammy
-  && if $(! grep "jammy" /etc/os-release); then \
+  && if $(! grep -q "jammy" /etc/os-release); then \
     apt-get -y install --no-install-recommends '^libvigraimpex[0-9]+$'; \
   fi \
   ## Additional python-dev dependencies
