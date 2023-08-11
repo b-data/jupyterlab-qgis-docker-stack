@@ -88,8 +88,8 @@ The default shell is Zsh, further enhanced with
 
 ### Default
 
-* [Terminal IPython](base/conf/ipython/usr/local/etc/ipython/ipython_config.py):
-  * Only enable figure formats `svg` and `pdf` for Terminal IPython.
+* [IPython](base/conf/ipython/usr/local/etc/ipython/ipython_config.py):
+  * Only enable figure formats `svg` and `pdf` for IPython.
 * [IPython kernel](base/conf/ipython/usr/local/etc/ipython/ipython_kernel_config.py):
   * Only enable figure formats `svg` and `pdf` for IPython Kernel (Jupyter
     Notebooks).
@@ -138,8 +138,7 @@ The default shell is Zsh, further enhanced with
 
 * Terminal IPython: Create file `~/.ipython/profile_default/ipython_config.py`
   * Valid figure formats: `png`, `retina`, `jpeg`, `svg`, `pdf`.
-* IPython kernel: Create file
-  `~/.ipython/profile_default/ipython_kernel_config.py`
+* IPython: Create file `~/.ipython/profile_default/ipython_config.py`
   * Valid figure formats: `png`, `retina`, `jpeg`, `svg`, `pdf`.
 * JupyterLab: Settings > Advanced Settings Editor
 * Zsh
@@ -152,6 +151,6 @@ The default shell is Zsh, further enhanced with
 
 The Python version is selected as follows:
 
-* The latest [Python version numba is compatible with](https://numba.readthedocs.io/en/stable/user/installing.html#compatibility).
+* The latest [Python version numba is compatible with](https://numba.readthedocs.io/en/stable/user/installing.html#numba-support-info).
 
-This Python version is installed at `/user/local/bin`.
+This Python version is installed at `/usr/local/bin`.

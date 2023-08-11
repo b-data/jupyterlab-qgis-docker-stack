@@ -183,7 +183,8 @@ docker run -it --rm \
 
 What makes this project different:
 
-1. Multi-arch: `linux/amd64`, `linux/arm64/v8`
+1. Multi-arch: `linux/amd64`, `linux/arm64/v8`  
+   :information_source: Runs on Apple M series using Docker Desktop.
 1. Base image: [Debian](https://hub.docker.com/_/debian) instead of
    [Ubuntu](https://hub.docker.com/_/ubuntu)
 1. Just Python – no [Conda](https://github.com/conda/conda) /
