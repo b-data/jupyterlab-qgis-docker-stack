@@ -6,6 +6,8 @@ Multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
 
 * [`glcr.b-data.ch/jupyterlab/qgis/base`](https://gitlab.b-data.ch/jupyterlab/qgis/base/container_registry)
 
+Images considered stable for QGIS versions ≥ 3.28.3 and ≥ 3.22.16 (LTR).
+
 ![Screenshot](assets/screenshot.png)
 
 **Features**
@@ -32,7 +34,8 @@ Multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
     * **SAGA GIS**: A Geographic Information System (GIS) software with immense
       capabilities for geodata processing and analysis.
 
-Images considered stable for QGIS versions ≥ 3.28.3 and ≥ 3.22.16 (LTR).
+:point_right: See the [Version Matrix](VERSION_MATRIX.md) for detailed
+information.
 
 **Subtags**
 
@@ -67,9 +70,9 @@ To install docker, follow the instructions for your platform:
 ```bash
 cd base && docker build \
   --build-arg QGIS_VERSION=3.32.1 \
+  --build-arg OTB_VERSION=8.1.2 \
   --build-arg PYTHON_VERSION=3.11.4 \
   --build-arg GIT_VERSION=2.41.0 \
-  --build-arg OTB_VERSION=8.1.2 \
   -t jupyterlab/qgis/base \
   -f Dockerfile .
 ```
@@ -79,9 +82,9 @@ cd base && docker build \
 ```bash
 cd base && docker build \
   --build-arg QGIS_VERSION=3.28.9 \
+  --build-arg OTB_VERSION=8.1.2 \
   --build-arg PYTHON_VERSION=3.11.4 \
   --build-arg GIT_VERSION=2.41.0 \
-  --build-arg OTB_VERSION=8.1.2 \
   -t jupyterlab/qgis/base:ltr \
   -f Dockerfile .
 ```
