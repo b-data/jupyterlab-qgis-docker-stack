@@ -2,14 +2,18 @@
 
 set -e
 
-files="start-notebook.sh start-singleuser.sh"
+scripts="start-notebook.sh start-singleuser.sh"
 
-for i in $files ; do
-  curl -sL https://raw.githubusercontent.com/jupyter/docker-stacks/main/base-notebook/$i \
-    -o scripts/usr/local/bin/$i
+for i in $scripts ; do
+  curl -sSL https://raw.githubusercontent.com/jupyter/docker-stacks/main/images/base-notebook/"$i" \
+    -o scripts/usr/local/bin/"$i"
 done
 
-curl -sL https://raw.githubusercontent.com/jupyter/docker-stacks/main/docker-stacks-foundation/start.sh \
-  -o scripts/usr/local/bin/start.sh
+scripts="start.sh run-hooks.sh"
+
+for i in $scripts ; do
+  curl -sSL https://raw.githubusercontent.com/jupyter/docker-stacks/main/images/docker-stacks-foundation/"$i" \
+    -o scripts/usr/local/bin/"$i"
+done
 
 chmod +x scripts/usr/local/bin/*.sh
