@@ -71,8 +71,8 @@ To install docker, follow the instructions for your platform:
 cd base && docker build \
   --build-arg QGIS_VERSION=3.32.2 \
   --build-arg OTB_VERSION=8.1.2 \
-  --build-arg PYTHON_VERSION=3.11.4 \
-  --build-arg GIT_VERSION=2.41.0 \
+  --build-arg PYTHON_VERSION=3.11.5 \
+  --build-arg GIT_VERSION=2.42.0 \
   -t jupyterlab/qgis/base \
   -f Dockerfile .
 ```
@@ -83,8 +83,8 @@ cd base && docker build \
 cd base && docker build \
   --build-arg QGIS_VERSION=3.28.10 \
   --build-arg OTB_VERSION=8.1.2 \
-  --build-arg PYTHON_VERSION=3.11.4 \
-  --build-arg GIT_VERSION=2.41.0 \
+  --build-arg PYTHON_VERSION=3.11.5 \
+  --build-arg GIT_VERSION=2.42.0 \
   -t jupyterlab/qgis/base:ltr \
   -f Dockerfile .
 ```
@@ -165,7 +165,28 @@ current value of `${NB_UID}` and `${NB_GID}`.
 
 The server logs appear in the terminal.
 
-**Using Docker Desktop**
+#### Using Podman (rootless mode)
+
+Create an empty home directory:
+
+```bash
+mkdir jupyterlab-root
+```
+
+Use the following command to run the container as `root`:
+
+```bash
+podman run -it --rm \
+  -p 8888:8888 \
+  -u root \
+  -v "${PWD}/jupyterlab-root":/home/root \
+  -e NB_USER=root \
+  -e NB_UID=0 \
+  -e NB_GID=0 \
+  IMAGE[:MAJOR[.MINOR[.PATCH]]] start-notebook.sh --allow-root
+```
+
+#### Using Docker Desktop
 
 [Creating a home directory](#create-home-directory) *might* not be required.
 Also
