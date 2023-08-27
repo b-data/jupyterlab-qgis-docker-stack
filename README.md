@@ -165,7 +165,7 @@ current value of `${NB_UID}` and `${NB_GID}`.
 
 The server logs appear in the terminal.
 
-#### Using Podman (rootless mode)
+#### Using Podman (rootless mode) (3.32.2+, 3.28.10+)
 
 Create an empty home directory:
 
@@ -183,7 +183,7 @@ podman run -it --rm \
   -e NB_USER=root \
   -e NB_UID=0 \
   -e NB_GID=0 \
-  IMAGE[:MAJOR[.MINOR[.PATCH]]] start-notebook.sh --allow-root
+  IMAGE{:ltr,:MAJOR[.MINOR[.PATCH]]} start-notebook.sh --allow-root
 ```
 
 #### Using Docker Desktop
