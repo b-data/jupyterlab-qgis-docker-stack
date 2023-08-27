@@ -113,7 +113,8 @@ if [ "$(id -u)" == 0 ] ; then
         # The home directory could be bind mounted. Populate it if it is empty
         elif [[ "$(ls -A "/home/${NB_USER}" 2> /dev/null)" == "" ]]; then
             _log "Populating home dir /home/${NB_USER}..."
-            if cp "${CP_OPTS:--a}" /home/jovyan/. "/home/${NB_USER}/"; then
+            # shellcheck disable=SC2086
+            if cp ${CP_OPTS:--a} /home/jovyan/. "/home/${NB_USER}/"; then
                 _log "Success!"
             else
                 _log "ERROR: Failed to copy data from /home/jovyan to /home/${NB_USER}!"
