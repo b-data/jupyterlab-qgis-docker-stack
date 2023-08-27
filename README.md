@@ -170,7 +170,7 @@ The server logs appear in the terminal.
 Create an empty home directory:
 
 ```bash
-mkdir jupyterlab-root
+mkdir "${PWD}/jupyterlab-root"
 ```
 
 Use the following command to run the container as `root`:
