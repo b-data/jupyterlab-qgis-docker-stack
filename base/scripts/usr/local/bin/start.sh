@@ -84,7 +84,7 @@ if [ "$(id -u)" == 0 ] ; then
     if [ "${NB_USER}" = "root" ] && [ "${NB_UID}" = "$(id -u "${NB_USER}")" ] && [ "${NB_GID}" = "$(id -g "${NB_USER}")" ]; then
         sed -i 's|/root|/home/root|g' /etc/passwd
         # Do not preserve ownership in rootless mode
-        CP_OPT="-a --no-preserve=ownership"
+        CP_OPTS="-a --no-preserve=ownership"
         # Pip: Install packages to the user site
         export PIP_USER=1
     fi
@@ -113,7 +113,7 @@ if [ "$(id -u)" == 0 ] ; then
         # The home directory could be bind mounted. Populate it if it is empty
         elif [[ "$(ls -A "/home/${NB_USER}" 2> /dev/null)" == "" ]]; then
             _log "Populating home dir /home/${NB_USER}..."
-            if cp "${CP_OPT:--a}" /home/jovyan/. "/home/${NB_USER}/"; then
+            if cp "${CP_OPTS:--a}" /home/jovyan/. "/home/${NB_USER}/"; then
                 _log "Success!"
             else
                 _log "ERROR: Failed to copy data from /home/jovyan to /home/${NB_USER}!"
