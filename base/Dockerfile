@@ -108,7 +108,7 @@ COPY --from=gsi /usr/local /usr/local
 ## Install Python
 COPY --from=psi /usr/local /usr/local
 ## Install SAGA GIS
-COPY --from=saga-gissi /usr/local /usr/local
+COPY --from=saga-gissi /usr /usr
 ## Install Orfeo Toolbox
 COPY --from=otbsi /usr/local /usr/local
 ENV GDAL_DRIVER_PATH=${OTB_VERSION:+disable} \
