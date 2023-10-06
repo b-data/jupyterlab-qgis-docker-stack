@@ -5,6 +5,8 @@ ARG QGIS_VERSION
 ARG SAGA_VERSION
 ARG OTB_VERSION
 
+ARG PROC_SAGA_NG_VERSION
+
 ARG NB_USER=jovyan
 ARG NB_UID=1000
 ARG JUPYTERHUB_VERSION=4.0.2
@@ -70,13 +72,14 @@ ARG BASE_IMAGE
 ARG BASE_IMAGE_TAG
 ARG QGIS_VERSION
 ARG SAGA_VERSION
+ARG OTB_VERSION
+ARG PROC_SAGA_NG_VERSION
 ARG NB_USER
 ARG NB_UID
 ARG JUPYTERHUB_VERSION
 ARG JUPYTERLAB_VERSION
 ARG PYTHON_VERSION
 ARG GIT_VERSION
-ARG OTB_VERSION
 ARG TURBOVNC_VERSION
 ARG BUILD_START
 
@@ -84,13 +87,13 @@ ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
     PARENT_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
     QGIS_VERSION=${QGIS_VERSION} \
     SAGA_VERSION=${SAGA_VERSION} \
+    OTB_VERSION=${OTB_VERSION} \
     NB_USER=${NB_USER} \
     NB_UID=${NB_UID} \
     JUPYTERHUB_VERSION=${JUPYTERHUB_VERSION} \
     JUPYTERLAB_VERSION=${JUPYTERLAB_VERSION} \
     PYTHON_VERSION=${PYTHON_VERSION} \
     GIT_VERSION=${GIT_VERSION} \
-    OTB_VERSION=${OTB_VERSION} \
     TURBOVNC_VERSION=${TURBOVNC_VERSION} \
     BUILD_DATE=${BUILD_START}
 
@@ -456,7 +459,7 @@ RUN export QT_QPA_PLATFORM=offscreen \
   && cd ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
   && qgis-plugin-manager init \
   && qgis-plugin-manager update \
-  && qgis-plugin-manager install 'Processing Saga NextGen Provider'==0.0.7 \
+  && qgis-plugin-manager install 'Processing Saga NextGen Provider'=="${PROC_SAGA_NG_VERSION:-0.0.7}" \
   && rm -rf .cache_qgis_plugin_manager \
   ## Enable QGIS plugins
   && qgis_process plugins enable processing_saga_nextgen \

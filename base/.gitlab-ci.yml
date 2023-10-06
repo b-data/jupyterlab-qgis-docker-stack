@@ -57,9 +57,11 @@ build:latest-linux-amd64:
       --build-arg BASE_IMAGE
       --build-arg BASE_IMAGE_TAG
       --build-arg QGIS_VERSION
+      --build-arg SAGA_VERSION
+      --build-arg OTB_VERSION
+      --build-arg PROC_SAGA_NG_VERSION
       --build-arg PYTHON_VERSION
       --build-arg GIT_VERSION
-      --build-arg OTB_VERSION
       --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -t $CI_APP_REPO:latest-linux-amd64
@@ -86,6 +88,8 @@ build:latest-linux-arm64v8:
       --build-arg BASE_IMAGE
       --build-arg BASE_IMAGE_TAG
       --build-arg QGIS_VERSION
+      --build-arg SAGA_VERSION
+      --build-arg PROC_SAGA_NG_VERSION
       --build-arg PYTHON_VERSION
       --build-arg GIT_VERSION
       --build-arg BUILD_START=$(date -uIseconds)
@@ -114,9 +118,11 @@ build:ltr-linux-amd64:
       --build-arg BASE_IMAGE
       --build-arg BASE_IMAGE_TAG
       --build-arg QGIS_VERSION
+      --build-arg SAGA_VERSION
+      --build-arg OTB_VERSION
+      --build-arg PROC_SAGA_NG_VERSION
       --build-arg PYTHON_VERSION
       --build-arg GIT_VERSION
-      --build-arg OTB_VERSION
       --build-arg BUILD_START=$(date -uIseconds)
       -t $CI_APP_REPO:$CI_APP_TAG-linux-amd64
       -t $CI_APP_REPO:ltr-linux-amd64
@@ -143,6 +149,8 @@ build:ltr-linux-arm64v8:
       --build-arg BASE_IMAGE
       --build-arg BASE_IMAGE_TAG
       --build-arg QGIS_VERSION
+      --build-arg SAGA_VERSION
+      --build-arg PROC_SAGA_NG_VERSION
       --build-arg PYTHON_VERSION
       --build-arg GIT_VERSION
       --build-arg BUILD_START=$(date -uIseconds)
