@@ -1,8 +1,6 @@
 #!/bin/sh
-# Copyright (c) 2023 b-data GmbH.
-# Distributed under the terms of the MIT License.
 
-if [ -f "$HOME/.i18n" ]; then
-  . "$HOME/.i18n"
-fi
+[ -f "$HOME/.xprofile" ] && . "$HOME/.xprofile"
+[ -f "$HOME/.i18n" ] && . "$HOME/.i18n"
+
 . /etc/xdg/xfce4/xinitrc

@@ -1,5 +1,8 @@
 [![minimal-readme compliant](https://img.shields.io/badge/readme%20style-minimal-brightgreen.svg)](https://github.com/RichardLitt/standard-readme/blob/master/example-readmes/minimal-readme.md) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) <a href="https://liberapay.com/benz0li/donate"><img src="https://liberapay.com/assets/widgets/donate.svg" alt="Donate using Liberapay" height="20"></a>
 
+| See the [CUDA-enabled JupyterLab QGIS docker stack](CUDA.md) for GPU accelerated docker images. |
+|:------------------------------------------------------------------------------------------------|
+
 # JupyterLab QGIS docker stack
 
 Multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
@@ -14,25 +17,26 @@ Images considered stable for QGIS versions ≥ 3.28.3 and ≥ 3.22.16 (LTR).
 
 * **JupyterLab**: A web-based interactive development environment for Jupyter
   notebooks, code, and data. The images include
-  * **Git**: A distributed version-control system for tracking changes in source
-    code.
-  * **Python**: An interpreted, object-oriented, high-level programming language
-    with dynamic semantics.
-  * **TurboVNC**: A high-speed version of VNC derived from TightVNC.  
-    :information_source: Tuned to maximize performance for image-intensive
-    applications.
-  * **Zsh**: A shell designed for interactive use, although it is also a
-    powerful scripting language.
-  * **Xfce (via noVNC + TurboVNC)**: A lightweight desktop environment for
-    UNIX-like operating systems.
-    * **GRASS GIS**: A free and open source Geographic Information System (GIS).
-    * **Orfeo Toolbox**: An open-source project for state-of-the-art remote
-      sensing.  
-      :information_source: amd64 only
-    * **QGIS**: A free, open source, cross platform (lin/win/mac) geographical
-      information system (GIS).
-    * **SAGA GIS**: A Geographic Information System (GIS) software with immense
-      capabilities for geodata processing and analysis.
+    * **Git**: A distributed version-control system for tracking changes in
+      source code.
+    * **Python**: An interpreted, object-oriented, high-level programming
+      language with dynamic semantics.
+    * **TurboVNC**: A high-speed version of VNC derived from TightVNC.  
+      :information_source: Tuned to maximize performance for image-intensive
+      applications.
+    * **Zsh**: A shell designed for interactive use, although it is also a
+      powerful scripting language.
+    * **Xfce (via noVNC + TurboVNC)**: A lightweight desktop environment for
+      UNIX-like operating systems.
+        * **GRASS GIS**: A free and open source Geographic Information System
+          (GIS).
+        * **Orfeo Toolbox**: An open-source project for state-of-the-art remote
+          sensing.  
+          :information_source: amd64 only
+        * **QGIS**: A free, open source, cross platform (lin/win/mac)
+          geographical information system (GIS).
+        * **SAGA GIS**: A Geographic Information System (GIS) software with
+          immense capabilities for geodata processing and analysis.
 
 :point_right: See the [Version Matrix](VERSION_MATRIX.md) for detailed
 information.
@@ -69,8 +73,10 @@ To install docker, follow the instructions for your platform:
 
 ```bash
 cd base && docker build \
-  --build-arg QGIS_VERSION=3.32.3 \
+  --build-arg QGIS_VERSION=3.34.0 \
+  --build-arg SAGA_VERSION=9.1.3 \
   --build-arg OTB_VERSION=8.1.2 \
+  --build-arg PROC_SAGA_NG_VERSION=1.0.0 \
   --build-arg PYTHON_VERSION=3.11.6 \
   --build-arg GIT_VERSION=2.42.0 \
   -t jupyterlab/qgis/base \
@@ -82,7 +88,9 @@ cd base && docker build \
 ```bash
 cd base && docker build \
   --build-arg QGIS_VERSION=3.28.11 \
+  --build-arg SAGA_VERSION=9.1.3 \
   --build-arg OTB_VERSION=8.1.2 \
+  --build-arg PROC_SAGA_NG_VERSION=1.0.0 \
   --build-arg PYTHON_VERSION=3.11.6 \
   --build-arg GIT_VERSION=2.42.0 \
   -t jupyterlab/qgis/base:ltr \
@@ -210,7 +218,9 @@ What makes this project different:
 1. Multi-arch: `linux/amd64`, `linux/arm64/v8`  
    :information_source: Runs on Apple M series using Docker Desktop.
 1. Base image: [Debian](https://hub.docker.com/_/debian) instead of
-   [Ubuntu](https://hub.docker.com/_/ubuntu)
+   [Ubuntu](https://hub.docker.com/_/ubuntu)  
+   :information_source: CUDA-enabled images are Ubuntu-based.
+1. [TurboVNC](https://turbovnc.org): High-speed VNC version
 1. Just Python – no [Conda](https://github.com/conda/conda) /
    [Mamba](https://github.com/mamba-org/mamba)
 
