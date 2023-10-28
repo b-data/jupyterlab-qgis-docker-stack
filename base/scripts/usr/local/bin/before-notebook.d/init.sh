@@ -36,8 +36,8 @@ if [ "$(id -u)" == 0 ] ; then
   ## Autostart: DPI setting
   su $NB_USER -c "mkdir -p /home/$NB_USER/.config/autostart"
   if [[ ! -f "/home/$NB_USER/.config/autostart/DPI setting.desktop" ]]; then
-    su $NB_USER -c "cp ${CP_OPTS:--a} /var/backups/skel/.config/autostart/DPI setting.desktop \
-      /home/$NB_USER/.config/autostart/DPI setting.desktop"
+    su $NB_USER -c "cp ${CP_OPTS:--a} /var/backups/skel/.config/autostart/DPI\ setting.desktop \
+      /home/$NB_USER/.config/autostart/DPI\ setting.desktop"
     chown :$NB_GID "/home/$NB_USER/.config/autostart/DPI setting.desktop"
   fi
   ## Xfce: Use custom xinitrc
