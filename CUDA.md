@@ -6,6 +6,8 @@ GPU accelerated, multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
 
 Images available for QGIS versions ≥ 3.34.0.
 
+![CUDA screenshot](assets/cuda-screenshot.png)
+
 **Features**
 
 The same as the
