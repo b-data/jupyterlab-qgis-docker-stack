@@ -244,6 +244,9 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     librsvg2-common \
     tumbler \
     xdg-user-dirs \
+    ## Thunar suggests
+    thunar-archive-plugin \
+    xarchiver \
     ## SAGA GIS: Supplementary runtime dependencies [^1]
     libdxflib3 \
     libhpdf-2.3.0 \
