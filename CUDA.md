@@ -185,7 +185,11 @@ docker run -it --rm \
 
 ## Similar projects
 
-None.
+None. I would like to mention
+
+* [selkies-project/docker-nvidia-egl-desktop](https://github.com/selkies-project/docker-nvidia-egl-desktop)
+
+which also relies on VirtualGL (EGL backend) for direct access to the GPU.
 
 **What makes this project unique:**
 
