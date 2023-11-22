@@ -98,7 +98,8 @@ if [ "$(id -u)" == 0 ] ; then
         if [[ ! -e "/home/${NB_USER}" ]]; then
             _log "Attempting to copy /home/jovyan to /home/${NB_USER}..."
             mkdir "/home/${NB_USER}"
-            if cp -a /home/jovyan/. "/home/${NB_USER}/"; then
+            # shellcheck disable=SC2086
+            if cp ${CP_OPTS:--a} /home/jovyan/. "/home/${NB_USER}/"; then
                 _log "Success!"
             else
                 _log "Failed to copy data from /home/jovyan to /home/${NB_USER}!"
