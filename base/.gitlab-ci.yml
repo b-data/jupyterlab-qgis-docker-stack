@@ -2,7 +2,7 @@
   variables:
     OTB_VERSION: "8.1.2"
     PYTHON_VERSION: "3.11.6"
-    GIT_VERSION: "2.42.1"
+    GIT_VERSION: "2.43.0"
 
 .before-script-build: &before-script-build
   - |
