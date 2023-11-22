@@ -269,6 +269,9 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     librsvg2-common \
     tumbler \
     xdg-user-dirs \
+    ## Thunar recommends
+    gvfs \
+    libglib2.0-bin \
     ## Thunar suggests
     thunar-archive-plugin \
     xarchiver \
