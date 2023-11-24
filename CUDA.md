@@ -168,7 +168,7 @@ podman run -it --rm \
   IMAGE{:ltr,:MAJOR[.MINOR[.PATCH]]} start-notebook.sh --allow-root
 ```
 
-**Using Docker Desktop**
+#### Using Docker Desktop
 
 [Creating a home directory](#create-home-directory) *might* not be required.
 Also
