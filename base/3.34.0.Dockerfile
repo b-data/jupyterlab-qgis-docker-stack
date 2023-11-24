@@ -1,9 +1,13 @@
 ARG BASE_IMAGE=debian
 ARG BASE_IMAGE_TAG=12
-ARG QGIS_VERSION
+ARG CUDA_IMAGE
+ARG CUDA_IMAGE_SUBTAG
+ARG CUDA_VERSION=11.8.0
+ARG QGIS_VERSION=3.34.0
 
 ARG SAGA_VERSION
 ARG OTB_VERSION
+## OTB_VERSION=8.1.2
 
 ARG PROC_SAGA_NG_VERSION
 
@@ -11,11 +15,12 @@ ARG NB_USER=jovyan
 ARG NB_UID=1000
 ARG JUPYTERHUB_VERSION=4.0.2
 ARG JUPYTERLAB_VERSION=4.0.9
-ARG PYTHON_VERSION
-ARG GIT_VERSION
+ARG PYTHON_VERSION=3.11.6
+ARG GIT_VERSION=2.43.0
 ARG TURBOVNC_VERSION=3.1
+ARG VIRTUALGL_VERSION=${CUDA_IMAGE:+3.1}
 
-FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} as files
+FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} as files
 
 ARG OTB_VERSION
 
@@ -60,7 +65,7 @@ FROM glcr.b-data.ch/python/psi${PYTHON_VERSION:+/}${PYTHON_VERSION:-:none}${PYTH
 FROM glcr.b-data.ch/git/gsi${GIT_VERSION:+/}${GIT_VERSION:-:none}${GIT_VERSION:+/$BASE_IMAGE}${GIT_VERSION:+:$BASE_IMAGE_TAG} as gsi
 FROM glcr.b-data.ch/orfeotoolbox/otbsi${OTB_VERSION:+/}${OTB_VERSION:-:none}${OTB_VERSION:+/$BASE_IMAGE}${OTB_VERSION:+:$BASE_IMAGE_TAG} as otbsi
 
-FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG}
+FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG}
 
 LABEL org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.source="https://gitlab.b-data.ch/jupyterlab/qgis" \
@@ -71,6 +76,9 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ARG BASE_IMAGE
 ARG BASE_IMAGE_TAG
+ARG CUDA_IMAGE
+ARG CUDA_IMAGE_SUBTAG
+ARG CUDA_VERSION
 ARG QGIS_VERSION
 ARG SAGA_VERSION
 ARG OTB_VERSION
@@ -82,10 +90,13 @@ ARG JUPYTERLAB_VERSION
 ARG PYTHON_VERSION
 ARG GIT_VERSION
 ARG TURBOVNC_VERSION
+ARG VIRTUALGL_VERSION
 ARG BUILD_START
 
 ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
-    PARENT_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
+    CUDA_IMAGE=${CUDA_IMAGE}${CUDA_IMAGE:+:}${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG} \
+    PARENT_IMAGE=${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} \
+    NVIDIA_DRIVER_CAPABILITIES=${CUDA_IMAGE:+utility,graphics,video,display} \
     QGIS_VERSION=${QGIS_VERSION} \
     SAGA_VERSION=${SAGA_VERSION} \
     OTB_VERSION=${OTB_VERSION} \
@@ -96,6 +107,7 @@ ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
     PYTHON_VERSION=${PYTHON_VERSION} \
     GIT_VERSION=${GIT_VERSION} \
     TURBOVNC_VERSION=${TURBOVNC_VERSION} \
+    VIRTUALGL_VERSION=${VIRTUALGL_VERSION} \
     BUILD_DATE=${BUILD_START}
 
 ENV NB_GID=100 \
@@ -441,9 +453,43 @@ ENV PATH=/opt/TurboVNC/bin:$PATH
 RUN dpkgArch="$(dpkg --print-architecture)" \
   && curl -fsSL "https://sourceforge.net/projects/turbovnc/files/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_${dpkgArch}.deb/download" -o turbovnc.deb \
   && apt-get install -y ./turbovnc.deb \
+  && if [ -n "$CUDA_IMAGE" ]; then \
+    ## Install VirtualGL
+    curl -fsSL "https://sourceforge.net/projects/virtualgl/files/virtualgl_${VIRTUALGL_VERSION}_${dpkgArch}.deb" -o virtualgl.deb; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+      mesa-utils \
+      ./virtualgl.deb; \
+    ## Install misc Vulkan utilities
+    apt-get install -y --no-install-recommends \
+      mesa-vulkan-drivers \
+      vulkan-tools; \
+    ## Make libraries available for preload
+    chmod u+s /usr/lib/libvglfaker.so; \
+    chmod u+s /usr/lib/libdlfaker.so; \
+    ## Configure EGL manually (fallback)
+    mkdir -p /usr/share/glvnd/egl_vendor.d/; \
+    echo "{\n\
+    \"file_format_version\" : \"1.0.0\",\n\
+    \"ICD\" : {\n\
+        \"library_path\" : \"libEGL_nvidia.so.0\"\n\
+    }\n\
+}" > /usr/share/glvnd/egl_vendor.d/10_nvidia.json; \
+    ## Configure Vulkan manually (fallback)
+    VULKAN_API_VERSION=$(dpkg -s libvulkan1 | grep -oP 'Version: [0-9|\.]+' | grep -oP '[0-9]+(\.[0-9]+)(\.[0-9]+)'); \
+    mkdir -p /etc/vulkan/icd.d/; \
+    echo "{\n\
+    \"file_format_version\" : \"1.0.0\",\n\
+    \"ICD\": {\n\
+        \"library_path\": \"libGLX_nvidia.so.0\",\n\
+        \"api_version\" : \"${VULKAN_API_VERSION}\"\n\
+    }\n\
+}" > /etc/vulkan/icd.d/nvidia_icd.json; \
+  fi \
   ## Clean up
   && rm -rf /var/lib/apt/lists/* \
-    turbovnc.deb
+    turbovnc.deb \
+    virtualgl.deb
 
 ## Switch back to ${NB_USER} to avoid accidental container runs as root
 USER ${NB_USER}
