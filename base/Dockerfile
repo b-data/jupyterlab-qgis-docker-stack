@@ -409,6 +409,7 @@ RUN export PIP_BREAK_SYSTEM_PACKAGES=1 \
     jupyterlab-git \
     jupyterlab-lsp \
     notebook \
+    nbclassic \
     nbconvert \
     python-lsp-server[all] \
   ## Include custom fonts
