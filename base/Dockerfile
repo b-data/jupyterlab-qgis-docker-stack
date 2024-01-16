@@ -51,11 +51,8 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
       echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis3Ini}; \
     fi \
   fi \
-  && cp -a /files/etc/skel /files/home/${NB_USER} \
   && cp -a /files/etc/skel/. /files/var/backups/skel \
-  && chown -R ${NB_UID}:${NB_GID} \
-    /files/home/${NB_USER} \
-    /files/var/backups/skel \
+  && chown -R ${NB_UID}:${NB_GID} /files/var/backups/skel \
   ## Ensure file modes are correct when using CI
   ## Otherwise set to 777 in the target image
   && find /files -type d -exec chmod 755 {} \; \
