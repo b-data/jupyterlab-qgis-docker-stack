@@ -165,7 +165,8 @@ podman run -it --rm \
   -e NB_USER=root \
   -e NB_UID=0 \
   -e NB_GID=0 \
-  IMAGE{:ltr,:MAJOR[.MINOR[.PATCH]]} start-notebook.sh --allow-root
+  -e NOTEBOOK_ARGS="--allow-root" \
+  IMAGE{:ltr,:MAJOR[.MINOR[.PATCH]]}
 ```
 
 #### Using Docker Desktop
