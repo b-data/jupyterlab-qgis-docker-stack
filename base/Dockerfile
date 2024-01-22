@@ -503,5 +503,5 @@ ENV PYTHONPATH=${PYTHONPATH:+$PYTHONPATH:}${OTB_VERSION:+/usr/local/lib/otb/pyth
 EXPOSE 8888
 
 ## Configure container startup
-ENTRYPOINT ["tini", "-g", "--"]
+ENTRYPOINT ["tini", "-g", "--", "start.sh"]
 CMD ["start-notebook.sh"]
