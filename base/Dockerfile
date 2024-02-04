@@ -13,7 +13,7 @@ ARG JUPYTERHUB_VERSION=4.0.2
 ARG JUPYTERLAB_VERSION=4.0.12
 ARG PYTHON_VERSION
 ARG GIT_VERSION
-ARG TURBOVNC_VERSION=3.1
+ARG TURBOVNC_VERSION=3.1.1
 
 FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} as files
 
@@ -443,7 +443,7 @@ ENV PATH=/opt/TurboVNC/bin:$PATH
 
 ## Install TurboVNC
 RUN dpkgArch="$(dpkg --print-architecture)" \
-  && curl -fsSL "https://sourceforge.net/projects/turbovnc/files/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_${dpkgArch}.deb/download" -o turbovnc.deb \
+  && curl -fsSL "https://github.com/TurboVNC/turbovnc/releases/download/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_${dpkgArch}.deb" -o turbovnc.deb \
   && apt-get install -y ./turbovnc.deb \
   ## Clean up
   && rm -rf /var/lib/apt/lists/* \
