@@ -16,7 +16,7 @@ ARG JUPYTERHUB_VERSION=4.0.2
 ARG JUPYTERLAB_VERSION=4.0.12
 ARG PYTHON_VERSION
 ARG GIT_VERSION
-ARG TURBOVNC_VERSION=3.1
+ARG TURBOVNC_VERSION=3.1.1
 ARG VIRTUALGL_VERSION=${CUDA_IMAGE:+3.1}
 
 FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} as files
@@ -454,11 +454,11 @@ ENV PATH=/opt/TurboVNC/bin:$PATH
 
 ## Install TurboVNC
 RUN dpkgArch="$(dpkg --print-architecture)" \
-  && curl -fsSL "https://sourceforge.net/projects/turbovnc/files/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_${dpkgArch}.deb/download" -o turbovnc.deb \
+  && curl -fsSL "https://github.com/TurboVNC/turbovnc/releases/download/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_${dpkgArch}.deb" -o turbovnc.deb \
   && apt-get install -y ./turbovnc.deb \
   && if [ -n "$CUDA_IMAGE" ]; then \
     ## Install VirtualGL
-    curl -fsSL "https://sourceforge.net/projects/virtualgl/files/virtualgl_${VIRTUALGL_VERSION}_${dpkgArch}.deb" -o virtualgl.deb; \
+    curl -fsSL "https://github.com/VirtualGL/virtualgl/releases/download/${VIRTUALGL_VERSION}/virtualgl_${VIRTUALGL_VERSION}_${dpkgArch}.deb" -o virtualgl.deb; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
       mesa-utils \
