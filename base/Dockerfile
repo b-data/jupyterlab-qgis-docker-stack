@@ -38,7 +38,7 @@ COPY conf/xfce /files
 COPY scripts /files
 
 RUN if [ "$(uname -m)" = "x86_64" ]; then \
-    ## QGIS Desktop: Set OTB application folder and OTB folder
+    ## QGIS: Set OTB application folder and OTB folder
     qgis3Ini="/files/var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini"; \
     echo "\n[Processing]" >> ${qgis3Ini}; \
     if [ -z "${OTB_VERSION}" ]; then \
@@ -113,7 +113,7 @@ ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
     BUILD_DATE=${BUILD_START}
 
 ENV NB_GID=100 \
-    ## Make sure grass uses the distro's python
+    ## GRASS GIS: Make sure the distro's python is used
     GRASS_PYTHON=/usr/bin/python3 \
     LANG=en_US.UTF-8 \
     TERM=xterm \
@@ -196,7 +196,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     ## Git: Additional runtime recommendations
     less \
     ssh-client \
-    ## QGIS Desktop: Additional runtime dependencies
+    ## QGIS: Additional runtime dependencies
     '^libexiv2-[0-9]+$' \
     '^libgdal[0-9]+$' \
     libgeos-c1v5 \
@@ -226,7 +226,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     qt3d-gltfsceneio-plugin \
     qt3d-scene2d-plugin \
     qt5-image-formats-plugins \
-    ## QGIS Desktop: Python 3 Support
+    ## QGIS: Python 3 Support
     gdal-bin \
     libfcgi0ldbl \
     libsqlite3-mod-spatialite \
@@ -249,9 +249,9 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     python3-sip \
     python3-yaml \
     qttools5-dev-tools \
-    ## QGIS Desktop: Additional runtime recommendations
+    ## QGIS: Additional runtime recommendations
     grass \
-    ## QGIS Desktop: Additional runtime suggestions
+    ## QGIS: Additional runtime suggestions
     gpsbabel \
     ## Xfce Lightweight Desktop Environment
     adwaita-icon-theme* \
@@ -327,7 +327,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   && if [ ! -f "/usr/lib/websockify/rebind.so" ]; then \
     ln -rs /usr/lib/websockify/rebind*.so /usr/lib/websockify/rebind.so; \
   fi \
-  ## Dynamic linker run time bindings for grass
+  ## GRASS GIS: Configure dynamic linker run time bindings
   && echo "$(grass --config path)/lib" | tee /etc/ld.so.conf.d/libgrass.conf \
   && ldconfig \
   ## Xfce: Remove 'Log Out' from Applications
@@ -521,7 +521,7 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 COPY --from=files /files /
 COPY --from=files /files/var/backups/skel ${HOME}
 
-## QGIS Desktop: Install plugin 'Processing Saga NextGen Provider'
+  ## QGIS: Install plugin 'Processing Saga NextGen Provider'
 RUN export QT_QPA_PLATFORM=offscreen \
   && mkdir -p ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
   && cd ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
@@ -529,10 +529,11 @@ RUN export QT_QPA_PLATFORM=offscreen \
   && qgis-plugin-manager update \
   && qgis-plugin-manager install 'Processing Saga NextGen Provider'=="${PROC_SAGA_NG_VERSION:-0.0.7}" \
   && rm -rf .cache_qgis_plugin_manager \
-  ## Enable QGIS plugins
+  ## QGIS: Enable plugins
   && qgis_process plugins enable processing_saga_nextgen \
   && qgis_process plugins enable grassprovider \
   && if [ "$(uname -m)" = "x86_64" ]; then \
+    ## QGIS: Enable OTB plugin
     qgis_process plugins enable otbprovider; \
   fi \
   ## Clean up
