@@ -37,21 +37,7 @@ COPY conf/user /files
 COPY conf/xfce /files
 COPY scripts /files
 
-RUN if [ "$(uname -m)" = "x86_64" ]; then \
-    ## QGIS: Set OTB application folder and OTB folder
-    qgis3Ini="/files/var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini"; \
-    echo "\n[Processing]" >> ${qgis3Ini}; \
-    if [ -z "${OTB_VERSION}" ]; then \
-      echo "Configuration\OTB_APP_FOLDER=/usr/lib/otb/applications" >> \
-        ${qgis3Ini}; \
-      echo "Configuration\OTB_FOLDER=/usr\n" >> ${qgis3Ini}; \
-    else \
-      echo "Configuration\OTB_APP_FOLDER=/usr/local/lib/otb/applications" >> \
-        ${qgis3Ini}; \
-      echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis3Ini}; \
-    fi \
-  fi \
-  && cp -a /files/etc/skel/. /files/var/backups/skel \
+RUN cp -a /files/etc/skel/. /files/var/backups/skel \
   && chown -R ${NB_UID}:${NB_GID} /files/var/backups/skel \
   ## Ensure file modes are correct when using CI
   ## Otherwise set to 777 in the target image
