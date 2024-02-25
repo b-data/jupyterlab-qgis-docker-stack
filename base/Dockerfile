@@ -392,6 +392,11 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   fi \
   ## Add user
   && useradd -l -m -s $(which zsh) -N -u ${NB_UID} ${NB_USER} \
+  ## Mark home directory as populated
+  && touch /home/${NB_USER}/.populated \
+  && chown ${NB_UID}:${NB_GID} /home/${NB_USER}/.populated \
+  && chmod go+w /home/${NB_USER}/.populated \
+  ## Create backup directory for home directory
   && mkdir -p /var/backups/skel \
   && chown ${NB_UID}:${NB_GID} /var/backups/skel \
   ## Install Tini
@@ -544,6 +549,8 @@ RUN export QT_QPA_PLATFORM=offscreen \
     ${HOME}/.cache \
     ${HOME}/.config \
     ${HOME}/.grass* \
+  ## Record population timestamp
+  && date -uIseconds > ${HOME}/.populated \
   ## Create backup of home directory
   && cp -a ${HOME}/. /var/backups/skel
 
