@@ -100,14 +100,26 @@ The default shell is Zsh, further enhanced with
   * Theme > Selected Theme: JupyterLab Dark
   * Terminal > Font family: MesloLGS NF
   * Python LSP Server: Example settings according to [jupyter-lsp/jupyterlab-lsp > Installation > Configuring the servers](https://github.com/jupyter-lsp/jupyterlab-lsp#configuring-the-servers)
+* Autostart
+  * [DPI setting](base/conf/user/var/backups/skel/.config/autostart/DPI%20setting.desktop):
+    Set DPI accoding to variable `DPI` exported in `~/.xprofile`. (QGIS
+    versions ≥ 3.34.0)
 * [Xfce xinitrc](base/conf/user/var/backups/skel/.config/xfce4/xinitrc):
-  * Allow users to set `LANG` in `~/.i18n` to change the system language.
+  * `~/.xprofile`: Commands to execute at the beginning of the X user session.
+    (QGIS versions ≥ 3.34.0)  
+    :information_source: To set a
+    [custom display resolution](#custom-display-resolution) not available in
+    'Display Settings'.
+  * `~/.i18n`: Set `LANG` to change the system language of the desktop
+    environment.  
+    :information_source: To override environment variable `LANG`. Must be one of
+    `LANGS`.
 * [Xfce Panel](base/conf/xfce/etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml):
   * Hide 'Lock Screen' and 'Log Out...' because those kill the session.  
     (Removed: 'Log Out' from Applications)  
     (Disabled: Ctrl+Alt+Del to trigger session logout)
 * [Xfce Terminal](base/conf/user/var/backups/skel/.config/xfce4/terminal/terminalrc):
-  * Set `FontName=MesloLGS NF 12` and `Encoding=UTF-8`.
+  * Set `FontName=MesloLGS NF 10` and `Encoding=UTF-8`.
 * [QGIS Desktop](base/conf/user/var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini):
   * Append `/usr/lib/python3/dist-packages` to `PYTHONPATH`.  
     :information_source: One distro refused to find the Python bindings to QGIS
@@ -149,6 +161,34 @@ The default shell is Zsh, further enhanced with
   * Powerlevel10k: Run `p10k configure` or edit `~/.p10k.zsh`.
     * Update command:
       `git -C ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k pull`
+
+### Custom display resolution
+
+noVNC + TurboVNC can take full advantage of a HiDPI/Retina display. E.g. for
+standard 2160p/4K UHD (3840x2160):
+
+1. Create file `~/.xprofile` with the following content:  
+   ```
+   xrandr --newmode "3840x2160_60.00"  712.34  3840 4152 4576 5312  2160 2161 2164 2235  -HSync +Vsync
+   xrandr --addmode VNC-0 "3840x2160_60.00"
+   xrandr -s 3840x2160
+   export DPI=192
+   ```  
+   :information_source: xrandr values according to command `gtf 3840 2160 60`
+1. Close 'QGIS Desktop'.
+1. Stop and restart the Jupyter server.
+1. Open 'QGIS Desktop'.
+1. Change the following settings:
+    * Appearance > Settings: Window Scaling: 2x
+    * Window Manager > Style: Theme: Default-xhdpi
+    * Mouse and Touchpad > Theme: Size: Increase/Decrease 'Cursor size' if
+      required.
+1. Close 'QGIS Desktop'.
+1. Stop and restart the Jupyter server.
+1. Open 'QGIS Desktop'.
+
+With the browser in full screen mode (hidden toolbars), 'QGIS Desktop' *should*
+fit the display perfectly.
 
 ## Python
 

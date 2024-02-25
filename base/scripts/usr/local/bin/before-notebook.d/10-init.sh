@@ -33,6 +33,13 @@ if [ "$(id -u)" == 0 ] ; then
     update-locale --reset LANG="$LANG"
   fi
 
+  ## Autostart: DPI setting
+  su "$NB_USER" -c "mkdir -p /home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/autostart"
+  if [[ ! -f "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/autostart/DPI setting.desktop" ]]; then
+    su "$NB_USER" -c "cp ${CP_OPTS:--a} /var/backups/skel/.config/autostart/DPI\ setting.desktop \
+      /home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/autostart/DPI\ setting.desktop"
+    chown :"$NB_GID" "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/autostart/DPI setting.desktop"
+  fi
   ## Xfce: Use custom xinitrc
   su "$NB_USER" -c "mkdir -p /home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/terminal"
   if [[ ! -f "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xinitrc" ]]; then
@@ -40,7 +47,7 @@ if [ "$(id -u)" == 0 ] ; then
       /home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xinitrc"
     chown :"$NB_GID" "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xinitrc"
   fi
-  ## Xfce Terminal: Font MesloLGS NF, Size 12, Encoding UTF-8
+  ## Xfce Terminal: Font MesloLGS NF, Size 10, Encoding UTF-8
   if [[ ! -f "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/terminal/terminalrc" ]]; then
     su "$NB_USER" -c "cp ${CP_OPTS:--a} /var/backups/skel/.config/xfce4/terminal/terminalrc \
       /home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/terminal/terminalrc"
@@ -95,13 +102,19 @@ else
     LANG=en_US.UTF-8
   fi
 
+  ## Autostart: DPI setting
+  mkdir -p "$HOME/.config/autostart"
+  if [[ ! -f "$HOME/.config/autostart/DPI setting.desktop" ]]; then
+    cp -a "/var/backups/skel/.config/autostart/DPI setting.desktop" \
+      "$HOME/.config/autostart/DPI setting.desktop"
+  fi
   ## Xfce: Use custom xinitrc
   mkdir -p "$HOME/.config/xfce4/terminal"
   if [[ ! -f "$HOME/.config/xfce4/xinitrc" ]]; then
     cp -a /var/backups/skel/.config/xfce4/xinitrc \
       "$HOME/.config/xfce4/xinitrc"
   fi
-  ## Xfce Terminal: Font MesloLGS NF, Size 12, Encoding UTF-8
+  ## Xfce Terminal: Font MesloLGS NF, Size 10, Encoding UTF-8
   if [[ ! -f "$HOME/.config/xfce4/terminal/terminalrc" ]]; then
     cp -a /var/backups/skel/.config/xfce4/terminal/terminalrc \
       "$HOME/.config/xfce4/terminal/terminalrc"

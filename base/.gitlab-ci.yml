@@ -1,5 +1,6 @@
 .env:
   variables:
+    CUDA_VERSION: "11.8.0"
     OTB_VERSION: "8.1.2"
     PYTHON_VERSION: "3.11.8"
     GIT_VERSION: "2.43.2"
@@ -56,6 +57,9 @@ build:latest-linux-amd64:
       cd base && docker build --pull
       --build-arg BASE_IMAGE
       --build-arg BASE_IMAGE_TAG
+      --build-arg CUDA_IMAGE
+      --build-arg CUDA_IMAGE_SUBTAG
+      --build-arg CUDA_VERSION
       --build-arg QGIS_VERSION
       --build-arg SAGA_VERSION
       --build-arg OTB_VERSION
@@ -87,6 +91,9 @@ build:latest-linux-arm64v8:
       cd base && docker build --pull
       --build-arg BASE_IMAGE
       --build-arg BASE_IMAGE_TAG
+      --build-arg CUDA_IMAGE
+      --build-arg CUDA_IMAGE_SUBTAG
+      --build-arg CUDA_VERSION
       --build-arg QGIS_VERSION
       --build-arg SAGA_VERSION
       --build-arg PROC_SAGA_NG_VERSION
@@ -117,6 +124,9 @@ build:ltr-linux-amd64:
       cd base && docker build --pull
       --build-arg BASE_IMAGE
       --build-arg BASE_IMAGE_TAG
+      --build-arg CUDA_IMAGE
+      --build-arg CUDA_IMAGE_SUBTAG
+      --build-arg CUDA_VERSION
       --build-arg QGIS_VERSION
       --build-arg SAGA_VERSION
       --build-arg OTB_VERSION
@@ -148,6 +158,9 @@ build:ltr-linux-arm64v8:
       cd base && docker build --pull
       --build-arg BASE_IMAGE
       --build-arg BASE_IMAGE_TAG
+      --build-arg CUDA_IMAGE
+      --build-arg CUDA_IMAGE_SUBTAG
+      --build-arg CUDA_VERSION
       --build-arg QGIS_VERSION
       --build-arg SAGA_VERSION
       --build-arg PROC_SAGA_NG_VERSION

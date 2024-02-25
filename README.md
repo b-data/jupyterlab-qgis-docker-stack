@@ -1,5 +1,8 @@
 [![minimal-readme compliant](https://img.shields.io/badge/readme%20style-minimal-brightgreen.svg)](https://github.com/RichardLitt/standard-readme/blob/master/example-readmes/minimal-readme.md) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) <a href="https://liberapay.com/benz0li/donate"><img src="https://liberapay.com/assets/widgets/donate.svg" alt="Donate using Liberapay" height="20"></a>
 
+| See the [CUDA-enabled JupyterLab QGIS docker stack](CUDA.md) for GPU accelerated docker images. |
+|:------------------------------------------------------------------------------------------------|
+
 # JupyterLab QGIS docker stack
 
 Multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
@@ -71,10 +74,12 @@ To install docker, follow the instructions for your platform:
 
 ```bash
 cd base && docker build \
-  --build-arg QGIS_VERSION=3.32.3 \
+  --build-arg QGIS_VERSION=3.34.3 \
+  --build-arg SAGA_VERSION=9.1.3 \
   --build-arg OTB_VERSION=8.1.2 \
-  --build-arg PYTHON_VERSION=3.11.6 \
-  --build-arg GIT_VERSION=2.42.0 \
+  --build-arg PROC_SAGA_NG_VERSION=1.0.0 \
+  --build-arg PYTHON_VERSION=3.11.8 \
+  --build-arg GIT_VERSION=2.43.2 \
   -t jupyterlab/qgis/base \
   -f Dockerfile .
 ```
@@ -83,10 +88,12 @@ cd base && docker build \
 
 ```bash
 cd base && docker build \
-  --build-arg QGIS_VERSION=3.28.11 \
+  --build-arg QGIS_VERSION=3.28.15 \
+  --build-arg SAGA_VERSION=9.1.3 \
   --build-arg OTB_VERSION=8.1.2 \
-  --build-arg PYTHON_VERSION=3.11.6 \
-  --build-arg GIT_VERSION=2.42.0 \
+  --build-arg PROC_SAGA_NG_VERSION=1.0.0 \
+  --build-arg PYTHON_VERSION=3.11.8 \
+  --build-arg GIT_VERSION=2.43.2 \
   -t jupyterlab/qgis/base:ltr \
   -f Dockerfile .
 ```
@@ -167,7 +174,7 @@ current value of `${NB_UID}` and `${NB_GID}`.
 
 The server logs appear in the terminal.
 
-#### Using Podman (rootless mode, 3.32.2+, 3.28.10+ (LTR))
+#### Using Podman (rootless mode, 3.34.0+, 3.28.12+ (LTR))
 
 Create an empty home directory:
 
@@ -185,7 +192,8 @@ podman run -it --rm \
   -e NB_USER=root \
   -e NB_UID=0 \
   -e NB_GID=0 \
-  IMAGE{:ltr,:MAJOR[.MINOR[.PATCH]]} start-notebook.sh --allow-root
+  -e NOTEBOOK_ARGS="--allow-root" \
+  IMAGE{:ltr,:MAJOR[.MINOR[.PATCH]]}
 ```
 
 #### Using Docker Desktop
@@ -212,7 +220,9 @@ What makes this project different:
 1. Multi-arch: `linux/amd64`, `linux/arm64/v8`  
    :information_source: Runs on Apple M series using Docker Desktop.
 1. Base image: [Debian](https://hub.docker.com/_/debian) instead of
-   [Ubuntu](https://hub.docker.com/_/ubuntu)
+   [Ubuntu](https://hub.docker.com/_/ubuntu)  
+   :information_source: CUDA-enabled images are Ubuntu-based.
+1. [TurboVNC](https://turbovnc.org): High-speed VNC version
 1. Just Python – no [Conda](https://github.com/conda/conda) /
    [Mamba](https://github.com/mamba-org/mamba)
 
