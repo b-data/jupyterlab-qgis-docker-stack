@@ -540,10 +540,6 @@ RUN export QT_QPA_PLATFORM=offscreen \
   ## QGIS: Enable plugins
   && qgis_process plugins enable processing_saga_nextgen \
   && qgis_process plugins enable grassprovider \
-  && if [ "$(uname -m)" = "x86_64" ]; then \
-    ## QGIS: Enable OTB plugin
-    qgis_process plugins enable otbprovider; \
-  fi \
   ## Clean up
   && rm -rf \
     ${HOME}/.cache \
