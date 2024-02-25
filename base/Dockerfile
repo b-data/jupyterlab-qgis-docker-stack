@@ -243,6 +243,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     python3-pyqt5.qsci \
     python3-pyqt5.qtmultimedia \
     python3-pyqt5.qtpositioning \
+    python3-pyqt5.qtserialport \
     python3-pyqt5.qtsql \
     python3-pyqt5.qtsvg \
     python3-pyqt5.qtwebkit \
