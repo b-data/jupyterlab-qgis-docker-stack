@@ -17,26 +17,25 @@ Images considered stable for QGIS versions ≥ 3.28.3 and ≥ 3.22.16 (LTR).
 
 * **JupyterLab**: A web-based interactive development environment for Jupyter
   notebooks, code, and data. The images include
-    * **Git**: A distributed version-control system for tracking changes in
-      source code.
-    * **Python**: An interpreted, object-oriented, high-level programming
-      language with dynamic semantics.
-    * **TurboVNC**: A high-speed version of VNC derived from TightVNC.  
-      :information_source: Tuned to maximize performance for image-intensive
-      applications.
-    * **Zsh**: A shell designed for interactive use, although it is also a
-      powerful scripting language.
-    * **Xfce (via noVNC + TurboVNC)**: A lightweight desktop environment for
-      UNIX-like operating systems.
-        * **GRASS GIS**: A free and open source Geographic Information System
-          (GIS).
-        * **Orfeo Toolbox**: An open-source project for state-of-the-art remote
-          sensing.  
-          :information_source: amd64 only
-        * **QGIS**: A free, open source, cross platform (lin/win/mac)
-          geographical information system (GIS).
-        * **SAGA GIS**: A Geographic Information System (GIS) software with
-          immense capabilities for geodata processing and analysis.
+  * **Git**: A distributed version-control system for tracking changes in source
+    code.
+  * **Python**: An interpreted, object-oriented, high-level programming language
+    with dynamic semantics.
+  * **TurboVNC**: A high-speed version of VNC derived from TightVNC.  
+    :information_source: Tuned to maximize performance for image-intensive
+    applications.
+  * **Zsh**: A shell designed for interactive use, although it is also a
+    powerful scripting language.
+  * **Xfce (via noVNC + TurboVNC)**: A lightweight desktop environment for
+    UNIX-like operating systems.
+    * **GRASS GIS**: A free and open source Geographic Information System (GIS).
+    * **Orfeo Toolbox**: An open-source project for state-of-the-art remote
+      sensing.  
+      :information_source: amd64 only
+    * **QGIS**: A free, open source, cross platform (lin/win/mac) geographical
+      information system (GIS).
+    * **SAGA GIS**: A Geographic Information System (GIS) software with immense
+      capabilities for geodata processing and analysis.
 
 :point_right: See the [Version Matrix](VERSION_MATRIX.md) for detailed
 information.
@@ -75,7 +74,7 @@ To install docker, follow the instructions for your platform:
 
 ```bash
 cd base && docker build \
-  --build-arg QGIS_VERSION=3.34.3 \
+  --build-arg QGIS_VERSION=3.36.0 \
   --build-arg SAGA_VERSION=9.1.3 \
   --build-arg OTB_VERSION=8.1.2 \
   --build-arg PROC_SAGA_NG_VERSION=1.0.0 \
@@ -89,7 +88,7 @@ cd base && docker build \
 
 ```bash
 cd base && docker build \
-  --build-arg QGIS_VERSION=3.28.15 \
+  --build-arg QGIS_VERSION=3.34.4 \
   --build-arg SAGA_VERSION=9.1.3 \
   --build-arg OTB_VERSION=8.1.2 \
   --build-arg PROC_SAGA_NG_VERSION=1.0.0 \
@@ -120,14 +119,11 @@ docker run --rm \
 ```
 
 It will be *bind mounted* as the JupyterLab user's home directory and
-automatically populated on first run.
+automatically populated.  
+:exclamation: *Bind mounting* a subfolder of the home directory is only possible
+for images with QGIS version ≥ 3.34.4.
 
 ### Run container
-
-| :exclamation: Always mount the user's **entire** home directory.<br>Mounting a subfolder prevents the container from starting.[^1] |
-|:-----------------------------------------------------------------------------------------------------------------------------------|
-
-[^1]: The only exception is the use case described at [Jupyter Docker Stacks > Quick Start > Example 2](https://github.com/jupyter/docker-stacks#quick-start).
 
 self built:
 

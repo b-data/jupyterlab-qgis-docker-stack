@@ -66,7 +66,7 @@ cd base && docker build \
   --build-arg CUDA_IMAGE=nvidia/cuda \
   --build-arg CUDA_IMAGE_SUBTAG=cudnn8-runtime-ubuntu22.04 \
   --build-arg CUDA_VERSION=11.8.0 \
-  --build-arg QGIS_VERSION=3.34.3 \
+  --build-arg QGIS_VERSION=3.36.0 \
   --build-arg OTB_VERSION=8.1.2 \
   --build-arg PYTHON_VERSION=3.11.8 \
   --build-arg GIT_VERSION=2.43.2 \
@@ -76,7 +76,20 @@ cd base && docker build \
 
 *ltr/version*:
 
-From QGIS versions 3.34.4 onwards.
+```bash
+cd base && docker build \
+  --build-arg BASE_IMAGE=ubuntu \
+  --build-arg BASE_IMAGE_TAG=22.04 \
+  --build-arg CUDA_IMAGE=nvidia/cuda \
+  --build-arg CUDA_IMAGE_SUBTAG=cudnn8-runtime-ubuntu22.04 \
+  --build-arg CUDA_VERSION=11.8.0 \
+  --build-arg QGIS_VERSION=3.34.4 \
+  --build-arg OTB_VERSION=8.1.2 \
+  --build-arg PYTHON_VERSION=3.11.8 \
+  --build-arg GIT_VERSION=2.43.2 \
+  -t jupyterlab/cuda/qgis/base:ltr \
+  -f Dockerfile .
+```
 
 ### Create home directory
 
@@ -89,14 +102,11 @@ docker run --rm \
 ```
 
 It will be *bind mounted* as the JupyterLab user's home directory and
-automatically populated on first run.
+automatically populated.  
+:exclamation: *Bind mounting* a subfolder of the home directory is only possible
+for images with QGIS version ≥ 3.34.4.
 
 ### Run container
-
-| :exclamation: Always mount the user's **entire** home directory.<br>Mounting a subfolder prevents the container from starting.[^1] |
-|:-----------------------------------------------------------------------------------------------------------------------------------|
-
-[^1]: The only exception is the use case described at [Jupyter Docker Stacks > Quick Start > Example 2](https://github.com/jupyter/docker-stacks#quick-start).
 
 self built:
 

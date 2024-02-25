@@ -26,13 +26,13 @@ The following startup hooks are put in place:
 * [/usr/local/bin/start-notebook.d/10-populate.sh](base/scripts/usr/local/bin/start-notebook.d/10-populate.sh)
   to populate a *bind mounted* home directory `/home/jovyan`.
 * [/usr/local/bin/before-notebook.d/10-init.sh](base/scripts/usr/local/bin/before-notebook.d/10-init.sh) to
-    * update timezone according to environment variable `TZ`.
-    * add locales according to environment variable `LANGS`.
-    * set locale according to environment variable `LANG`.
-    * use custom xinitrc (Xfce).
-    * set font to MesloLGS NF (Xfce Terminal).
-    * put inital settings in place (QGIS Desktop).
-    * copy plugin 'Processing Saga NextGen Provider' (QGIS Desktop).
+  * update timezone according to environment variable `TZ`.
+  * add locales according to environment variable `LANGS`.
+  * set locale according to environment variable `LANG`.
+  * use custom xinitrc (Xfce).
+  * set font to MesloLGS NF (Xfce Terminal).
+  * put inital settings in place (QGIS Desktop).
+  * copy plugin 'Processing Saga NextGen Provider' (QGIS Desktop).
 * [/usr/local/bin/before-notebook.d/90-limits.sh](base/scripts/usr/local/bin/before-notebook.d/90-limits.sh)
   to set the *soft limit* for *the maximum amount of virtual memory* based on
   the amount of *physical* and *virtual memory* of the host.
@@ -92,75 +92,75 @@ The default shell is Zsh, further enhanced with
 ### Default
 
 * [IPython](base/conf/ipython/usr/local/etc/ipython/ipython_config.py):
-    * Only enable figure formats `svg` and `pdf` for IPython.
+  * Only enable figure formats `svg` and `pdf` for IPython.
 * [IPython kernel](base/conf/ipython/usr/local/etc/ipython/ipython_kernel_config.py):
-    * Only enable figure formats `svg` and `pdf` for IPython Kernel (Jupyter
-      Notebooks).
+  * Only enable figure formats `svg` and `pdf` for IPython Kernel (Jupyter
+    Notebooks).
 * [JupyterLab](base/conf/jupyterlab/usr/local/share/jupyter/lab/settings/overrides.json):
-    * Theme > Selected Theme: JupyterLab Dark
-    * Terminal > Font family: MesloLGS NF
-    * Python LSP Server: Example settings according to [jupyter-lsp/jupyterlab-lsp > Installation > Configuring the servers](https://github.com/jupyter-lsp/jupyterlab-lsp#configuring-the-servers)
+  * Theme > Selected Theme: JupyterLab Dark
+  * Terminal > Font family: MesloLGS NF
+  * Python LSP Server: Example settings according to [jupyter-lsp/jupyterlab-lsp > Installation > Configuring the servers](https://github.com/jupyter-lsp/jupyterlab-lsp#configuring-the-servers)
 * Autostart
-    * [DPI setting](base/conf/user/var/backups/skel/.config/autostart/DPI%20setting.desktop):
-      Set DPI accoding to variable `DPI` exported in `~/.xprofile`. (QGIS
-      versions ≥ 3.34.0)
+  * [DPI setting](base/conf/user/var/backups/skel/.config/autostart/DPI%20setting.desktop):
+    Set DPI accoding to variable `DPI` exported in `~/.xprofile`. (QGIS
+    versions ≥ 3.34.0)
 * [Xfce xinitrc](base/conf/user/var/backups/skel/.config/xfce4/xinitrc):
-    * `~/.xprofile`: Commands to execute at the beginning of the X user session.
-      (QGIS versions ≥ 3.34.0)  
-      :information_source: To set a
-      [custom display resolution](#custom-display-resolution) not available in
-      'Display Settings'.
-    * `~/.i18n`: Set `LANG` to change the system language of the desktop
-      environment.  
-      :information_source: To override environment variable `LANG`. Must be one of
-      `LANGS`.
+  * `~/.xprofile`: Commands to execute at the beginning of the X user session.
+    (QGIS versions ≥ 3.34.0)  
+    :information_source: To set a
+    [custom display resolution](#custom-display-resolution) not available in
+    'Display Settings'.
+  * `~/.i18n`: Set `LANG` to change the system language of the desktop
+    environment.  
+    :information_source: To override environment variable `LANG`. Must be one of
+    `LANGS`.
 * [Xfce Panel](base/conf/xfce/etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml):
-    * Hide 'Lock Screen' and 'Log Out...' because those kill the session.  
-      (Removed: 'Log Out' from Applications)  
-      (Disabled: Ctrl+Alt+Del to trigger session logout)
+  * Hide 'Lock Screen' and 'Log Out...' because those kill the session.  
+    (Removed: 'Log Out' from Applications)  
+    (Disabled: Ctrl+Alt+Del to trigger session logout)
 * [Xfce Terminal](base/conf/user/var/backups/skel/.config/xfce4/terminal/terminalrc):
-    * Set `FontName=MesloLGS NF 10` and `Encoding=UTF-8`.
+  * Set `FontName=MesloLGS NF 10` and `Encoding=UTF-8`.
 * [QGIS Desktop](base/conf/user/var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini):
-    * Append `/usr/lib/python3/dist-packages` to `PYTHONPATH`.  
-      :information_source: One distro refused to find the Python bindings to QGIS
-      (at `/usr/lib/python3/dist-packages/qgis`)...
+  * Append `/usr/lib/python3/dist-packages` to `PYTHONPATH`.  
+    :information_source: One distro refused to find the Python bindings to QGIS
+    (at `/usr/lib/python3/dist-packages/qgis`)...
 * Zsh
-    * Oh My Zsh: `~/.zshrc`
-        * Set PATH so it includes user's private bin if it exists
-        * Update last-activity timestamps while in screen/tmux session
-    * [Powerlevel10k](base/conf/user/var/backups/skel/.p10k.zsh): `p10k configure`
-        * Does this look like a diamond (rotated square)?: (y)  Yes.
-        * Does this look like a lock?: (y)  Yes.
-        * Does this look like a Debian logo (swirl/spiral)?: (y)  Yes.
-        * Do all these icons fit between the crosses?: (y)  Yes.
-        * Prompt Style: (3)  Rainbow.
-        * Character Set: (1)  Unicode.
-        * Show current time?: (2)  24-hour format.
-        * Prompt Separators: (1)  Angled.
-        * Prompt Heads: (1)  Sharp.
-        * Prompt Tails: (1)  Flat.
-        * Prompt Height: (2)  Two lines.
-        * Prompt Connection: (2)  Dotted.
-        * Prompt Frame: (2)  Left.
-        * Connection & Frame Color: (2)  Light.
-        * Prompt Spacing: (2)  Sparse.
-        * Icons: (2)  Many icons.
-        * Prompt Flow: (1)  Concise.
-        * Enable Transient Prompt?: (n)  No.
-        * Instant Prompt Mode: (3)  Off.
+  * Oh My Zsh: `~/.zshrc`
+    * Set PATH so it includes user's private bin if it exists
+    * Update last-activity timestamps while in screen/tmux session
+  * [Powerlevel10k](base/conf/user/var/backups/skel/.p10k.zsh): `p10k configure`
+    * Does this look like a diamond (rotated square)?: (y)  Yes.
+    * Does this look like a lock?: (y)  Yes.
+    * Does this look like a Debian logo (swirl/spiral)?: (y)  Yes.
+    * Do all these icons fit between the crosses?: (y)  Yes.
+    * Prompt Style: (3)  Rainbow.
+    * Character Set: (1)  Unicode.
+    * Show current time?: (2)  24-hour format.
+    * Prompt Separators: (1)  Angled.
+    * Prompt Heads: (1)  Sharp.
+    * Prompt Tails: (1)  Flat.
+    * Prompt Height: (2)  Two lines.
+    * Prompt Connection: (2)  Dotted.
+    * Prompt Frame: (2)  Left.
+    * Connection & Frame Color: (2)  Light.
+    * Prompt Spacing: (2)  Sparse.
+    * Icons: (2)  Many icons.
+    * Prompt Flow: (1)  Concise.
+    * Enable Transient Prompt?: (n)  No.
+    * Instant Prompt Mode: (3)  Off.
 
 ### Customise
 
 * Terminal IPython: Create file `~/.ipython/profile_default/ipython_config.py`
-    * Valid figure formats: `png`, `retina`, `jpeg`, `svg`, `pdf`.
+  * Valid figure formats: `png`, `retina`, `jpeg`, `svg`, `pdf`.
 * IPython: Create file `~/.ipython/profile_default/ipython_config.py`
-    * Valid figure formats: `png`, `retina`, `jpeg`, `svg`, `pdf`.
+  * Valid figure formats: `png`, `retina`, `jpeg`, `svg`, `pdf`.
 * JupyterLab: Settings > Advanced Settings Editor
 * Zsh
-    * Oh My Zsh: Edit `~/.zshrc`.
-    * Powerlevel10k: Run `p10k configure` or edit `~/.p10k.zsh`.
-        * Update command:
-          `git -C ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k pull`
+  * Oh My Zsh: Edit `~/.zshrc`.
+  * Powerlevel10k: Run `p10k configure` or edit `~/.p10k.zsh`.
+    * Update command:
+      `git -C ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k pull`
 
 ### Custom display resolution
 
