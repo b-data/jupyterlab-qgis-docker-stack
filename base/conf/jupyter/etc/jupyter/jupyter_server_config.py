@@ -9,7 +9,7 @@ from pathlib import Path
 
 from jupyter_core.paths import jupyter_data_dir
 
-c = get_config()  # noqa: F821
+c = get_config()  # noqa: F821 # type: ignore
 c.ServerApp.ip = "0.0.0.0"
 c.ServerApp.port = 8888
 #c.ServerApp.open_browser = False

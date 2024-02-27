@@ -34,53 +34,53 @@ if [ "$(id -u)" == 0 ] ; then
   fi
 
   ## Autostart: DPI setting
-  su "$NB_USER" -c "mkdir -p /home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/autostart"
+  run_user_group mkdir -p "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/autostart"
   if [[ ! -f "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/autostart/DPI setting.desktop" ]]; then
-    su "$NB_USER" -c "cp ${CP_OPTS:--a} /var/backups/skel/.config/autostart/DPI\ setting.desktop \
-      /home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/autostart/DPI\ setting.desktop"
-    chown :"$NB_GID" "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/autostart/DPI setting.desktop"
+    run_user_group cp -a --no-preserve=ownership \
+      "/var/backups/skel/.config/autostart/DPI setting.desktop" \
+      "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/autostart/DPI setting.desktop"
   fi
   ## Xfce: Use custom xinitrc
-  su "$NB_USER" -c "mkdir -p /home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/terminal"
+  run_user_group mkdir -p "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/terminal"
   if [[ ! -f "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xinitrc" ]]; then
-    su "$NB_USER" -c "cp ${CP_OPTS:--a} /var/backups/skel/.config/xfce4/xinitrc \
-      /home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xinitrc"
-    chown :"$NB_GID" "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xinitrc"
+    run_user_group cp -a --no-preserve=ownership \
+      /var/backups/skel/.config/xfce4/xinitrc \
+      "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xinitrc"
   fi
   ## Xfce Terminal: Font MesloLGS NF, Size 10, Encoding UTF-8
   if [[ ! -f "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/terminal/terminalrc" ]]; then
-    su "$NB_USER" -c "cp ${CP_OPTS:--a} /var/backups/skel/.config/xfce4/terminal/terminalrc \
-      /home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/terminal/terminalrc"
-    chown :"$NB_GID" "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/terminal/terminalrc"
+    run_user_group cp -a --no-preserve=ownership \
+      /var/backups/skel/.config/xfce4/terminal/terminalrc \
+      "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/terminal/terminalrc"
   fi
   ## Xfce Appearance: Set style to Adwaita-dark
-  su "$NB_USER" -c "mkdir -p /home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xfconf/xfce-perchannel-xml"
+  run_user_group mkdir -p "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xfconf/xfce-perchannel-xml"
   if [[ ! -f "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" ]]; then
-    su "$NB_USER" -c "cp ${CP_OPTS:--a} /var/backups/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml \
-      /home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml"
-    chown :"$NB_GID" "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml"
+    run_user_group cp -a --no-preserve=ownership \
+      /var/backups/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml \
+      "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml"
   fi
   ## Xfce Desktop: Set background to black
   if [[ ! -f "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml" ]]; then
-    su "$NB_USER" -c "cp ${CP_OPTS:--a} /var/backups/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml \
-      /home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml"
-    chown :"$NB_GID" "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml"
+    run_user_group cp -a --no-preserve=ownership \
+      /var/backups/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml \
+      "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml"
   fi
 
-  ## QGIS Desktop: Put inital settings in place
-  su "$NB_USER" -c "mkdir -p /home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS3/profiles/default/QGIS"
+  ## QGIS: Put inital settings in place
+  run_user_group mkdir -p "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS3/profiles/default/QGIS"
   if [[ ! -f "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini" ]]; then
-    su "$NB_USER" -c "cp ${CP_OPTS:--a} /var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini \
-      /home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini"
-    chown :"$NB_GID" "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini"
+    run_user_group cp -a --no-preserve=ownership \
+      /var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini \
+      "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini"
   fi
 
-  ## QGIS Desktop: Copy plugin 'Processing Saga NextGen Provider'
-  su "$NB_USER" -c "mkdir -p /home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS3/profiles/default/python/plugins"
-  su "$NB_USER" -c "rm -rf /home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS3/profiles/default/python/plugins/processing_saga_nextgen"
-  su "$NB_USER" -c "cp ${CP_OPTS:--a} /var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/python/plugins/processing_saga_nextgen \
-    /home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS3/profiles/default/python/plugins"
-  chown -R :"$NB_GID" "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS3/profiles/default/python/plugins"
+  ## QGIS: Copy plugin 'Processing Saga NextGen Provider'
+  run_user_group mkdir -p "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS3/profiles/default/python/plugins"
+  run_user_group rm -rf "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS3/profiles/default/python/plugins/processing_saga_nextgen"
+  run_user_group cp -a --no-preserve=ownership \
+    /var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/python/plugins/processing_saga_nextgen \
+    "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS3/profiles/default/python/plugins"
 
   # Remove old .zcompdump files
   rm -f "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.zcompdump"*
@@ -131,14 +131,14 @@ else
       "$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml"
   fi
 
-  ## QGIS Desktop: Put inital settings in place
+  ## QGIS: Put inital settings in place
   mkdir -p "$HOME/.local/share/QGIS/QGIS3/profiles/default/QGIS"
   if [[ ! -f "$HOME/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini" ]]; then
     cp -a /var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini \
       "$HOME/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini"
   fi
 
-  ## QGIS Desktop: Copy plugin 'Processing Saga NextGen Provider'
+  ## QGIS: Copy plugin 'Processing Saga NextGen Provider'
   mkdir -p "$HOME/.local/share/QGIS/QGIS3/profiles/default/python/plugins"
   rm -rf "$HOME/.local/share/QGIS/QGIS3/profiles/default/python/plugins/processing_saga_nextgen"
   cp -a /var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/python/plugins/processing_saga_nextgen \
