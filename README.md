@@ -141,17 +141,17 @@ docker run -it --rm \
 
 from the project's GitLab Container Registries:
 
-  ```bash
-  docker run -it --rm \
-    -p 8888:8888 \
-    -u root \
-    -v "${PWD}/jupyterlab-jovyan":/home/jovyan \
-    -e NB_UID=$(id -u) \
-    -e NB_GID=$(id -g) \
-    -e CHOWN_HOME=yes \
-    -e CHOWN_HOME_OPTS='-R' \
-    IMAGE{:ltr,:MAJOR[.MINOR[.PATCH]]}
-  ```
+```bash
+docker run -it --rm \
+  -p 8888:8888 \
+  -u root \
+  -v "${PWD}/jupyterlab-jovyan":/home/jovyan \
+  -e NB_UID=$(id -u) \
+  -e NB_GID=$(id -g) \
+  -e CHOWN_HOME=yes \
+  -e CHOWN_HOME_OPTS='-R' \
+  IMAGE{:ltr,:MAJOR[.MINOR[.PATCH]]}
+```
 
 `IMAGE` being one of
 
