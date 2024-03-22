@@ -57,7 +57,7 @@ platform:
 
 ### Build image (base)
 
-latest:
+*latest*:
 
 ```bash
 cd base && docker build \
@@ -67,7 +67,7 @@ cd base && docker build \
   --build-arg CUDA_IMAGE_SUBTAG=cudnn8-runtime-ubuntu22.04 \
   --build-arg CUDA_VERSION=11.8.0 \
   --build-arg QGIS_VERSION=3.36.0 \
-  --build-arg OTB_VERSION=8.1.2 \
+  --build-arg OTB_VERSION=9.0.0 \
   --build-arg PYTHON_VERSION=3.11.8 \
   --build-arg GIT_VERSION=2.43.2 \
   -t jupyterlab/cuda/qgis/base \
