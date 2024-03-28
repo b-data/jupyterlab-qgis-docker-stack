@@ -22,7 +22,7 @@ Topmost entry = Tag `latest`
 | 3.30.0  | 7.3.0 | 8.1.1   | 3.1.1       | 3.6.3       | 3.10.10 | 2.40.0 | Debian 11    |
 | 3.28.3  | 7.3.0 | 8.1.1   | 3.1.1       | 3.6.1       | 3.10.10 | 2.39.2 | Debian 11    |
 
-[^1]: `amd64` only
+[^1]: `amd64` only; QGIS v3.36.0 w/o OTB provider
 
 ## LTR
 
