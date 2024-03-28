@@ -54,7 +54,7 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
   ## Copy content of skel directory to backup
   && cp -a /files/etc/skel/. /files/var/backups/skel \
   && chown -R ${NB_UID}:${NB_GID} /files/var/backups/skel \
-  && if [ -n "$CUDA_VERSION" ]; then \
+  && if [ -n "${CUDA_VERSION}" ]; then \
     ## Use entrypoint of CUDA image
     mv /opt/nvidia/entrypoint.d /opt/nvidia/nvidia_entrypoint.sh \
       /files/usr/local/bin; \
