@@ -4,6 +4,12 @@
 
 set -e
 
+if [ -n "${CUDA_IMAGE}" ]; then
+  echo
+  print_banner_text "=" "JUPYTER"
+  echo
+fi
+
 function run_user_group() {
   runuser -u "${NB_USER}" -g "$(id -gn "${NB_USER}")" -G "users" -- "$@"
 }
