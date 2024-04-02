@@ -79,14 +79,6 @@ FROM glcr.b-data.ch/orfeotoolbox/otbsi${OTB_VERSION:+/}${OTB_VERSION:-:none}${OT
 
 FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG}
 
-ARG CUDA_IMAGE_LICENSE
-ARG IMAGE_LICENSE=${CUDA_IMAGE_LICENSE:-MIT}
-
-LABEL org.opencontainers.image.licenses="$IMAGE_LICENSE" \
-      org.opencontainers.image.source="https://gitlab.b-data.ch/jupyterlab/qgis" \
-      org.opencontainers.image.vendor="b-data GmbH" \
-      org.opencontainers.image.authors="Olivier Benz <olivier.benz@b-data.ch>"
-
 ARG DEBIAN_FRONTEND=noninteractive
 
 ARG BASE_IMAGE
@@ -107,6 +99,14 @@ ARG GIT_VERSION
 ARG TURBOVNC_VERSION
 ARG VIRTUALGL_VERSION
 ARG BUILD_START
+
+ARG CUDA_IMAGE_LICENSE=${CUDA_VERSION:+"NVIDIA Deep Learning Container License"}
+ARG IMAGE_LICENSE=${CUDA_IMAGE_LICENSE:-"MIT"}
+
+LABEL org.opencontainers.image.licenses="$IMAGE_LICENSE" \
+      org.opencontainers.image.source="https://gitlab.b-data.ch/jupyterlab/qgis" \
+      org.opencontainers.image.vendor="b-data GmbH" \
+      org.opencontainers.image.authors="Olivier Benz <olivier.benz@b-data.ch>"
 
 ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
     CUDA_IMAGE=${CUDA_IMAGE}${CUDA_IMAGE:+:}${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG} \
