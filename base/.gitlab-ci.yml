@@ -2,7 +2,7 @@
   variables:
     CUDA_VERSION: "11.8.0"
     OTB_VERSION: "8.1.2"
-    PYTHON_VERSION: "3.11.8"
+    PYTHON_VERSION: "3.11.9"
     GIT_VERSION: "2.44.0"
 
 .before-script-build: &before-script-build
