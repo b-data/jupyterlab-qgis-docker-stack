@@ -64,7 +64,7 @@ cd base && docker build \
   --build-arg BASE_IMAGE=ubuntu \
   --build-arg BASE_IMAGE_TAG=22.04 \
   --build-arg CUDA_IMAGE=nvidia/cuda \
-  --build-arg CUDA_IMAGE_SUBTAG=cudnn8-runtime-ubuntu22.04 \
+  --build-arg CUDA_IMAGE_SUBTAG=runtime-ubuntu22.04 \
   --build-arg CUDA_VERSION=11.8.0 \
   --build-arg QGIS_VERSION=3.36.1 \
   --build-arg OTB_VERSION=9.0.0 \
@@ -81,7 +81,7 @@ cd base && docker build \
   --build-arg BASE_IMAGE=ubuntu \
   --build-arg BASE_IMAGE_TAG=22.04 \
   --build-arg CUDA_IMAGE=nvidia/cuda \
-  --build-arg CUDA_IMAGE_SUBTAG=cudnn8-runtime-ubuntu22.04 \
+  --build-arg CUDA_IMAGE_SUBTAG=runtime-ubuntu22.04 \
   --build-arg CUDA_VERSION=11.8.0 \
   --build-arg QGIS_VERSION=3.34.5 \
   --build-arg OTB_VERSION=8.1.2 \
@@ -206,7 +206,7 @@ which also relies on VirtualGL (EGL backend) for direct access to the GPU.
 
 1. Multi-arch: `linux/amd64`, `linux/arm64/v8`  
    :information_source: No GPU acceleration on Apple M series.
-1. Derived from [`nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04`](https://hub.docker.com/r/nvidia/cuda/tags?page=1&name=11.8.0-cudnn8-runtime-ubuntu22.04)
+1. Derived from [`nvidia/cuda:11.8.0-runtime-ubuntu22.04`](https://hub.docker.com/r/nvidia/cuda/tags?page=1&name=11.8.0-runtime-ubuntu22.04)
 1. [VirtualGL](https://virtualgl.org): Fully GPU accelerated OpenGL applications
 1. Just Python – no [Conda](https://github.com/conda/conda) /
    [Mamba](https://github.com/mamba-org/mamba)
