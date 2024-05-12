@@ -69,7 +69,7 @@ cd base && docker build \
   --build-arg QGIS_VERSION=3.36.2 \
   --build-arg OTB_VERSION=9.0.0 \
   --build-arg PYTHON_VERSION=3.12.3 \
-  --build-arg GIT_VERSION=2.44.0 \
+  --build-arg GIT_VERSION=2.45.0 \
   -t jupyterlab/cuda/qgis/base \
   -f Dockerfile .
 ```
@@ -86,7 +86,7 @@ cd base && docker build \
   --build-arg QGIS_VERSION=3.34.6 \
   --build-arg OTB_VERSION=8.1.2 \
   --build-arg PYTHON_VERSION=3.11.9 \
-  --build-arg GIT_VERSION=2.44.0 \
+  --build-arg GIT_VERSION=2.45.0 \
   -t jupyterlab/cuda/qgis/base:ltr \
   -f Dockerfile .
 ```
