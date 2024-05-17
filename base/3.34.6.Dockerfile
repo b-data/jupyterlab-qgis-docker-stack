@@ -3,7 +3,7 @@ ARG BASE_IMAGE_TAG=12
 ARG CUDA_IMAGE
 ARG CUDA_IMAGE_SUBTAG
 ARG CUDA_VERSION=11.8.0
-ARG QGIS_VERSION=3.34.5
+ARG QGIS_VERSION=3.34.6
 
 ARG SAGA_VERSION
 ARG OTB_VERSION
@@ -14,9 +14,9 @@ ARG PROC_SAGA_NG_VERSION
 ARG NB_USER=jovyan
 ARG NB_UID=1000
 ARG JUPYTERHUB_VERSION=4.1.5
-ARG JUPYTERLAB_VERSION=4.1.6
+ARG JUPYTERLAB_VERSION=4.2.0
 ARG PYTHON_VERSION=3.11.9
-ARG GIT_VERSION=2.44.0
+ARG GIT_VERSION=2.45.1
 ARG TURBOVNC_VERSION=3.1.1
 ARG VIRTUALGL_VERSION=${CUDA_IMAGE:+3.1.1}
 
@@ -539,6 +539,7 @@ WORKDIR ${HOME}
 ## Install Oh My Zsh with Powerlevel10k theme
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended \
   && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k \
+  && ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k/gitstatus/install -f \
   && sed -i 's/ZSH="\/home\/jovyan\/.oh-my-zsh"/ZSH="${HOME}\/.oh-my-zsh"/g' ${HOME}/.zshrc \
   && sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' ${HOME}/.zshrc \
   && echo "\n# set PATH so it includes user's private bin if it exists\nif [ -d \"\$HOME/bin\" ] && [[ \"\$PATH\" != *\"\$HOME/bin\"* ]] ; then\n    PATH=\"\$HOME/bin:\$PATH\"\nfi" | tee -a ${HOME}/.bashrc ${HOME}/.zshrc \

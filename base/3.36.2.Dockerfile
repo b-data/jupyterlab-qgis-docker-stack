@@ -2,21 +2,21 @@ ARG BASE_IMAGE=debian
 ARG BASE_IMAGE_TAG=12
 ARG CUDA_IMAGE
 ARG CUDA_IMAGE_SUBTAG
-ARG CUDA_VERSION=11.8.0
-ARG QGIS_VERSION=3.34.5
+ARG CUDA_VERSION=12.4.1
+ARG QGIS_VERSION=3.36.2
 
 ARG SAGA_VERSION
 ARG OTB_VERSION
-## OTB_VERSION=8.1.2
+## OTB_VERSION=9.0.0
 
 ARG PROC_SAGA_NG_VERSION
 
 ARG NB_USER=jovyan
 ARG NB_UID=1000
 ARG JUPYTERHUB_VERSION=4.1.5
-ARG JUPYTERLAB_VERSION=4.1.6
-ARG PYTHON_VERSION=3.11.9
-ARG GIT_VERSION=2.44.0
+ARG JUPYTERLAB_VERSION=4.2.0
+ARG PYTHON_VERSION=3.12.3
+ARG GIT_VERSION=2.45.1
 ARG TURBOVNC_VERSION=3.1.1
 ARG VIRTUALGL_VERSION=${CUDA_IMAGE:+3.1.1}
 
@@ -147,8 +147,10 @@ COPY --from=saga-gissi /usr /usr
 ## Install Orfeo Toolbox
 COPY --from=otbsi /usr/local /usr/local
 ENV GDAL_DRIVER_PATH=${OTB_VERSION:+disable} \
-    OTB_APPLICATION_PATH=${OTB_VERSION:+/usr/local/lib/otb/applications}
-ENV OTB_APPLICATION_PATH=${OTB_APPLICATION_PATH:-/usr/lib/otb/applications}
+    OTB_APPLICATION_PATH=${OTB_VERSION:+/usr/local/lib/otb/applications} \
+    OTB_INSTALL_DIR=${OTB_VERSION:+/usr/local}
+ENV OTB_APPLICATION_PATH=${OTB_APPLICATION_PATH:-/usr/lib/otb/applications} \
+    OTB_INSTALL_DIR=${OTB_INSTALL_DIR:-/usr}
 
 USER root
 
@@ -260,6 +262,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     python3-pyqt5.qsci \
     python3-pyqt5.qtmultimedia \
     python3-pyqt5.qtpositioning \
+    python3-pyqt5.qtserialport \
     python3-pyqt5.qtsql \
     python3-pyqt5.qtsvg \
     python3-pyqt5.qtwebkit \
@@ -319,6 +322,14 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
         apt-get -y install --no-install-recommends \
           '^libopenthreads[0-9]+$' \
           libossim1; \
+      fi; \
+      ## Orfeo Toolbox: Clean up installation
+      bash -c 'rm -rf /usr/local/{otbenv.profile,recompile_bindings.sh,tools}'; \
+      if [ -f /usr/local/README ]; then \
+        mv /usr/local/README /usr/local/share/doc/otb; \
+      fi; \
+      if [ -f /usr/local/LICENSE ]; then \
+        mv /usr/local/LICENSE /usr/local/share/doc/otb; \
       fi \
     else \
       mkdir -p /usr/lib/otb; \
@@ -539,6 +550,7 @@ WORKDIR ${HOME}
 ## Install Oh My Zsh with Powerlevel10k theme
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended \
   && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k \
+  && ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k/gitstatus/install -f \
   && sed -i 's/ZSH="\/home\/jovyan\/.oh-my-zsh"/ZSH="${HOME}\/.oh-my-zsh"/g' ${HOME}/.zshrc \
   && sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' ${HOME}/.zshrc \
   && echo "\n# set PATH so it includes user's private bin if it exists\nif [ -d \"\$HOME/bin\" ] && [[ \"\$PATH\" != *\"\$HOME/bin\"* ]] ; then\n    PATH=\"\$HOME/bin:\$PATH\"\nfi" | tee -a ${HOME}/.bashrc ${HOME}/.zshrc \
@@ -561,14 +573,15 @@ RUN export QT_QPA_PLATFORM=offscreen \
   && qgis-plugin-manager init \
   && qgis-plugin-manager update \
   && qgis-plugin-manager install 'Processing Saga NextGen Provider'=="${PROC_SAGA_NG_VERSION:-0.0.7}" \
-  && rm -rf .cache_qgis_plugin_manager \
   ## QGIS: Enable plugins
   && qgis_process plugins enable processing_saga_nextgen \
   && qgis_process plugins enable grassprovider \
   && if [ "$(uname -m)" = "x86_64" ]; then \
-    ## QGIS: Enable OTB plugin
-    qgis_process plugins enable otbprovider; \
+    ## QGIS: Install and enable OTB plugin
+    qgis-plugin-manager install 'OrfeoToolbox Provider'; \
+    qgis_process plugins enable orfeoToolbox_provider; \
   fi \
+  && rm -rf .cache_qgis_plugin_manager \
   ## Clean up
   && rm -rf \
     ${HOME}/.cache \
