@@ -1,6 +1,6 @@
 .env:
   variables:
-    CUDA_VERSION: "12.4.1"
+    CUDA_VERSION: "12.5.0"
     OTB_VERSION: "9.0.0"
     PYTHON_VERSION: "3.12.3"
     GIT_VERSION: "2.45.2"
