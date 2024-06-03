@@ -571,7 +571,8 @@ RUN export QT_QPA_PLATFORM=offscreen \
   fi \
   ## Clean up
   && rm -rf \
-    ${HOME}/.cache \
+    ${HOME}/.cache/QGIS \
+    ${HOME}/.cache/qgis_process_ \
     ${HOME}/.config \
     ${HOME}/.grass* \
   ## Record population timestamp
