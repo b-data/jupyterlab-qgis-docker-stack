@@ -26,13 +26,27 @@ Topmost entry = Tag `ltr`
 | 3.34.5  | 7.3.0 | 11.8.0 | 11.11.3.6 | n/a      | 2.15.5 | Ubuntu 22.04 |
 | 3.34.4  | 7.3.0 | 11.8.0 | 11.11.3.6 | 8.9.6.50 | 2.15.5 | Ubuntu 22.04 |
 
-## Recommended NVIDIA driver
+## Recommended NVIDIA driver (Regular)
 
-| CUDA   | NVIDIA Linux driver | NVIDIA Windows driver[^1] |
-|:-------|:--------------------|:--------------------------|
-| 12.5.0 | ≥ 555.42.02         | ≥ 555.85                  |
-| 12.4.1 | ≥ 550.54.15         | ≥ 551.78                  |
-| 11.8.0 | ≥ 520.61.05         | ≥ 520.06                  |
+| CUDA   | Linux driver version | Windows driver version[^1] |
+|:-------|:---------------------|:---------------------------|
+| 12.5.0 | ≥ 555.42.02          | ≥ 555.85                   |
+| 12.4.1 | ≥ 550.54.15          | ≥ 551.78                   |
+| 11.8.0 | ≥ 520.61.05          | ≥ 520.06                   |
 
 [^1]: [GPU support in Docker Desktop | Docker Docs](https://docs.docker.com/desktop/gpu/),
 [Nvidia GPU Support for Windows · Issue #19005 · containers/podman](https://github.com/containers/podman/issues/19005)
+
+## Supported NVIDIA drivers (LTSB)
+
+| CUDA   | Driver version 535[^2] | Driver version 470[^3] |
+|:-------|:----------------------:|:----------------------:|
+| 12.5.0 | 🟢                      | 🟢                      |
+| 12.4.1 | 🟢                      | 🟢                      |
+| 11.8.0 | 🟡                      | 🟢                      |
+
+🟢: Works due to the CUDA forward compat package  
+🟡: Supported due to backward compatibility
+
+[^2]: EOL: June 2026  
+[^3]: EOL: July 2024
