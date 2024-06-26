@@ -15,9 +15,8 @@ The same as the
 
 * VirtualGL: Enables OpenGL applications to run with full GPU acceleration.
 * CUDA runtime,
-  [CUDA math libraries](https://developer.nvidia.com/gpu-accelerated-libraries),
-  [NCCL](https://developer.nvidia.com/nccl) and
-  [cuDNN](https://developer.nvidia.com/cudnn)
+  [CUDA math libraries](https://developer.nvidia.com/gpu-accelerated-libraries)
+  and [NCCL](https://developer.nvidia.com/nccl)
 
 :point_right: See the [CUDA Version Matrix](CUDA_VERSION_MATRIX.md) for detailed
 information.
