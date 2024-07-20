@@ -1,20 +1,26 @@
 ARG BASE_IMAGE=debian
 ARG BASE_IMAGE_TAG=12
-ARG QGIS_VERSION=3.28.8
+ARG CUDA_IMAGE
+ARG CUDA_IMAGE_SUBTAG
+ARG CUDA_VERSION=11.8.0
+ARG QGIS_VERSION=3.34.8
 
 ARG SAGA_VERSION
 ARG OTB_VERSION
-## OTB_VERSION=8.1.1
+## OTB_VERSION=8.1.2
+
+ARG PROC_SAGA_NG_VERSION
 
 ARG NB_USER=jovyan
 ARG NB_UID=1000
-ARG JUPYTERHUB_VERSION=4.0.1
-ARG JUPYTERLAB_VERSION=3.6.5
-ARG PYTHON_VERSION=3.11.4
-ARG GIT_VERSION=2.41.0
-ARG TURBOVNC_VERSION=3.0.3
+ARG JUPYTERHUB_VERSION=5.0.0
+ARG JUPYTERLAB_VERSION=4.2.4
+ARG PYTHON_VERSION=3.11.9
+ARG GIT_VERSION=2.45.2
+ARG TURBOVNC_VERSION=3.1.1
+ARG VIRTUALGL_VERSION=${CUDA_IMAGE:+3.1.1}
 
-FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} AS files
+FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} AS files
 
 ARG OTB_VERSION
 
@@ -27,16 +33,17 @@ COPY assets /files
 COPY conf/ipython /files
 COPY conf/jupyter /files
 COPY conf/jupyterlab /files
+COPY conf/shell /files
 COPY conf/user /files
 COPY conf/xfce /files
 COPY scripts /files
 
 RUN if [ "$(uname -m)" = "x86_64" ]; then \
-    ## QGIS Desktop: Set OTB application folder and OTB folder
+    ## QGIS: Set OTB application folder and OTB folder
     qgis3Ini="/files/var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini"; \
     echo "\n[Processing]" >> ${qgis3Ini}; \
     if [ -z "${OTB_VERSION}" ]; then \
-      echo "Configuration\OTB_APP_FOLDER=/usr/lib/x86_64-linux-gnu/otb/applications" >> \
+      echo "Configuration\OTB_APP_FOLDER=/usr/lib/otb/applications" >> \
         ${qgis3Ini}; \
       echo "Configuration\OTB_FOLDER=/usr\n" >> ${qgis3Ini}; \
     else \
@@ -45,12 +52,25 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
       echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis3Ini}; \
     fi \
   fi \
+  ## Copy content of skel directory to backup
+  && cp -a /files/etc/skel/. /files/var/backups/skel \
   && chown -R ${NB_UID}:${NB_GID} /files/var/backups/skel \
+  && if [ -n "${CUDA_VERSION}" ]; then \
+    ## Use entrypoint of CUDA image
+    mv /opt/nvidia/entrypoint.d /opt/nvidia/nvidia_entrypoint.sh \
+      /files/usr/local/bin; \
+    mv /files/usr/local/bin/start.sh \
+      /files/usr/local/bin/entrypoint.d/99-start.sh; \
+    mv /files/usr/local/bin/nvidia_entrypoint.sh \
+      /files/usr/local/bin/start.sh; \
+  fi \
   ## Ensure file modes are correct when using CI
   ## Otherwise set to 777 in the target image
   && find /files -type d -exec chmod 755 {} \; \
   && find /files -type f -exec chmod 644 {} \; \
-  && find /files/usr/local/bin -type f -exec chmod 755 {} \;
+  && find /files/usr/local/bin -type f -exec chmod 755 {} \; \
+  && find /files/etc/profile.d -type f -exec chmod 755 {} \; \
+  && chmod 755 /files/var/backups/skel/.config/xfce4/xinitrc
 
 FROM glcr.b-data.ch/qgis/qgissi/${QGIS_VERSION}/${BASE_IMAGE}:${BASE_IMAGE_TAG} AS qgissi
 FROM glcr.b-data.ch/saga-gis/saga-gissi${SAGA_VERSION:+/}${SAGA_VERSION:-:none}${SAGA_VERSION:+/$BASE_IMAGE}${SAGA_VERSION:+:$BASE_IMAGE_TAG} AS saga-gissi
@@ -58,45 +78,59 @@ FROM glcr.b-data.ch/python/psi${PYTHON_VERSION:+/}${PYTHON_VERSION:-:none}${PYTH
 FROM glcr.b-data.ch/git/gsi${GIT_VERSION:+/}${GIT_VERSION:-:none}${GIT_VERSION:+/$BASE_IMAGE}${GIT_VERSION:+:$BASE_IMAGE_TAG} AS gsi
 FROM glcr.b-data.ch/orfeotoolbox/otbsi${OTB_VERSION:+/}${OTB_VERSION:-:none}${OTB_VERSION:+/$BASE_IMAGE}${OTB_VERSION:+:$BASE_IMAGE_TAG} AS otbsi
 
-FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG}
-
-LABEL org.opencontainers.image.licenses="MIT" \
-      org.opencontainers.image.source="https://gitlab.b-data.ch/jupyterlab/qgis" \
-      org.opencontainers.image.vendor="b-data GmbH" \
-      org.opencontainers.image.authors="Olivier Benz <olivier.benz@b-data.ch>"
+FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG}
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 ARG BASE_IMAGE
 ARG BASE_IMAGE_TAG
+ARG CUDA_IMAGE
+ARG CUDA_IMAGE_SUBTAG
+ARG CUDA_VERSION
 ARG QGIS_VERSION
 ARG SAGA_VERSION
+ARG OTB_VERSION
+ARG PROC_SAGA_NG_VERSION
 ARG NB_USER
 ARG NB_UID
 ARG JUPYTERHUB_VERSION
 ARG JUPYTERLAB_VERSION
 ARG PYTHON_VERSION
 ARG GIT_VERSION
-ARG OTB_VERSION
 ARG TURBOVNC_VERSION
+ARG VIRTUALGL_VERSION
 ARG BUILD_START
 
+ARG CUDA_IMAGE_LICENSE=${CUDA_VERSION:+"NVIDIA Deep Learning Container License"}
+ARG IMAGE_LICENSE=${CUDA_IMAGE_LICENSE:-"MIT"}
+ARG IMAGE_SOURCE=https://gitlab.b-data.ch/jupyterlab/qgis
+ARG IMAGE_VENDOR="b-data GmbH"
+ARG IMAGE_AUTHORS="Olivier Benz <olivier.benz@b-data.ch>"
+
+LABEL org.opencontainers.image.licenses="$IMAGE_LICENSE" \
+      org.opencontainers.image.source="$IMAGE_SOURCE" \
+      org.opencontainers.image.vendor="$IMAGE_VENDOR" \
+      org.opencontainers.image.authors="$IMAGE_AUTHORS"
+
 ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
-    PARENT_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
+    CUDA_IMAGE=${CUDA_IMAGE}${CUDA_IMAGE:+:}${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG} \
+    PARENT_IMAGE=${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} \
+    NVIDIA_DRIVER_CAPABILITIES=${CUDA_IMAGE:+utility,graphics,video,display} \
     QGIS_VERSION=${QGIS_VERSION} \
     SAGA_VERSION=${SAGA_VERSION} \
+    OTB_VERSION=${OTB_VERSION} \
     NB_USER=${NB_USER} \
     NB_UID=${NB_UID} \
     JUPYTERHUB_VERSION=${JUPYTERHUB_VERSION} \
     JUPYTERLAB_VERSION=${JUPYTERLAB_VERSION} \
     PYTHON_VERSION=${PYTHON_VERSION} \
     GIT_VERSION=${GIT_VERSION} \
-    OTB_VERSION=${OTB_VERSION} \
     TURBOVNC_VERSION=${TURBOVNC_VERSION} \
+    VIRTUALGL_VERSION=${VIRTUALGL_VERSION} \
     BUILD_DATE=${BUILD_START}
 
 ENV NB_GID=100 \
-    ## Make sure grass uses the distro's python
+    ## GRASS GIS: Make sure the distro's python is used
     GRASS_PYTHON=/usr/bin/python3 \
     LANG=en_US.UTF-8 \
     TERM=xterm \
@@ -151,6 +185,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     libclang-dev \
     man-db \
     nano \
+    ncdu \
     procps \
     psmisc \
     screen \
@@ -160,13 +195,25 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     vim-tiny \
     wget \
     zsh \
+    ## JupyterLab R verse image
+    ghostscript \
+    imagemagick \
+    librsvg2-bin \
+    ## JupyterLab R geospatial image
+    nco \
+    netcdf-bin \
+    postgis \
+    protobuf-compiler \
+    sqlite3 \
+    ## Multimedia files trancoding
+    ffmpeg \
     ## Git: Additional runtime dependencies
     libcurl3-gnutls \
     liberror-perl \
     ## Git: Additional runtime recommendations
     less \
     ssh-client \
-    ## QGIS Desktop: Additional runtime dependencies
+    ## QGIS: Additional runtime dependencies
     '^libexiv2-[0-9]+$' \
     '^libgdal[0-9]+$' \
     libgeos-c1v5 \
@@ -196,7 +243,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     qt3d-gltfsceneio-plugin \
     qt3d-scene2d-plugin \
     qt5-image-formats-plugins \
-    ## QGIS Desktop: Python 3 Support
+    ## QGIS: Python 3 Support
     gdal-bin \
     libfcgi0ldbl \
     libsqlite3-mod-spatialite \
@@ -219,9 +266,9 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     python3-sip \
     python3-yaml \
     qttools5-dev-tools \
-    ## QGIS Desktop: Additional runtime recommendations
+    ## QGIS: Additional runtime recommendations
     grass \
-    ## QGIS Desktop: Additional runtime suggestions
+    ## QGIS: Additional runtime suggestions
     gpsbabel \
     ## Xfce Lightweight Desktop Environment
     adwaita-icon-theme* \
@@ -242,6 +289,12 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     librsvg2-common \
     tumbler \
     xdg-user-dirs \
+    ## Thunar recommends
+    gvfs \
+    libglib2.0-bin \
+    ## Thunar suggests
+    thunar-archive-plugin \
+    xarchiver \
     ## SAGA GIS: Supplementary runtime dependencies [^1]
     libdxflib3 \
     libhpdf-2.3.0 \
@@ -291,7 +344,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   && if [ ! -f "/usr/lib/websockify/rebind.so" ]; then \
     ln -rs /usr/lib/websockify/rebind*.so /usr/lib/websockify/rebind.so; \
   fi \
-  ## Dynamic linker run time bindings for grass
+  ## GRASS GIS: Configure dynamic linker run time bindings
   && echo "$(grass --config path)/lib" | tee /etc/ld.so.conf.d/libgrass.conf \
   && ldconfig \
   ## Xfce: Remove 'Log Out' from Applications
@@ -324,9 +377,9 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     ## ("/usr/bin/python" and friends)
     for src in pydoc3 python3 python3-config; do \
       dst="$(echo "$src" | tr -d 3)"; \
-      [ -s "/usr/bin/$src" ]; \
-      [ ! -e "/usr/bin/$dst" ]; \
-      ln -svT "$src" "/usr/bin/$dst"; \
+      if [ -s "/usr/bin/$src" ] && [ ! -e "/usr/bin/$dst" ]; then \
+        ln -svT "$src" "/usr/bin/$dst"; \
+      fi \
     done; \
   else \
     ## Force update pip, setuptools and wheel
@@ -339,10 +392,10 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   fi \
   ## Install font MesloLGS NF
   && mkdir -p /usr/share/fonts/truetype/meslo \
-  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -o /usr/share/fonts/truetype/meslo/MesloLGS\ NF\ Regular.ttf \
-  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf -o /usr/share/fonts/truetype/meslo/MesloLGS\ NF\ Bold.ttf \
-  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf -o /usr/share/fonts/truetype/meslo/MesloLGS\ NF\ Italic.ttf \
-  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf -o /usr/share/fonts/truetype/meslo/MesloLGS\ NF\ Bold\ Italic.ttf \
+  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -o "/usr/share/fonts/truetype/meslo/MesloLGS NF Regular.ttf" \
+  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf -o "/usr/share/fonts/truetype/meslo/MesloLGS NF Bold.ttf" \
+  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf -o "/usr/share/fonts/truetype/meslo/MesloLGS NF Italic.ttf" \
+  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf -o "/usr/share/fonts/truetype/meslo/MesloLGS NF Bold Italic.ttf" \
   && fc-cache -fv \
   ## Git: Set default branch name to main
   && git config --system init.defaultBranch main \
@@ -356,6 +409,11 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   fi \
   ## Add user
   && useradd -l -m -s $(which zsh) -N -u ${NB_UID} ${NB_USER} \
+  ## Mark home directory as populated
+  && touch /home/${NB_USER}/.populated \
+  && chown ${NB_UID}:${NB_GID} /home/${NB_USER}/.populated \
+  && chmod go+w /home/${NB_USER}/.populated \
+  ## Create backup directory for home directory
   && mkdir -p /var/backups/skel \
   && chown ${NB_UID}:${NB_GID} /var/backups/skel \
   ## Install Tini
@@ -376,13 +434,25 @@ RUN export PIP_BREAK_SYSTEM_PACKAGES=1 \
     jupyterlab-git \
     jupyterlab-lsp \
     notebook \
+    nbclassic \
     nbconvert \
     python-lsp-server[all] \
+  ## Jupyter Server Proxy: Set maximum allowed HTTP body size to 10 GiB
+  && sed -i 's/AsyncHTTPClient(/AsyncHTTPClient(max_body_size=10737418240, /g' \
+    /usr/local/lib/python*/*-packages/jupyter_server_proxy/handlers.py \
+  ## Jupyter Server Proxy: Set maximum allowed websocket message size to 1 GiB
+  && sed -i 's/"_default_max_message_size",.*$/"_default_max_message_size", 1024 \* 1024 \* 1024/g' \
+    /usr/local/lib/python*/*-packages/jupyter_server_proxy/websocket.py \
+  && sed -i 's/_default_max_message_size =.*$/_default_max_message_size = 1024 \* 1024 \* 1024/g' \
+    /usr/local/lib/python*/*-packages/tornado/websocket.py \
+  ## Copy custom fonts
+  && mkdir -p /usr/local/share/jupyter/lab/static/assets/fonts \
+  && cp -a /usr/share/fonts/truetype/meslo/*.ttf /usr/local/share/jupyter/lab/static/assets/fonts \
   ## Include custom fonts
-  && sed -i 's|</head>|<link rel="preload" href="{{page_config.fullStaticUrl}}/assets/fonts/MesloLGS-NF-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous"></head>|g' /usr/local/share/jupyter/lab/static/index.html \
-  && sed -i 's|</head>|<link rel="preload" href="{{page_config.fullStaticUrl}}/assets/fonts/MesloLGS-NF-Italic.woff2" as="font" type="font/woff2" crossorigin="anonymous"></head>|g' /usr/local/share/jupyter/lab/static/index.html \
-  && sed -i 's|</head>|<link rel="preload" href="{{page_config.fullStaticUrl}}/assets/fonts/MesloLGS-NF-Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous"></head>|g' /usr/local/share/jupyter/lab/static/index.html \
-  && sed -i 's|</head>|<link rel="preload" href="{{page_config.fullStaticUrl}}/assets/fonts/MesloLGS-NF-Bold-Italic.woff2" as="font" type="font/woff2" crossorigin="anonymous"></head>|g' /usr/local/share/jupyter/lab/static/index.html \
+  && sed -i 's|</head>|<link rel="preload" href="{{page_config.fullStaticUrl}}/assets/fonts/MesloLGS NF Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous"></head>|g' /usr/local/share/jupyter/lab/static/index.html \
+  && sed -i 's|</head>|<link rel="preload" href="{{page_config.fullStaticUrl}}/assets/fonts/MesloLGS NF Italic.woff2" as="font" type="font/woff2" crossorigin="anonymous"></head>|g' /usr/local/share/jupyter/lab/static/index.html \
+  && sed -i 's|</head>|<link rel="preload" href="{{page_config.fullStaticUrl}}/assets/fonts/MesloLGS NF Bold.woff2" as="font" type="font/woff2" crossorigin="anonymous"></head>|g' /usr/local/share/jupyter/lab/static/index.html \
+  && sed -i 's|</head>|<link rel="preload" href="{{page_config.fullStaticUrl}}/assets/fonts/MesloLGS NF Bold Italic.woff2" as="font" type="font/woff2" crossorigin="anonymous"></head>|g' /usr/local/share/jupyter/lab/static/index.html \
   && sed -i 's|</head>|<link rel="stylesheet" type="text/css" href="{{page_config.fullStaticUrl}}/assets/css/fonts.css"></head>|g' /usr/local/share/jupyter/lab/static/index.html \
   ## Clean up
   && rm -rf /tmp/* \
@@ -415,14 +485,47 @@ RUN apt-get update \
 
 ENV PATH=/opt/TurboVNC/bin:$PATH
 
-# Install TurboVNC
+## Install TurboVNC
 RUN dpkgArch="$(dpkg --print-architecture)" \
-  && wget -q "https://sourceforge.net/projects/turbovnc/files/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_${dpkgArch}.deb/download" -O turbovnc.deb \
+  && curl -fsSL "https://github.com/TurboVNC/turbovnc/releases/download/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_${dpkgArch}.deb" -o turbovnc.deb \
   && apt-get install -y ./turbovnc.deb \
+  && if [ -n "$CUDA_IMAGE" ]; then \
+    ## Install VirtualGL
+    curl -fsSL "https://github.com/VirtualGL/virtualgl/releases/download/${VIRTUALGL_VERSION}/virtualgl_${VIRTUALGL_VERSION}_${dpkgArch}.deb" -o virtualgl.deb; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+      mesa-utils \
+      ./virtualgl.deb; \
+    ## Install misc Vulkan utilities
+    apt-get install -y --no-install-recommends \
+      mesa-vulkan-drivers \
+      vulkan-tools; \
+    ## Make libraries available for preload
+    chmod u+s /usr/lib/libvglfaker.so; \
+    chmod u+s /usr/lib/libdlfaker.so; \
+    ## Configure EGL manually (fallback)
+    mkdir -p /usr/share/glvnd/egl_vendor.d/; \
+    echo "{\n\
+    \"file_format_version\" : \"1.0.0\",\n\
+    \"ICD\" : {\n\
+        \"library_path\" : \"libEGL_nvidia.so.0\"\n\
+    }\n\
+}" > /usr/share/glvnd/egl_vendor.d/10_nvidia.json; \
+    ## Configure Vulkan manually (fallback)
+    VULKAN_API_VERSION=$(dpkg -s libvulkan1 | grep -oP 'Version: [0-9|\.]+' | grep -oP '[0-9]+(\.[0-9]+)(\.[0-9]+)'); \
+    mkdir -p /etc/vulkan/icd.d/; \
+    echo "{\n\
+    \"file_format_version\" : \"1.0.0\",\n\
+    \"ICD\": {\n\
+        \"library_path\": \"libGLX_nvidia.so.0\",\n\
+        \"api_version\" : \"${VULKAN_API_VERSION}\"\n\
+    }\n\
+}" > /etc/vulkan/icd.d/nvidia_icd.json; \
+  fi \
   ## Clean up
   && rm -rf /var/lib/apt/lists/* \
     turbovnc.deb \
-    ${HOME}/.wget-hsts
+    virtualgl.deb
 
 ## Switch back to ${NB_USER} to avoid accidental container runs as root
 USER ${NB_USER}
@@ -436,10 +539,11 @@ WORKDIR ${HOME}
 ## Install Oh My Zsh with Powerlevel10k theme
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended \
   && git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k \
+  && ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k/gitstatus/install -f \
   && sed -i 's/ZSH="\/home\/jovyan\/.oh-my-zsh"/ZSH="${HOME}\/.oh-my-zsh"/g' ${HOME}/.zshrc \
   && sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' ${HOME}/.zshrc \
-  && echo "\n# set PATH so it includes user's private bin if it exists\nif [ -d \"\${HOME}/bin\" -a \"\$SHLVL\" = 1 -a ! \"\$TERM_PROGRAM\" = \"vscode\" ] ; then\n    PATH=\"\${HOME}/bin:\$PATH\"\nfi" >> ${HOME}/.zshrc \
-  && echo "\n# set PATH so it includes user's private bin if it exists\nif [ -d \"\${HOME}/.local/bin\" -a \"\$SHLVL\" = 1 -a ! \"\$TERM_PROGRAM\" = \"vscode\" ] ; then\n    PATH=\"\${HOME}/.local/bin:\$PATH\"\nfi" >> ${HOME}/.zshrc \
+  && echo "\n# set PATH so it includes user's private bin if it exists\nif [ -d \"\$HOME/bin\" ] && [[ \"\$PATH\" != *\"\$HOME/bin\"* ]] ; then\n    PATH=\"\$HOME/bin:\$PATH\"\nfi" | tee -a ${HOME}/.bashrc ${HOME}/.zshrc \
+  && echo "\n# set PATH so it includes user's private bin if it exists\nif [ -d \"\$HOME/.local/bin\" ] && [[ \"\$PATH\" != *\"\$HOME/.local/bin\"* ]] ; then\n    PATH=\"\$HOME/.local/bin:\$PATH\"\nfi" | tee -a ${HOME}/.bashrc ${HOME}/.zshrc \
   && echo "\n# Update last-activity timestamps while in screen/tmux session\nif [ ! -z \"\$TMUX\" -o ! -z \"\$STY\" ] ; then\n    busy &\nfi" >> ${HOME}/.bashrc \
   && echo "\n# Update last-activity timestamps while in screen/tmux session\nif [ ! -z \"\$TMUX\" -o ! -z \"\$STY\" ] ; then\n    setopt nocheckjobs\n    busy &\nfi" >> ${HOME}/.zshrc \
   && echo "\n# To customize prompt, run \`p10k configure\` or edit ~/.p10k.zsh." >> ${HOME}/.zshrc \
@@ -451,25 +555,29 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 COPY --from=files /files /
 COPY --from=files /files/var/backups/skel ${HOME}
 
-## QGIS Desktop: Install plugin 'Processing Saga NextGen Provider'
+  ## QGIS: Install plugin 'Processing Saga NextGen Provider'
 RUN export QT_QPA_PLATFORM=offscreen \
   && mkdir -p ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
   && cd ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
   && qgis-plugin-manager init \
   && qgis-plugin-manager update \
-  && qgis-plugin-manager install 'Processing Saga NextGen Provider'==0.0.7 \
+  && qgis-plugin-manager install 'Processing Saga NextGen Provider'=="${PROC_SAGA_NG_VERSION:-0.0.7}" \
   && rm -rf .cache_qgis_plugin_manager \
-  ## Enable QGIS plugins
+  ## QGIS: Enable plugins
   && qgis_process plugins enable processing_saga_nextgen \
   && qgis_process plugins enable grassprovider \
   && if [ "$(uname -m)" = "x86_64" ]; then \
+    ## QGIS: Enable OTB plugin
     qgis_process plugins enable otbprovider; \
   fi \
   ## Clean up
   && rm -rf \
-    ${HOME}/.cache \
+    ${HOME}/.cache/QGIS \
+    ${HOME}/.cache/qgis_process_ \
     ${HOME}/.config \
     ${HOME}/.grass* \
+  ## Record population timestamp
+  && date -uIseconds > ${HOME}/.populated \
   ## Create backup of home directory
   && cp -a ${HOME}/. /var/backups/skel
 
@@ -478,5 +586,5 @@ ENV PYTHONPATH=${PYTHONPATH:+$PYTHONPATH:}${OTB_VERSION:+/usr/local/lib/otb/pyth
 EXPOSE 8888
 
 ## Configure container startup
-ENTRYPOINT ["tini", "-g", "--"]
+ENTRYPOINT ["tini", "-g", "--", "start.sh"]
 CMD ["start-notebook.sh"]
