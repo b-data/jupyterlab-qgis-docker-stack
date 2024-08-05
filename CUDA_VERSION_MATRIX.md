@@ -44,6 +44,10 @@ Topmost entry = Tag `ltr`
 
 ## Supported NVIDIA drivers (LTSB)
 
+Only works with
+[NVIDIA Data Center GPUs](https://resources.nvidia.com/l/en-us-gpu) or
+[select NGC-Ready NVIDIA RTX boards](https://docs.nvidia.com/certification-programs/ngc-ready-systems/index.html).
+
 | CUDA   | Driver version 535[^2] | Driver version 470[^3] |
 |:-------|:----------------------:|:----------------------:|
 | 12.5.1 | 🟢                      | 🟢                      |
