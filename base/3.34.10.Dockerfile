@@ -3,7 +3,7 @@ ARG BASE_IMAGE_TAG=12
 ARG CUDA_IMAGE
 ARG CUDA_IMAGE_SUBTAG
 ARG CUDA_VERSION=11.8.0
-ARG QGIS_VERSION=3.34.9
+ARG QGIS_VERSION=3.34.10
 
 ARG SAGA_VERSION
 ARG OTB_VERSION
@@ -14,7 +14,7 @@ ARG PROC_SAGA_NG_VERSION
 ARG NB_USER=jovyan
 ARG NB_UID=1000
 ARG JUPYTERHUB_VERSION=5.1.0
-ARG JUPYTERLAB_VERSION=4.2.4
+ARG JUPYTERLAB_VERSION=4.2.5
 ARG PYTHON_VERSION=3.11.9
 ARG GIT_VERSION=2.46.0
 ARG TURBOVNC_VERSION=3.1.2
@@ -384,12 +384,10 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     done; \
   else \
     ## Force update pip, setuptools and wheel
-    curl -sLO https://bootstrap.pypa.io/get-pip.py; \
-    python get-pip.py \
+    pip install --upgrade --force-reinstall \
       pip \
       setuptools \
       wheel; \
-    rm get-pip.py; \
   fi \
   ## Install font MesloLGS NF
   && mkdir -p /usr/share/fonts/truetype/meslo \
@@ -405,8 +403,8 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   ## Git: Merge the default branch from the default remote when "git pull" is run
   && git config --system pull.rebase false \
   ## Delete potential user with UID 1000
-  && if $(grep -q 1000 /etc/passwd); then \
-    userdel $(id -un 1000); \
+  && if grep -q 1000 /etc/passwd; then \
+    userdel --remove $(id -un 1000); \
   fi \
   ## Add user
   && useradd -l -m -s $(which zsh) -N -u ${NB_UID} ${NB_USER} \
