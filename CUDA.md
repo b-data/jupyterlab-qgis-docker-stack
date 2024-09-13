@@ -72,10 +72,10 @@ cd base && docker build \
   --build-arg BASE_IMAGE_TAG=22.04 \
   --build-arg CUDA_IMAGE=nvidia/cuda \
   --build-arg CUDA_IMAGE_SUBTAG=runtime-ubuntu22.04 \
-  --build-arg CUDA_VERSION=12.6.0 \
+  --build-arg CUDA_VERSION=12.6.1 \
   --build-arg QGIS_VERSION=3.38.2 \
   --build-arg OTB_VERSION=9.0.0 \
-  --build-arg PYTHON_VERSION=3.12.5 \
+  --build-arg PYTHON_VERSION=3.12.6 \
   --build-arg GIT_VERSION=2.46.0 \
   -t jupyterlab/cuda/qgis/base \
   -f Dockerfile .
