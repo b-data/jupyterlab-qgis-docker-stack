@@ -78,7 +78,7 @@ cd base && docker build \
   --build-arg SAGA_VERSION=9.1.3 \
   --build-arg OTB_VERSION=9.1.0 \
   --build-arg PROC_SAGA_NG_VERSION=1.0.0 \
-  --build-arg PYTHON_VERSION=3.12.6 \
+  --build-arg PYTHON_VERSION=3.12.7 \
   --build-arg GIT_VERSION=2.46.0 \
   -t jupyterlab/qgis/base \
   -f Dockerfile .

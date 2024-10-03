@@ -75,7 +75,7 @@ cd base && docker build \
   --build-arg CUDA_VERSION=12.6.1 \
   --build-arg QGIS_VERSION=3.38.3 \
   --build-arg OTB_VERSION=9.1.0 \
-  --build-arg PYTHON_VERSION=3.12.6 \
+  --build-arg PYTHON_VERSION=3.12.7 \
   --build-arg GIT_VERSION=2.46.0 \
   -t jupyterlab/cuda/qgis/base \
   -f Dockerfile .
