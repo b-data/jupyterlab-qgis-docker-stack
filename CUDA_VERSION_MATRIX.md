@@ -59,15 +59,15 @@ Only works with
 
 | CUDA   | Driver version 535[^2] | Driver version 470[^3] |
 |:-------|:----------------------:|:----------------------:|
-| 12.6.2 | 🟢                      | 🟢                      |
-| 12.6.1 | 🟢                      | 🟢                      |
-| 12.6.0 | 🟢                      | 🟢                      |
-| 12.5.1 | 🟢                      | 🟢                      |
-| 12.5.0 | 🟢                      | 🟢                      |
-| 12.4.1 | 🟢                      | 🟢                      |
+| 12.6.1 | 🟢                      | 🔵                      |
+| 12.6.0 | 🟢                      | 🔵                      |
+| 12.5.1 | 🟢                      | 🔵                      |
+| 12.5.0 | 🟢                      | 🔵                      |
+| 12.4.1 | 🟢                      | 🔵                      |
 | 11.8.0 | 🟡                      | 🟢                      |
 
-🟢: Works due to the CUDA forward compat package  
+🔵: Supported due to the CUDA forward compat package  
+🟢: Supported due to minor-version compatibility
 🟡: Supported due to backward compatibility
 
 [^2]: EOL: June 2026  
