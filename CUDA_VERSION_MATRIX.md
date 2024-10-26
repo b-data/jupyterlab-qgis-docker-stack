@@ -6,6 +6,7 @@ Topmost entry = Tag `latest`
 
 | QGIS    | SAGA  | CUDA   | cuBLAS    | cuDNN    | NCCL   | Linux distro |
 |:--------|:------|:-------|:----------|:---------|:-------|:-------------|
+| 3.38.4  | 7.3.0 | 12.6.2 | 12.6.3.3  | n/a      | 2.23.4 | Ubuntu 22.04 |
 | 3.38.3  | 7.3.0 | 12.6.2 | 12.6.3.3  | n/a      | 2.23.4 | Ubuntu 22.04 |
 | 3.38.2  | 7.3.0 | 12.6.1 | 12.6.1.4  | n/a      | 2.22.3 | Ubuntu 22.04 |
 | 3.38.1  | 7.3.0 | 12.6.0 | 12.6.0.22 | n/a      | 2.22.3 | Ubuntu 22.04 |
@@ -25,6 +26,7 @@ Topmost entry = Tag `ltr`
 
 | QGIS    | SAGA  | CUDA   | cuBLAS    | cuDNN    | NCCL   | Linux distro |
 |:--------|:------|:-------|:----------|:---------|:-------|:-------------|
+| 3.34.12 | 7.3.0 | 11.8.0 | 11.11.3.6 | n/a      | 2.15.5 | Ubuntu 22.04 |
 | 3.34.11 | 7.3.0 | 11.8.0 | 11.11.3.6 | n/a      | 2.15.5 | Ubuntu 22.04 |
 | 3.34.10 | 7.3.0 | 11.8.0 | 11.11.3.6 | n/a      | 2.15.5 | Ubuntu 22.04 |
 | 3.34.9  | 7.3.0 | 11.8.0 | 11.11.3.6 | n/a      | 2.15.5 | Ubuntu 22.04 |
@@ -57,15 +59,15 @@ Only works with
 
 | CUDA   | Driver version 535[^2] | Driver version 470[^3] |
 |:-------|:----------------------:|:----------------------:|
-| 12.6.2 | 🟢                      | 🟢                      |
-| 12.6.1 | 🟢                      | 🟢                      |
-| 12.6.0 | 🟢                      | 🟢                      |
-| 12.5.1 | 🟢                      | 🟢                      |
-| 12.5.0 | 🟢                      | 🟢                      |
-| 12.4.1 | 🟢                      | 🟢                      |
+| 12.6.1 | 🟢                      | 🔵                      |
+| 12.6.0 | 🟢                      | 🔵                      |
+| 12.5.1 | 🟢                      | 🔵                      |
+| 12.5.0 | 🟢                      | 🔵                      |
+| 12.4.1 | 🟢                      | 🔵                      |
 | 11.8.0 | 🟡                      | 🟢                      |
 
-🟢: Works due to the CUDA forward compat package  
+🔵: Supported due to the CUDA forward compat package  
+🟢: Supported due to minor-version compatibility
 🟡: Supported due to backward compatibility
 
 [^2]: EOL: June 2026  
