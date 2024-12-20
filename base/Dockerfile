@@ -437,6 +437,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
 ## Install JupyterLab
 RUN export PIP_BREAK_SYSTEM_PACKAGES=1 \
   && pip install --force \
+    httpx==0.27.2 \
     git+https://github.com/b-data/jupyter-remote-desktop-proxy.git@QGIS \
     jupyterhub==${JUPYTERHUB_VERSION} \
     jupyterlab==${JUPYTERLAB_VERSION} \
