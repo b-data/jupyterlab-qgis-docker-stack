@@ -1,7 +1,7 @@
 [![minimal-readme compliant](https://img.shields.io/badge/readme%20style-minimal-brightgreen.svg)](https://github.com/RichardLitt/standard-readme/blob/master/example-readmes/minimal-readme.md) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) <a href="https://liberapay.com/benz0li/donate"><img src="https://liberapay.com/assets/widgets/donate.svg" alt="Donate using Liberapay" height="20"></a>
 
-| See the [CUDA-enabled JupyterLab QGIS docker stack](CUDA.md) for GPU accelerated docker images. |
-|:------------------------------------------------------------------------------------------------|
+| See the [CUDA-based JupyterLab QGIS docker stack](CUDA.md) for GPU accelerated docker images. |
+|:----------------------------------------------------------------------------------------------|
 
 # JupyterLab QGIS docker stack
 
@@ -218,7 +218,7 @@ What makes this project different:
    :information_source: Runs on Apple M series using Docker Desktop.
 1. Base image: [Debian](https://hub.docker.com/_/debian) instead of
    [Ubuntu](https://hub.docker.com/_/ubuntu)  
-   :information_source: CUDA-enabled images are Ubuntu-based.
+   :information_source: CUDA-based images are Ubuntu-based.
 1. [TurboVNC](https://turbovnc.org): High-speed VNC version
 1. Just Python – no [Conda](https://github.com/conda/conda) /
    [Mamba](https://github.com/mamba-org/mamba)
