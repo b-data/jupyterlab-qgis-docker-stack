@@ -581,7 +581,10 @@ RUN export QT_QPA_PLATFORM=offscreen \
 
 ENV PYTHONPATH=${PYTHONPATH:+$PYTHONPATH:}${OTB_VERSION:+/usr/local/lib/otb/python}
 
-EXPOSE 8888
+ARG JUPYTER_PORT=8888
+ENV JUPYTER_PORT=${JUPYTER_PORT}
+
+EXPOSE $JUPYTER_PORT
 
 ## Configure container startup
 ENTRYPOINT ["tini", "-g", "--", "start.sh"]
