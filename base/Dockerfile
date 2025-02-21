@@ -147,8 +147,10 @@ COPY --from=saga-gissi /usr /usr
 ## Install Orfeo Toolbox
 COPY --from=otbsi /usr/local /usr/local
 ENV GDAL_DRIVER_PATH=${OTB_VERSION:+disable} \
-    OTB_APPLICATION_PATH=${OTB_VERSION:+/usr/local/lib/otb/applications}
-ENV OTB_APPLICATION_PATH=${OTB_APPLICATION_PATH:-/usr/lib/otb/applications}
+    OTB_APPLICATION_PATH=${OTB_VERSION:+/usr/local/lib/otb/applications} \
+    OTB_INSTALL_DIR=${OTB_VERSION:+/usr/local}
+ENV OTB_APPLICATION_PATH=${OTB_APPLICATION_PATH:-/usr/lib/otb/applications} \
+    OTB_INSTALL_DIR=${OTB_INSTALL_DIR:-/usr}
 
 USER root
 
@@ -260,6 +262,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     python3-pyqt5.qsci \
     python3-pyqt5.qtmultimedia \
     python3-pyqt5.qtpositioning \
+    python3-pyqt5.qtserialport \
     python3-pyqt5.qtsql \
     python3-pyqt5.qtsvg \
     python3-pyqt5.qtwebkit \
@@ -319,6 +322,14 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
         apt-get -y install --no-install-recommends \
           '^libopenthreads[0-9]+$' \
           libossim1; \
+      fi; \
+      ## Orfeo Toolbox: Clean up installation
+      bash -c 'rm -rf /usr/local/{otbenv.profile,recompile_bindings.sh,tools}'; \
+      if [ -f /usr/local/README ]; then \
+        mv /usr/local/README /usr/local/share/doc/otb; \
+      fi; \
+      if [ -f /usr/local/LICENSE ]; then \
+        mv /usr/local/LICENSE /usr/local/share/doc/otb; \
       fi \
     else \
       mkdir -p /usr/lib/otb; \
@@ -560,14 +571,15 @@ RUN export QT_QPA_PLATFORM=offscreen \
   && qgis-plugin-manager init \
   && qgis-plugin-manager update \
   && qgis-plugin-manager install 'Processing Saga NextGen Provider'=="${PROC_SAGA_NG_VERSION:-0.0.7}" \
-  && rm -rf .cache_qgis_plugin_manager \
   ## QGIS: Enable plugins
   && qgis_process plugins enable processing_saga_nextgen \
   && qgis_process plugins enable grassprovider \
   && if [ "$(uname -m)" = "x86_64" ]; then \
-    ## QGIS: Enable OTB plugin
-    qgis_process plugins enable otbprovider; \
+    ## QGIS: Install and enable OTB plugin
+    qgis-plugin-manager install 'OrfeoToolbox Provider'; \
+    qgis_process plugins enable orfeoToolbox_provider; \
   fi \
+  && rm -rf .cache_qgis_plugin_manager \
   ## Clean up
   && rm -rf \
     ${HOME}/.cache/QGIS \
