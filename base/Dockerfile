@@ -16,7 +16,7 @@ ARG JUPYTERHUB_VERSION=5.2.1
 ARG JUPYTERLAB_VERSION=4.3.5
 ARG PYTHON_VERSION
 ARG GIT_VERSION
-ARG TURBOVNC_VERSION=3.1.2
+ARG TURBOVNC_VERSION=3.1.4
 ARG VIRTUALGL_VERSION=${CUDA_IMAGE:+3.1.1}
 
 FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} AS files
@@ -437,7 +437,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
 ## Install JupyterLab
 RUN export PIP_BREAK_SYSTEM_PACKAGES=1 \
   && pip install --force \
-    git+https://github.com/b-data/jupyter-remote-desktop-proxy.git@QGIS-TurboVNC3.1.2 \
+    git+https://github.com/b-data/jupyter-remote-desktop-proxy.git@QGIS \
     jupyterhub==${JUPYTERHUB_VERSION} \
     jupyterlab==${JUPYTERLAB_VERSION} \
     jupyterlab-git \
