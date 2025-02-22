@@ -108,9 +108,6 @@ The default shell is Zsh, further enhanced with
 
 * [IPython](base/conf/ipython/usr/local/etc/ipython/ipython_config.py):
   * Only enable figure formats `svg` and `pdf` for IPython.
-* [IPython kernel](base/conf/ipython/usr/local/etc/ipython/ipython_kernel_config.py):
-  * Only enable figure formats `svg` and `pdf` for IPython Kernel (Jupyter
-    Notebooks).
 * [JupyterLab](base/conf/jupyterlab/usr/local/share/jupyter/lab/settings/overrides.json):
   * Theme > Selected Theme: JupyterLab Dark
   * Terminal > Font family: MesloLGS NF
@@ -135,7 +132,7 @@ The default shell is Zsh, further enhanced with
     (Disabled: Ctrl+Alt+Del to trigger session logout)
 * [Xfce Terminal](base/conf/user/var/backups/skel/.config/xfce4/terminal/terminalrc):
   * Set `FontName=MesloLGS NF 10` and `Encoding=UTF-8`.
-* [QGIS Desktop](base/conf/user/var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini):
+* [QGIS](base/conf/user/var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini):
   * Append `/usr/lib/python3/dist-packages` to `PYTHONPATH`.  
     :information_source: One distro refused to find the Python bindings to QGIS
     (at `/usr/lib/python3/dist-packages/qgis`)... Kept for backwards
