@@ -9,7 +9,7 @@ Multi-arch (`linux/amd64`, `linux/arm64/v8`) docker images:
 
 * [`glcr.b-data.ch/jupyterlab/qgis/base`](https://gitlab.b-data.ch/jupyterlab/qgis/base/container_registry)
 
-Images considered stable for QGIS versions ≥ 3.28.3 and ≥ 3.22.16 (LTR).
+Images considered stable for QGIS versions ≥ 3.28.4.
 
 ![Screenshot](assets/screenshot.png)
 
@@ -106,7 +106,7 @@ cd base && docker build \
   -f MAJOR.MINOR.PATCH.Dockerfile .
 ```
 
-For `MAJOR.MINOR.PATCH` ≥ `3.28.3` and `MAJOR.MINOR.PATCH` ≥ `3.22.16` (LTR versions).
+For `MAJOR.MINOR.PATCH` ≥ `3.28.4`.
 
 ### Create home directory
 
