@@ -138,7 +138,10 @@ The default shell is Zsh, further enhanced with
 * [QGIS Desktop](base/conf/user/var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini):
   * Append `/usr/lib/python3/dist-packages` to `PYTHONPATH`.  
     :information_source: One distro refused to find the Python bindings to QGIS
-    (at `/usr/lib/python3/dist-packages/qgis`)...
+    (at `/usr/lib/python3/dist-packages/qgis`)... Kept for backwards
+    compatibility.
+  * Set UI Theme to 'Night Mapping'.
+  * Set OTB application folder and OTB folder.
 * Zsh
   * Oh My Zsh: `~/.zshrc`
     * Set PATH so it includes user's private bin if it exists

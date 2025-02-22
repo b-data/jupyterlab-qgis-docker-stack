@@ -2,11 +2,12 @@ ARG BASE_IMAGE=debian
 ARG BASE_IMAGE_TAG=12
 ARG CUDA_IMAGE
 ARG CUDA_IMAGE_SUBTAG
-ARG CUDA_VERSION
-ARG QGIS_VERSION
+ARG CUDA_VERSION=12.8.0
+ARG QGIS_VERSION=3.40.3
 
 ARG SAGA_VERSION
 ARG OTB_VERSION
+## OTB_VERSION=9.1.0
 
 ARG PROC_SAGA_NG_VERSION
 
@@ -14,10 +15,10 @@ ARG NB_USER=jovyan
 ARG NB_UID=1000
 ARG JUPYTERHUB_VERSION=5.2.1
 ARG JUPYTERLAB_VERSION=4.3.5
-ARG PYTHON_VERSION
-ARG GIT_VERSION
-ARG TURBOVNC_VERSION=3.1.4
-ARG VIRTUALGL_VERSION=${CUDA_IMAGE:+3.1.2}
+ARG PYTHON_VERSION=3.12.9
+ARG GIT_VERSION=2.48.1
+ARG TURBOVNC_VERSION=3.1.2
+ARG VIRTUALGL_VERSION=${CUDA_IMAGE:+3.1.1}
 
 FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} AS files
 
@@ -437,7 +438,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
 ## Install JupyterLab
 RUN export PIP_BREAK_SYSTEM_PACKAGES=1 \
   && pip install --force \
-    git+https://github.com/b-data/jupyter-remote-desktop-proxy.git@QGIS \
+    git+https://github.com/b-data/jupyter-remote-desktop-proxy.git@QGIS-TurboVNC3.1.2 \
     jupyterhub==${JUPYTERHUB_VERSION} \
     jupyterlab==${JUPYTERLAB_VERSION} \
     jupyterlab-git \
@@ -473,6 +474,15 @@ RUN apt-get update \
   && apt-get -y install --no-install-recommends python3-pip \
   && export PIP_BREAK_SYSTEM_PACKAGES=1 \
   && /usr/bin/pip install qgis-plugin-manager \
+  ## QGIS: Make sure qgis_mapserver and qgis_process find the qgis module
+  && cp -a $(which qgis_mapserver) $(which qgis_mapserver)_ \
+  && echo '#!/bin/bash' > $(which qgis_mapserver) \
+  && echo "PYTHONPATH=/usr/lib/python3/dist-packages $(which qgis_mapserver)_ \"\${@}\"" >> \
+    $(which qgis_mapserver) \
+  && cp -a $(which qgis_process) $(which qgis_process)_ \
+  && echo '#!/bin/bash' > $(which qgis_process) \
+  && echo "PYTHONPATH=/usr/lib/python3/dist-packages $(which qgis_process)_ \"\${@}\"" >> \
+    $(which qgis_process) \
   ## Clean up
   && if [ ! -z "$PYTHON_VERSION" ]; then \
     apt-get -y purge python3-pip; \

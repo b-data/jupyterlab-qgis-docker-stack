@@ -2,11 +2,12 @@ ARG BASE_IMAGE=debian
 ARG BASE_IMAGE_TAG=12
 ARG CUDA_IMAGE
 ARG CUDA_IMAGE_SUBTAG
-ARG CUDA_VERSION
-ARG QGIS_VERSION
+ARG CUDA_VERSION=11.8.0
+ARG QGIS_VERSION=3.34.15
 
 ARG SAGA_VERSION
 ARG OTB_VERSION
+## OTB_VERSION=8.1.2
 
 ARG PROC_SAGA_NG_VERSION
 
@@ -14,10 +15,10 @@ ARG NB_USER=jovyan
 ARG NB_UID=1000
 ARG JUPYTERHUB_VERSION=5.2.1
 ARG JUPYTERLAB_VERSION=4.3.5
-ARG PYTHON_VERSION
-ARG GIT_VERSION
-ARG TURBOVNC_VERSION=3.1.4
-ARG VIRTUALGL_VERSION=${CUDA_IMAGE:+3.1.2}
+ARG PYTHON_VERSION=3.11.10
+ARG GIT_VERSION=2.48.1
+ARG TURBOVNC_VERSION=3.1.2
+ARG VIRTUALGL_VERSION=${CUDA_IMAGE:+3.1.1}
 
 FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} AS files
 
@@ -147,10 +148,8 @@ COPY --from=saga-gissi /usr /usr
 ## Install Orfeo Toolbox
 COPY --from=otbsi /usr/local /usr/local
 ENV GDAL_DRIVER_PATH=${OTB_VERSION:+disable} \
-    OTB_APPLICATION_PATH=${OTB_VERSION:+/usr/local/lib/otb/applications} \
-    OTB_INSTALL_DIR=${OTB_VERSION:+/usr/local}
-ENV OTB_APPLICATION_PATH=${OTB_APPLICATION_PATH:-/usr/lib/otb/applications} \
-    OTB_INSTALL_DIR=${OTB_INSTALL_DIR:-/usr}
+    OTB_APPLICATION_PATH=${OTB_VERSION:+/usr/local/lib/otb/applications}
+ENV OTB_APPLICATION_PATH=${OTB_APPLICATION_PATH:-/usr/lib/otb/applications}
 
 USER root
 
@@ -262,7 +261,6 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     python3-pyqt5.qsci \
     python3-pyqt5.qtmultimedia \
     python3-pyqt5.qtpositioning \
-    python3-pyqt5.qtserialport \
     python3-pyqt5.qtsql \
     python3-pyqt5.qtsvg \
     python3-pyqt5.qtwebkit \
@@ -322,14 +320,6 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
         apt-get -y install --no-install-recommends \
           '^libopenthreads[0-9]+$' \
           libossim1; \
-      fi; \
-      ## Orfeo Toolbox: Clean up installation
-      bash -c 'rm -rf /usr/local/{otbenv.profile,recompile_bindings.sh,tools}'; \
-      if [ -f /usr/local/README ]; then \
-        mv /usr/local/README /usr/local/share/doc/otb; \
-      fi; \
-      if [ -f /usr/local/LICENSE ]; then \
-        mv /usr/local/LICENSE /usr/local/share/doc/otb; \
       fi \
     else \
       mkdir -p /usr/lib/otb; \
@@ -437,7 +427,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
 ## Install JupyterLab
 RUN export PIP_BREAK_SYSTEM_PACKAGES=1 \
   && pip install --force \
-    git+https://github.com/b-data/jupyter-remote-desktop-proxy.git@QGIS \
+    git+https://github.com/b-data/jupyter-remote-desktop-proxy.git@QGIS-TurboVNC3.1.2 \
     jupyterhub==${JUPYTERHUB_VERSION} \
     jupyterlab==${JUPYTERLAB_VERSION} \
     jupyterlab-git \
@@ -473,6 +463,15 @@ RUN apt-get update \
   && apt-get -y install --no-install-recommends python3-pip \
   && export PIP_BREAK_SYSTEM_PACKAGES=1 \
   && /usr/bin/pip install qgis-plugin-manager \
+  ## QGIS: Make sure qgis_mapserver and qgis_process find the qgis module
+  && cp -a $(which qgis_mapserver) $(which qgis_mapserver)_ \
+  && echo '#!/bin/bash' > $(which qgis_mapserver) \
+  && echo "PYTHONPATH=/usr/lib/python3/dist-packages $(which qgis_mapserver)_ \"\${@}\"" >> \
+    $(which qgis_mapserver) \
+  && cp -a $(which qgis_process) $(which qgis_process)_ \
+  && echo '#!/bin/bash' > $(which qgis_process) \
+  && echo "PYTHONPATH=/usr/lib/python3/dist-packages $(which qgis_process)_ \"\${@}\"" >> \
+    $(which qgis_process) \
   ## Clean up
   && if [ ! -z "$PYTHON_VERSION" ]; then \
     apt-get -y purge python3-pip; \
@@ -562,15 +561,14 @@ RUN export QT_QPA_PLATFORM=offscreen \
   && qgis-plugin-manager init \
   && qgis-plugin-manager update \
   && qgis-plugin-manager install 'Processing Saga NextGen Provider'=="${PROC_SAGA_NG_VERSION:-0.0.7}" \
+  && rm -rf .cache_qgis_plugin_manager \
   ## QGIS: Enable plugins
   && qgis_process plugins enable processing_saga_nextgen \
   && qgis_process plugins enable grassprovider \
   && if [ "$(uname -m)" = "x86_64" ]; then \
-    ## QGIS: Install and enable OTB plugin
-    qgis-plugin-manager install 'OrfeoToolbox Provider'; \
-    qgis_process plugins enable orfeoToolbox_provider; \
+    ## QGIS: Enable OTB plugin
+    qgis_process plugins enable otbprovider; \
   fi \
-  && rm -rf .cache_qgis_plugin_manager \
   ## Clean up
   && rm -rf \
     ${HOME}/.cache/QGIS \
