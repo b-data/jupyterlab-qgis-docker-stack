@@ -3,7 +3,7 @@
     CUDA_VERSION: "12.8.1"
     OTB_VERSION: "9.1.0"
     PYTHON_VERSION: "3.12.9"
-    GIT_VERSION: "2.48.1"
+    GIT_VERSION: "2.49.0"
 
 .before-script-build: &before-script-build
   - |
