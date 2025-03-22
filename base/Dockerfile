@@ -57,6 +57,10 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
   && chown -R ${NB_UID}:${NB_GID} /files/var/backups/skel \
   && if [ -n "${CUDA_VERSION}" ]; then \
     ## Use entrypoint of CUDA image
+    apt-get update; \
+    apt-get -y install --no-install-recommends git; \
+    git clone https://gitlab.com/nvidia/container-images/cuda.git \
+      /opt/nvidia; \
     mv /opt/nvidia/entrypoint.d /opt/nvidia/nvidia_entrypoint.sh \
       /files/usr/local/bin; \
     mv /files/usr/local/bin/start.sh \
@@ -78,7 +82,16 @@ FROM glcr.b-data.ch/python/psi${PYTHON_VERSION:+/}${PYTHON_VERSION:-:none}${PYTH
 FROM glcr.b-data.ch/git/gsi${GIT_VERSION:+/}${GIT_VERSION:-:none}${GIT_VERSION:+/$BASE_IMAGE}${GIT_VERSION:+:$BASE_IMAGE_TAG} AS gsi
 FROM glcr.b-data.ch/orfeotoolbox/otbsi${OTB_VERSION:+/}${OTB_VERSION:-:none}${OTB_VERSION:+/$BASE_IMAGE}${OTB_VERSION:+:$BASE_IMAGE_TAG} AS otbsi
 
-FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG}
+FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} as base-cuda
+
+## For use with the NVIDIA Container Runtime
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
+ENV NVIDIA_PRODUCT_NAME=CUDA
+
+FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} as base
+
+FROM base${CUDA_IMAGE:+-cuda}
 
 ARG DEBIAN_FRONTEND=noninteractive
 

@@ -14,9 +14,7 @@ The same as the
 [JupyterLab QGIS docker stack](README.md#jupyterlab-qgis-docker-stack) plus
 
 * VirtualGL: Enables OpenGL applications to run with full GPU acceleration.
-* CUDA runtime,
-  [CUDA math libraries](https://developer.nvidia.com/gpu-accelerated-libraries)
-  and [NCCL](https://developer.nvidia.com/nccl)
+* CUDA: Runtime (cudart) and forward compatibility (compat) package.
 
 :point_right: See the [CUDA Version Matrix](CUDA_VERSION_MATRIX.md) for detailed
 information.
@@ -71,7 +69,7 @@ cd base && docker build \
   --build-arg BASE_IMAGE=ubuntu \
   --build-arg BASE_IMAGE_TAG=22.04 \
   --build-arg CUDA_IMAGE=nvidia/cuda \
-  --build-arg CUDA_IMAGE_SUBTAG=runtime-ubuntu22.04 \
+  --build-arg CUDA_IMAGE_SUBTAG=base-ubuntu22.04 \
   --build-arg CUDA_VERSION=12.8.1 \
   --build-arg QGIS_VERSION=3.42.0 \
   --build-arg OTB_VERSION=9.1.0 \
@@ -88,7 +86,7 @@ cd base && docker build \
   --build-arg BASE_IMAGE=ubuntu \
   --build-arg BASE_IMAGE_TAG=22.04 \
   --build-arg CUDA_IMAGE=nvidia/cuda \
-  --build-arg CUDA_IMAGE_SUBTAG=runtime-ubuntu22.04 \
+  --build-arg CUDA_IMAGE_SUBTAG=base-ubuntu22.04 \
   --build-arg CUDA_VERSION=12.8.1 \
   --build-arg QGIS_VERSION=3.40.4 \
   --build-arg OTB_VERSION=9.1.0 \
@@ -213,7 +211,7 @@ which also relies on VirtualGL (EGL backend) for direct access to the GPU.
 
 1. Multi-arch: `linux/amd64`, `linux/arm64/v8`  
    :information_source: No GPU acceleration on Apple M series.
-1. Derived from [`nvidia/cuda:12.8.1-runtime-ubuntu22.04`](https://hub.docker.com/r/nvidia/cuda/tags?page=1&name=12.8.1-runtime-ubuntu22.04)
+1. Derived from [`nvidia/cuda:12.8.1-base-ubuntu22.04`](https://hub.docker.com/r/nvidia/cuda/tags?page=1&name=12.8.1-base-ubuntu22.04)
 1. [VirtualGL](https://virtualgl.org): Fully GPU accelerated OpenGL applications
 1. Just Python – no [Conda](https://github.com/conda/conda) /
    [Mamba](https://github.com/mamba-org/mamba)
