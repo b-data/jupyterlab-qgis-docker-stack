@@ -65,6 +65,7 @@
     - arch:${ARCH}
     - os:linux
   script:
+    - export BUILD_START=$(date -uIseconds)
     - |
       for i in $CI_APP_REPO; do
         docker build \
@@ -80,14 +81,14 @@
           --build-arg PROC_SAGA_NG_VERSION \
           --build-arg PYTHON_VERSION \
           --build-arg GIT_VERSION \
-          --build-arg BUILD_START=$(date -uIseconds) \
+          --build-arg BUILD_START \
           -t $i:$CI_APP_TAG-linux-${ARCH//\/} \
           -t $i:${ADD_TAG:-latest}-linux-${ARCH//\/} \
           base
 
         docker build \
           --build-arg BUILD_ON_IMAGE=$i:$CI_APP_TAG-linux-${ARCH//\/} \
-          --build-arg BUILD_START=$(date -uIseconds) \
+          --build-arg BUILD_START \
           -t $i:$CI_APP_TAG-root-linux-${ARCH//\/} \
           -t $i:${ADD_TAG:-latest}-root-linux-${ARCH//\/} \
           common/subtags/root
@@ -109,6 +110,7 @@
     - |
       for i in $CI_APP_REPO; do
         unset CI_MANIFEST_LIST
+        unset CI_MANIFEST_LIST_ROOT
         for j in $OS_ARCH; do
           export CI_MANIFEST_LIST="$CI_MANIFEST_LIST $i:$CI_APP_TAG-$j"
           export CI_MANIFEST_LIST_ROOT="$CI_MANIFEST_LIST_ROOT $i:$CI_APP_TAG-root-$j"
