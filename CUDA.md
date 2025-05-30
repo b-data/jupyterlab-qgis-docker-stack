@@ -71,7 +71,7 @@ cd base && docker build \
   --build-arg CUDA_IMAGE=nvidia/cuda \
   --build-arg CUDA_IMAGE_SUBTAG=base-ubuntu22.04 \
   --build-arg CUDA_VERSION=12.9.0 \
-  --build-arg QGIS_VERSION=3.42.2 \
+  --build-arg QGIS_VERSION=3.42.3 \
   --build-arg OTB_VERSION=9.1.1 \
   --build-arg PYTHON_VERSION=3.12.10 \
   --build-arg GIT_VERSION=2.49.0 \
@@ -88,7 +88,7 @@ cd base && docker build \
   --build-arg CUDA_IMAGE=nvidia/cuda \
   --build-arg CUDA_IMAGE_SUBTAG=base-ubuntu22.04 \
   --build-arg CUDA_VERSION=12.9.0 \
-  --build-arg QGIS_VERSION=3.40.6 \
+  --build-arg QGIS_VERSION=3.40.7 \
   --build-arg OTB_VERSION=9.1.1 \
   --build-arg PYTHON_VERSION=3.12.10 \
   --build-arg GIT_VERSION=2.49.0 \
