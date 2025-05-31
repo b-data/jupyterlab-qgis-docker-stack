@@ -228,6 +228,66 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     ## Git: Additional runtime recommendations
     less \
     ssh-client \
+  ## Additional python-dev dependencies
+  && if [ -z "$PYTHON_VERSION" ]; then \
+    apt-get -y install --no-install-recommends \
+      python3-dev \
+      ## Install Python package installer
+      ## (dep: python3-distutils, python3-setuptools and python3-wheel)
+      python3-pip \
+      ## Install venv module for python3
+      python3-venv; \
+    ## make some useful symlinks that are expected to exist
+    ## ("/usr/bin/python" and friends)
+    for src in pydoc3 python3 python3-config; do \
+      dst="$(echo "$src" | tr -d 3)"; \
+      if [ -s "/usr/bin/$src" ] && [ ! -e "/usr/bin/$dst" ]; then \
+        ln -svT "$src" "/usr/bin/$dst"; \
+      fi \
+    done; \
+  else \
+    ## Force update pip, setuptools and wheel
+    pip install --upgrade --force-reinstall \
+      pip \
+      setuptools \
+      wheel; \
+  fi \
+  ## Install font MesloLGS NF
+  && mkdir -p /usr/share/fonts/truetype/meslo \
+  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -o "/usr/share/fonts/truetype/meslo/MesloLGS NF Regular.ttf" \
+  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf -o "/usr/share/fonts/truetype/meslo/MesloLGS NF Bold.ttf" \
+  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf -o "/usr/share/fonts/truetype/meslo/MesloLGS NF Italic.ttf" \
+  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf -o "/usr/share/fonts/truetype/meslo/MesloLGS NF Bold Italic.ttf" \
+  && fc-cache -fv \
+  ## Git: Set default branch name to main
+  && git config --system init.defaultBranch main \
+  ## Git: Store passwords for one hour in memory
+  && git config --system credential.helper "cache --timeout=3600" \
+  ## Git: Merge the default branch from the default remote when "git pull" is run
+  && git config --system pull.rebase false \
+  ## Delete potential user with UID 1000
+  && if grep -q 1000 /etc/passwd; then \
+    userdel --remove $(id -un 1000); \
+  fi \
+  ## Add user
+  && useradd -l -m -s $(which zsh) -N -u ${NB_UID} ${NB_USER} \
+  ## Mark home directory as populated
+  && touch /home/${NB_USER}/.populated \
+  && chown ${NB_UID}:${NB_GID} /home/${NB_USER}/.populated \
+  && chmod go+w /home/${NB_USER}/.populated \
+  ## Create backup directory for home directory
+  && mkdir -p /var/backups/skel \
+  && chown ${NB_UID}:${NB_GID} /var/backups/skel \
+  ## Install Tini
+  && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${dpkgArch} -o /usr/local/bin/tini \
+  && chmod +x /usr/local/bin/tini \
+  ## Clean up
+  && rm -rf /tmp/* \
+  && rm -rf /var/lib/apt/lists/* \
+    ${HOME}/.cache
+
+RUN apt-get update \
+  && apt-get -y install --no-install-recommends \
     ## QGIS: Additional runtime dependencies
     '^libexiv2-[0-9]+$' \
     '^libgdal[0-9]+$' \
@@ -388,64 +448,12 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   && if $(! grep -q "jammy" /etc/os-release); then \
     apt-get -y install --no-install-recommends '^libvigraimpex[0-9]+$'; \
   fi \
-  ## Additional python-dev dependencies
-  && if [ -z "$PYTHON_VERSION" ]; then \
-    apt-get -y install --no-install-recommends \
-      python3-dev \
-      ## Install Python package installer
-      ## (dep: python3-distutils, python3-setuptools and python3-wheel)
-      python3-pip \
-      ## Install venv module for python3
-      python3-venv; \
-    ## make some useful symlinks that are expected to exist
-    ## ("/usr/bin/python" and friends)
-    for src in pydoc3 python3 python3-config; do \
-      dst="$(echo "$src" | tr -d 3)"; \
-      if [ -s "/usr/bin/$src" ] && [ ! -e "/usr/bin/$dst" ]; then \
-        ln -svT "$src" "/usr/bin/$dst"; \
-      fi \
-    done; \
-  else \
-    ## Force update pip, setuptools and wheel
-    pip install --upgrade --force-reinstall \
-      pip \
-      setuptools \
-      wheel; \
-  fi \
-  ## Install font MesloLGS NF
-  && mkdir -p /usr/share/fonts/truetype/meslo \
-  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -o "/usr/share/fonts/truetype/meslo/MesloLGS NF Regular.ttf" \
-  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf -o "/usr/share/fonts/truetype/meslo/MesloLGS NF Bold.ttf" \
-  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf -o "/usr/share/fonts/truetype/meslo/MesloLGS NF Italic.ttf" \
-  && curl -sL https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf -o "/usr/share/fonts/truetype/meslo/MesloLGS NF Bold Italic.ttf" \
-  && fc-cache -fv \
-  ## Git: Set default branch name to main
-  && git config --system init.defaultBranch main \
-  ## Git: Store passwords for one hour in memory
-  && git config --system credential.helper "cache --timeout=3600" \
-  ## Git: Merge the default branch from the default remote when "git pull" is run
-  && git config --system pull.rebase false \
-  ## Delete potential user with UID 1000
-  && if grep -q 1000 /etc/passwd; then \
-    userdel --remove $(id -un 1000); \
-  fi \
-  ## Add user
-  && useradd -l -m -s $(which zsh) -N -u ${NB_UID} ${NB_USER} \
-  ## Mark home directory as populated
-  && touch /home/${NB_USER}/.populated \
-  && chown ${NB_UID}:${NB_GID} /home/${NB_USER}/.populated \
-  && chmod go+w /home/${NB_USER}/.populated \
-  ## Create backup directory for home directory
-  && mkdir -p /var/backups/skel \
-  && chown ${NB_UID}:${NB_GID} /var/backups/skel \
-  ## Install Tini
-  && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${dpkgArch} -o /usr/local/bin/tini \
-  && chmod +x /usr/local/bin/tini \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/* \
     ${HOME}/.cache \
-    ${HOME}/.grass*
+    ${HOME}/.grass* \
+    ${HOME}/.launchpadlib
 
 ## Install JupyterLab
 RUN export PIP_BREAK_SYSTEM_PACKAGES=1 \
@@ -585,6 +593,7 @@ RUN export QT_QPA_PLATFORM=offscreen \
   fi \
   && rm -rf .cache_qgis_plugin_manager \
   ## Clean up
+  && rm -rf /tmp/* \
   && rm -rf \
     ${HOME}/.cache/QGIS \
     ${HOME}/.cache/qgis_process_ \
