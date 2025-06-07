@@ -493,12 +493,14 @@ RUN apt-get update \
   ## Install QGIS-Plugin-Manager
   && apt-get -y install --no-install-recommends python3-pip \
   && export PIP_BREAK_SYSTEM_PACKAGES=1 \
-  && /usr/bin/pip install qgis-plugin-manager \
+  && /usr/bin/pip install \
+    git+https://github.com/benz0li/qgis-plugin-manager.git@1.6.5 \
   ## Clean up
   && if [ ! -z "$PYTHON_VERSION" ]; then \
     apt-get -y purge python3-pip; \
     apt-get -y autoremove; \
   fi \
+  && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/* \
     ${HOME}/.cache \
     ${HOME}/.config \
@@ -596,7 +598,7 @@ RUN export QT_QPA_PLATFORM=offscreen \
   && rm -rf /tmp/* \
   && rm -rf \
     ${HOME}/.cache/QGIS \
-    ${HOME}/.cache/qgis_process_ \
+    ${HOME}/.cache/qgis_process* \
     ${HOME}/.config \
     ${HOME}/.grass* \
   ## Record population timestamp
