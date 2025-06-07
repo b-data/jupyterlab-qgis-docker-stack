@@ -168,8 +168,6 @@ ENV OTB_APPLICATION_PATH=${OTB_APPLICATION_PATH:-/usr/lib/otb/applications} \
 USER root
 
 RUN dpkgArch="$(dpkg --print-architecture)" \
-  && export $(cat /etc/os-release | grep "^ID=debian" | xargs) \
-    > /dev/null \
   ## Unminimise if the system has been minimised
   && if [ $(command -v unminimize) ]; then \
     yes | unminimize; \
@@ -286,7 +284,9 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   && rm -rf /var/lib/apt/lists/* \
     ${HOME}/.cache
 
-RUN apt-get update \
+RUN export $(cat /etc/os-release | grep "^ID=debian" | xargs) \
+    > /dev/null \
+  && apt-get update \
   && apt-get -y install --no-install-recommends \
     ## QGIS: Additional runtime dependencies
     '^libexiv2-[0-9]+$' \
