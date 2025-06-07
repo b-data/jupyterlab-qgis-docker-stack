@@ -499,6 +499,7 @@ RUN apt-get update \
     apt-get -y purge python3-pip; \
     apt-get -y autoremove; \
   fi \
+  && rm -rf /tmp/* \
   && rm -rf /var/lib/apt/lists/* \
     ${HOME}/.cache \
     ${HOME}/.config \
@@ -596,7 +597,7 @@ RUN export QT_QPA_PLATFORM=offscreen \
   && rm -rf /tmp/* \
   && rm -rf \
     ${HOME}/.cache/QGIS \
-    ${HOME}/.cache/qgis_process_ \
+    ${HOME}/.cache/qgis_process* \
     ${HOME}/.config \
     ${HOME}/.grass* \
   ## Record population timestamp
