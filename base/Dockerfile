@@ -383,7 +383,7 @@ RUN export $(cat /etc/os-release | grep "^ID=debian" | xargs) \
       '^libboost-filesystem[0-9].[0-9]+.[0-9]$' \
       '^libboost-serialization[0-9].[0-9]+.[0-9]$' \
       libglew2.* \
-      '^libinsighttoolkit4.[0-9]+$' \
+      '^libinsighttoolkit[0-9].[0-9]+$' \
       libmuparser2v5 \
       libmuparserx4.* \
       '^libopencv-core[0-9][0-9.][0-9][a-z]?$' \
