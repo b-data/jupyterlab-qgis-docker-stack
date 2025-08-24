@@ -1,6 +1,6 @@
 .env:
   variables:
-    CUDA_VERSION: "12.9.1"
+    CUDA_VERSION: "13.0.0"
     OTB_VERSION: "9.1.1"
     PYTHON_VERSION: "3.12.11"
     GIT_VERSION: "2.51.0"
@@ -14,6 +14,7 @@ workflow:
     - if: $CI_COMMIT_BRANCH == "ltr" && $BASE_IMAGE == "ubuntu"
       variables:
         BASE_IMAGE_TAG: "22.04"
+        CUDA_VERSION: "12.9.1"
     - if: $CI_COMMIT_BRANCH
 
 .before-script-build: &before-script-build
