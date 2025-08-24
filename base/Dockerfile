@@ -306,7 +306,6 @@ RUN export $(cat /etc/os-release | grep "^ID=debian" | xargs) \
     libqt5quickwidgets5 \
     libqt5serialport5 \
     libqt5sql5 \
-    libqt5webkit5 \
     libqt5widgets5 \
     libqt5xml5 \
     libqwt-qt5-6 \
@@ -338,10 +337,18 @@ RUN export $(cat /etc/os-release | grep "^ID=debian" | xargs) \
     python3-pyqt5.qtserialport \
     python3-pyqt5.qtsql \
     python3-pyqt5.qtsvg \
-    python3-pyqt5.qtwebkit \
-    python3-sip \
     python3-yaml \
     qttools5-dev-tools \
+  && if $(grep -q "trixie" /etc/os-release); then \
+    apt-get -y install --no-install-recommends \
+      python3-pyqt5.sip; \
+  else \
+    apt-get -y install --no-install-recommends \
+      libqt5webkit5 \
+      python3-pyqt5.qtwebkit \
+      python3-sip; \
+  fi \
+  && apt-get -y install --no-install-recommends \
     ## QGIS: Additional runtime recommendations
     grass \
     ## QGIS: Additional runtime suggestions
