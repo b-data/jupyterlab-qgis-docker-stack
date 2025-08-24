@@ -6,7 +6,7 @@ Topmost entry = Tag `latest`
 
 | QGIS    | SAGA  | CUDA   | cuBLAS    | cuDNN    | NCCL   | Linux distro |
 |:--------|:------|:-------|:----------|:---------|:-------|:-------------|
-| 3.44.2  | 7.3.0 | 12.9.1 | n/a       | n/a      | n/a    | Ubuntu 22.04 |
+| 3.44.2  | 9.3.1 | 13.0.0 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
 | 3.44.1  | 7.3.0 | 12.9.1 | n/a       | n/a      | n/a    | Ubuntu 22.04 |
 | 3.44.0  | 7.3.0 | 12.9.1 | n/a       | n/a      | n/a    | Ubuntu 22.04 |
 | 3.42.3  | 7.3.0 | 12.9.1 | n/a       | n/a      | n/a    | Ubuntu 22.04 |
@@ -60,6 +60,7 @@ Topmost entry = Tag `ltr`
 
 | CUDA   | Linux driver version | Windows driver version[^1] |
 |:-------|:---------------------|:---------------------------|
+| 13.0.0 | ≥ 580.65.06          | n/a                        |
 | 12.9.1 | ≥ 575.57.08          | ≥ 576.57                   |
 | 12.9.0 | ≥ 575.51.03          | ≥ 576.02                   |
 | 12.8.1 | ≥ 570.124.06         | ≥ 572.61                   |
@@ -84,6 +85,7 @@ Only works with
 
 | CUDA   | Driver version 535[^2] | Driver version 470[^3] |
 |:-------|:----------------------:|:----------------------:|
+| 13.0.0 | 🔵                      | 🔴                      |
 | 12.9.1 | 🟢                      | 🔵                      |
 | 12.9.0 | 🟢                      | 🔵                      |
 | 12.8.1 | 🟢                      | 🔵                      |
@@ -97,6 +99,7 @@ Only works with
 | 12.4.1 | 🟢                      | 🔵                      |
 | 11.8.0 | 🟡                      | 🟢                      |
 
+🔴: Not supported
 🔵: Supported due to the CUDA forward compat package  
 🟢: Supported due to minor-version compatibility
 🟡: Supported due to backward compatibility
