@@ -11,6 +11,9 @@ workflow:
       variables:
         BASE_IMAGE_TAG: "12"
         SAGA_VERSION: "9.1.3"
+    - if: $CI_COMMIT_BRANCH == "ltr" && $BASE_IMAGE == "ubuntu"
+      variables:
+        BASE_IMAGE_TAG: "22.04"
     - if: $CI_COMMIT_BRANCH
 
 .before-script-build: &before-script-build
