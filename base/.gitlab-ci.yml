@@ -1,25 +1,28 @@
 .env:
   variables:
-    CUDA_VERSION: "13.0.0"
-    OTB_VERSION: "9.1.1"
-    PYTHON_VERSION: "3.13.7"
     GIT_VERSION: "2.51.0"
 
 workflow:
   rules:
     - if: $CI_COMMIT_BRANCH == "main" && $CUDA_BASE_IMAGE != "ubuntu"
       variables:
+        OTB_VERSION: "9.1.1"
         PROC_SAGA_NG_VERSION: "1.0.0"
+        PYTHON_VERSION: "3.13.7"
     - if: $CI_COMMIT_BRANCH == "main" && $CUDA_BASE_IMAGE == "ubuntu"
       variables:
         BASE_IMAGE: "$CUDA_BASE_IMAGE"
         BASE_IMAGE_TAG: "$CUDA_BASE_IMAGE_TAG"
         CUDA_IMAGE_SUBTAG: "base-$BASE_IMAGE$BASE_IMAGE_TAG"
+        CUDA_VERSION: "13.0.0"
+        OTB_VERSION: "9.1.1"
         PROC_SAGA_NG_VERSION: "1.0.0"
+        PYTHON_VERSION: "3.13.7"
     - if: $CI_COMMIT_BRANCH == "ltr" && $CUDA_BASE_IMAGE != "ubuntu"
       variables:
         BASE_IMAGE_TAG: "12"
         SAGA_VERSION: "9.1.3"
+        OTB_VERSION: "9.1.1"
         PROC_SAGA_NG_VERSION: "1.0.0"
         PYTHON_VERSION: "3.12.11"
     - if: $CI_COMMIT_BRANCH == "ltr" && $CUDA_BASE_IMAGE == "ubuntu"
@@ -28,6 +31,7 @@ workflow:
         BASE_IMAGE_TAG: "22.04"
         CUDA_IMAGE_SUBTAG: "base-$BASE_IMAGE$BASE_IMAGE_TAG"
         CUDA_VERSION: "12.9.1"
+        OTB_VERSION: "9.1.1"
         PYTHON_VERSION: "3.12.11"
     - if: $CI_COMMIT_BRANCH
 
