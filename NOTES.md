@@ -191,19 +191,18 @@ standard 2160p/4K UHD (3840x2160):
    xrandr --addmode VNC-0 "3840x2160_60.00"
    xrandr -s 3840x2160
    export DPI=192
+
+   # Debian 13
+   export GDK_SCALE=2
+   export QT_SCALE_FACTOR=2
    ```  
    :information_source: xrandr values according to command `gtf 3840 2160 60`
 1. Close 'QGIS Desktop'.
 1. Stop and restart the Jupyter server.
 1. Open 'QGIS Desktop'.
 1. Change the following settings:
-    * Appearance > Settings: Window Scaling: 2x
-    * Window Manager > Style: Theme: Default-xhdpi
     * Mouse and Touchpad > Theme: Size: Increase/Decrease 'Cursor size' if
       required.
-1. Close 'QGIS Desktop'.
-1. Stop and restart the Jupyter server.
-1. Open 'QGIS Desktop'.
 
 With the browser in full screen mode (hidden toolbars), 'QGIS Desktop' *should*
 fit the display perfectly.
