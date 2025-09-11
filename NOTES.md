@@ -201,8 +201,13 @@ standard 2160p/4K UHD (3840x2160):
 1. Stop and restart the Jupyter server.
 1. Open 'QGIS Desktop'.
 1. Change the following settings:
+    * Not Debian 13: Appearance > Settings: Window Scaling: 2x
+    * Not Debian 13: Window Manager > Style: Theme: Default-xhdpi
     * Mouse and Touchpad > Theme: Size: Increase/Decrease 'Cursor size' if
       required.
+1. Close 'QGIS Desktop'.
+1. Stop and restart the Jupyter server.
+1. Open 'QGIS Desktop'.
 
 With the browser in full screen mode (hidden toolbars), 'QGIS Desktop' *should*
 fit the display perfectly.
