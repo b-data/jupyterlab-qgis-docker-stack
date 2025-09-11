@@ -36,6 +36,7 @@ COPY conf/shell /files
 COPY conf${CUDA_IMAGE:+/cuda}/shell /files
 COPY conf/user /files
 COPY conf/xfce /files
+COPY conf${CUDA_IMAGE:+/cuda}/xfce /files
 COPY scripts /files
 
 RUN if [ "$(uname -m)" = "x86_64" ]; then \

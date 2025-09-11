@@ -2,10 +2,10 @@
 
 <channel name="xfce4-panel" version="1.0">
   <property name="plugins" type="empty">
-    <property name="plugin-10" type="string" value="actions">
+    <property name="plugin-14" type="string" value="actions">
       <property name="items" type="array">
         <value type="string" value="-lock-screen"/>
-        <value type="string" value="-switch-user"/>
+        <value type="string" value="+switch-user"/>
         <value type="string" value="+separator"/>
         <value type="string" value="+suspend"/>
         <value type="string" value="-hibernate"/>
