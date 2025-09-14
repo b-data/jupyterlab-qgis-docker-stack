@@ -6,7 +6,7 @@ Topmost entry = Tag `latest`
 
 | QGIS    | SAGA  | CUDA   | cuBLAS    | cuDNN    | NCCL   | Linux distro |
 |:--------|:------|:-------|:----------|:---------|:-------|:-------------|
-| 3.44.2  | 9.3.1 | 13.0.0 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
+| 3.44.2  | 9.3.1 | 13.0.1 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
 | 3.44.1  | 7.3.0 | 12.9.1 | n/a       | n/a      | n/a    | Ubuntu 22.04 |
 | 3.44.0  | 7.3.0 | 12.9.1 | n/a       | n/a      | n/a    | Ubuntu 22.04 |
 | 3.42.3  | 7.3.0 | 12.9.1 | n/a       | n/a      | n/a    | Ubuntu 22.04 |
@@ -60,7 +60,7 @@ Topmost entry = Tag `ltr`
 
 | CUDA   | Linux driver version | Windows driver version[^1] |
 |:-------|:---------------------|:---------------------------|
-| 13.0.0 | ≥ 580.65.06          | n/a                        |
+| 13.0.1 | ≥ 580.82.07          | n/a                        |
 | 12.9.1 | ≥ 575.57.08          | ≥ 576.57                   |
 | 12.9.0 | ≥ 575.51.03          | ≥ 576.02                   |
 | 12.8.1 | ≥ 570.124.06         | ≥ 572.61                   |
@@ -83,26 +83,27 @@ Only works with
 [NVIDIA Data Center GPUs](https://resources.nvidia.com/l/en-us-gpu) or
 [select NGC-Ready NVIDIA RTX boards](https://docs.nvidia.com/certification-programs/ngc-ready-systems/index.html).
 
-| CUDA   | Driver version 535[^2] | Driver version 470[^3] |
-|:-------|:----------------------:|:----------------------:|
-| 13.0.0 | 🔵                      | 🔴                      |
-| 12.9.1 | 🟢                      | 🔵                      |
-| 12.9.0 | 🟢                      | 🔵                      |
-| 12.8.1 | 🟢                      | 🔵                      |
-| 12.8.0 | 🟢                      | 🔵                      |
-| 12.6.3 | 🟢                      | 🔵                      |
-| 12.6.2 | 🟢                      | 🔵                      |
-| 12.6.1 | 🟢                      | 🔵                      |
-| 12.6.0 | 🟢                      | 🔵                      |
-| 12.5.1 | 🟢                      | 🔵                      |
-| 12.5.0 | 🟢                      | 🔵                      |
-| 12.4.1 | 🟢                      | 🔵                      |
-| 11.8.0 | 🟡                      | 🟢                      |
+| CUDA   | Driver version 580[^2] | Driver version 535[^3] | Driver version 470[^4] |
+|:-------|:----------------------:|:----------------------:|:----------------------:|
+| 13.0.1 | 🟢                      | 🔵                      | 🔴                      |
+| 12.9.1 | 🟡                      | 🟢                      | 🔵                      |
+| 12.9.0 | 🟡                      | 🟢                      | 🔵                      |
+| 12.8.1 | 🟡                      | 🟢                      | 🔵                      |
+| 12.8.0 | 🟡                      | 🟢                      | 🔵                      |
+| 12.6.3 | 🟡                      | 🟢                      | 🔵                      |
+| 12.6.2 | 🟡                      | 🟢                      | 🔵                      |
+| 12.6.1 | 🟡                      | 🟢                      | 🔵                      |
+| 12.6.0 | 🟡                      | 🟢                      | 🔵                      |
+| 12.5.1 | 🟡                      | 🟢                      | 🔵                      |
+| 12.5.0 | 🟡                      | 🟢                      | 🔵                      |
+| 12.4.1 | 🟡                      | 🟢                      | 🔵                      |
+| 11.8.0 | 🟡                      | 🟡                      | 🟢                      |
 
-🔴: Not supported
+🔴: Not supported  
 🔵: Supported due to the CUDA forward compat package  
-🟢: Supported due to minor-version compatibility
+🟢: Supported due to minor-version compatibility  
 🟡: Supported due to backward compatibility
 
-[^2]: EOL: June 2026  
-[^3]: EOL: July 2024
+[^2]: EOL: August 2028  
+[^3]: EOL: June 2026  
+[^4]: EOL: July 2024
