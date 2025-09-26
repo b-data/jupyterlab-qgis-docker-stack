@@ -440,6 +440,13 @@ RUN export $(cat /etc/os-release | grep "^ID=debian" | xargs) \
   ## GRASS GIS: Configure dynamic linker run time bindings
   && echo "$(grass --config path)/lib" | tee /etc/ld.so.conf.d/libgrass.conf \
   && ldconfig \
+  ## Xfce: Ubuntu 24.04 (noble) is missing package adwaita-icon-theme-legacy
+  && if $(grep -q "noble" /etc/os-release); then \
+    curl -fsSLO http://mirrors.kernel.org/ubuntu/pool/universe/a/adwaita-icon-theme-legacy/adwaita-icon-theme-legacy_46.2-2_all.deb; \
+    dpkg -i adwaita-icon-theme-legacy_46.2-2_all.deb; \
+    sed -i s/hicolor/AdwaitaLegacy,hicolor/ /usr/share/icons/Adwaita/index.theme; \
+    rm adwaita-icon-theme-legacy_46.2-2_all.deb; \
+  fi \
   ## Xfce: Remove 'Log Out' from Applications
   && rm -f /usr/share/applications/xfce4-session-logout.desktop \
   ## Xfce: Disable Ctrl+Alt+Del to trigger session logout
