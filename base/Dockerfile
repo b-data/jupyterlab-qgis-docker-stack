@@ -270,7 +270,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     userdel --remove $(id -un 1000); \
   fi \
   ## Add user
-  && useradd -l -m -s $(which zsh) -N -u ${NB_UID} ${NB_USER} \
+  && useradd -K HOME_MODE=0755 -l -m -s $(which zsh) -N -u ${NB_UID} ${NB_USER} \
   ## Mark home directory as populated
   && touch /home/${NB_USER}/.populated \
   && chown ${NB_UID}:${NB_GID} /home/${NB_USER}/.populated \
