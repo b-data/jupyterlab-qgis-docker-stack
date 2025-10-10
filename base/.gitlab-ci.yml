@@ -1,6 +1,5 @@
-.env:
-  variables:
-    GIT_VERSION: "2.51.0"
+variables:
+  GIT_VERSION: "2.51.0"
 
 workflow:
   rules:
@@ -76,7 +75,6 @@ workflow:
 
 .build:
   image: quay.io/bedata/docker:dind
-  extends: .env
   stage: build
   services:
     - name: quay.io/bedata/docker:dind
