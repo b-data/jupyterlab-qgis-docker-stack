@@ -7,7 +7,7 @@ workflow:
       variables:
         OTB_VERSION: "9.1.1"
         PROC_SAGA_NG_VERSION: "1.0.0"
-        PYTHON_VERSION: "3.13.7"
+        PYTHON_VERSION: "3.13.9"
     - if: $CI_COMMIT_BRANCH == "main" && $CUDA_BASE_IMAGE == "ubuntu"
       variables:
         BASE_IMAGE: "$CUDA_BASE_IMAGE"
@@ -16,7 +16,7 @@ workflow:
         CUDA_VERSION: "13.0.1"
         OTB_VERSION: "9.1.1"
         PROC_SAGA_NG_VERSION: "1.0.0"
-        PYTHON_VERSION: "3.13.7"
+        PYTHON_VERSION: "3.13.9"
     - if: $CI_COMMIT_BRANCH == "ltr" && $CUDA_BASE_IMAGE != "ubuntu"
       variables:
         BASE_IMAGE_TAG: "12"
