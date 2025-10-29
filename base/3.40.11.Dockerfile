@@ -3,7 +3,7 @@ ARG BASE_IMAGE_TAG=12
 ARG CUDA_IMAGE
 ARG CUDA_IMAGE_SUBTAG
 ARG CUDA_VERSION=12.9.1
-ARG QGIS_VERSION=3.40.10
+ARG QGIS_VERSION=3.40.11
 
 ARG SAGA_VERSION
 ARG OTB_VERSION
@@ -13,12 +13,12 @@ ARG PROC_SAGA_NG_VERSION
 
 ARG NB_USER=jovyan
 ARG NB_UID=1000
-ARG JUPYTERHUB_VERSION=5.3.0
-ARG JUPYTERLAB_VERSION=4.4.5
-ARG PYTHON_VERSION=3.12.11
-ARG GIT_VERSION=2.51.0
-ARG TURBOVNC_VERSION=3.2
-ARG VIRTUALGL_VERSION=${CUDA_IMAGE:+3.1.3}
+ARG JUPYTERHUB_VERSION=5.4.2
+ARG JUPYTERLAB_VERSION=4.4.10
+ARG PYTHON_VERSION=3.12.12
+ARG GIT_VERSION=2.51.1
+ARG TURBOVNC_VERSION=3.2.1
+ARG VIRTUALGL_VERSION=${CUDA_IMAGE:+3.1.4}
 
 FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} AS files
 
@@ -89,6 +89,7 @@ FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CU
 
 ## For use with the NVIDIA Container Runtime
 ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 ENV NVIDIA_PRODUCT_NAME=CUDA
 
 FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} AS base
@@ -270,7 +271,7 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
     userdel --remove $(id -un 1000); \
   fi \
   ## Add user
-  && useradd -l -m -s $(which zsh) -N -u ${NB_UID} ${NB_USER} \
+  && useradd -K HOME_MODE=0755 -l -m -s $(which zsh) -N -u ${NB_UID} ${NB_USER} \
   ## Mark home directory as populated
   && touch /home/${NB_USER}/.populated \
   && chown ${NB_UID}:${NB_GID} /home/${NB_USER}/.populated \
@@ -278,6 +279,8 @@ RUN dpkgArch="$(dpkg --print-architecture)" \
   ## Create backup directory for home directory
   && mkdir -p /var/backups/skel \
   && chown ${NB_UID}:${NB_GID} /var/backups/skel \
+  ## Allow writing to /etc/passwd for the root group
+  && chmod g+w /etc/passwd \
   ## Install Tini
   && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${dpkgArch} -o /usr/local/bin/tini \
   && chmod +x /usr/local/bin/tini \
@@ -440,6 +443,13 @@ RUN export $(cat /etc/os-release | grep "^ID=debian" | xargs) \
   ## GRASS GIS: Configure dynamic linker run time bindings
   && echo "$(grass --config path)/lib" | tee /etc/ld.so.conf.d/libgrass.conf \
   && ldconfig \
+  ## Xfce: Ubuntu 24.04 (noble) is missing package adwaita-icon-theme-legacy
+  && if $(grep -q "noble" /etc/os-release); then \
+    curl -fsSLO http://mirrors.kernel.org/ubuntu/pool/universe/a/adwaita-icon-theme-legacy/adwaita-icon-theme-legacy_46.2-2_all.deb; \
+    dpkg -i adwaita-icon-theme-legacy_46.2-2_all.deb; \
+    sed -i s/hicolor/AdwaitaLegacy,hicolor/ /usr/share/icons/Adwaita/index.theme; \
+    rm adwaita-icon-theme-legacy_46.2-2_all.deb; \
+  fi \
   ## Xfce: Remove 'Log Out' from Applications
   && rm -f /usr/share/applications/xfce4-session-logout.desktop \
   ## Xfce: Disable Ctrl+Alt+Del to trigger session logout
