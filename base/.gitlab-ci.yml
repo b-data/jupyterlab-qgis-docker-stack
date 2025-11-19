@@ -1,5 +1,5 @@
 variables:
-  GIT_VERSION: "2.51.2"
+  GIT_VERSION: "2.52.0"
 
 workflow:
   rules:
