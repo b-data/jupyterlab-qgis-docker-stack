@@ -71,8 +71,9 @@ cd base && docker build \
   --build-arg CUDA_IMAGE=nvidia/cuda \
   --build-arg CUDA_IMAGE_SUBTAG=base-ubuntu24.04 \
   --build-arg CUDA_VERSION=13.0.2 \
-  --build-arg QGIS_VERSION=3.44.4 \
+  --build-arg QGIS_VERSION=3.44.5 \
   --build-arg OTB_VERSION=9.1.1 \
+  --build-arg PROC_SAGA_NG_VERSION=1.0.0 \
   --build-arg PYTHON_VERSION=3.13.9 \
   --build-arg GIT_VERSION=2.52.0 \
   -t jupyterlab/cuda/qgis/base \
@@ -88,7 +89,7 @@ cd base && docker build \
   --build-arg CUDA_IMAGE=nvidia/cuda \
   --build-arg CUDA_IMAGE_SUBTAG=base-ubuntu22.04 \
   --build-arg CUDA_VERSION=12.9.1 \
-  --build-arg QGIS_VERSION=3.40.12 \
+  --build-arg QGIS_VERSION=3.40.13 \
   --build-arg OTB_VERSION=9.1.1 \
   --build-arg PYTHON_VERSION=3.12.12 \
   --build-arg GIT_VERSION=2.52.0 \
