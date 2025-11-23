@@ -43,6 +43,11 @@ Topmost entry = Tag `latest`
 
 [^1]: `amd64` only; QGIS v3.36.0 w/o OTB provider
 
+### Bugs
+
+* Version 3.44.5: Folder `~/processing` is not created at startup
+  * Cross reference: <https://github.com/qgis/QGIS/issues/64029>
+
 ## LTR
 
 Topmost entry = Tag `ltr`
