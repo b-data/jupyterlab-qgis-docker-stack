@@ -6,6 +6,7 @@ Topmost entry = Tag `latest`
 
 | QGIS    | SAGA  | CUDA   | cuBLAS    | cuDNN    | NCCL   | Linux distro |
 |:--------|:------|:-------|:----------|:---------|:-------|:-------------|
+| 3.44.6  | 9.3.1 | 13.1.0 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
 | 3.44.5  | 9.3.1 | 13.1.0 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
 | 3.44.4  | 9.3.1 | 13.0.2 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
 | 3.44.3  | 9.3.1 | 13.0.1 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
@@ -39,6 +40,7 @@ Topmost entry = Tag `ltr`
 
 | QGIS    | SAGA  | CUDA   | cuBLAS    | cuDNN    | NCCL   | Linux distro |
 |:--------|:------|:-------|:----------|:---------|:-------|:-------------|
+| 3.40.14 | 7.3.0 | 12.9.1 | n/a       | n/a      | n/a    | Ubuntu 22.04 |
 | 3.40.13 | 7.3.0 | 12.9.1 | n/a       | n/a      | n/a    | Ubuntu 22.04 |
 | 3.40.12 | 7.3.0 | 12.9.1 | n/a       | n/a      | n/a    | Ubuntu 22.04 |
 | 3.40.11 | 7.3.0 | 12.9.1 | n/a       | n/a      | n/a    | Ubuntu 22.04 |
@@ -62,7 +64,7 @@ Topmost entry = Tag `ltr`
 | 3.34.5  | 7.3.0 | 11.8.0 | 11.11.3.6 | n/a      | 2.15.5 | Ubuntu 22.04 |
 | 3.34.4  | 7.3.0 | 11.8.0 | 11.11.3.6 | 8.9.6.50 | 2.15.5 | Ubuntu 22.04 |
 
-## Recommended NVIDIA driver (Regular)
+## Recommended NVIDIA driver (NFB/PB)
 
 | CUDA   | Linux driver version | Windows driver version[^1] |
 |:-------|:---------------------|:---------------------------|
