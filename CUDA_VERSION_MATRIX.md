@@ -6,6 +6,7 @@ Topmost entry = Tag `latest`
 
 | QGIS    | SAGA  | CUDA   | cuBLAS    | cuDNN    | NCCL   | Linux distro |
 |:--------|:------|:-------|:----------|:---------|:-------|:-------------|
+| 3.44.7  | 9.3.1 | 13.1.0 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
 | 3.44.6  | 9.3.1 | 13.1.0 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
 | 3.44.5  | 9.3.1 | 13.1.0 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
 | 3.44.4  | 9.3.1 | 13.0.2 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
@@ -40,6 +41,7 @@ Topmost entry = Tag `ltr`
 
 | QGIS    | SAGA  | CUDA   | cuBLAS    | cuDNN    | NCCL   | Linux distro |
 |:--------|:------|:-------|:----------|:---------|:-------|:-------------|
+| 3.40.15 | 7.3.0 | 12.9.1 | n/a       | n/a      | n/a    | Ubuntu 22.04 |
 | 3.40.14 | 7.3.0 | 12.9.1 | n/a       | n/a      | n/a    | Ubuntu 22.04 |
 | 3.40.13 | 7.3.0 | 12.9.1 | n/a       | n/a      | n/a    | Ubuntu 22.04 |
 | 3.40.12 | 7.3.0 | 12.9.1 | n/a       | n/a      | n/a    | Ubuntu 22.04 |
