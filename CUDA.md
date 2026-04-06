@@ -62,36 +62,23 @@ platform:
 
 ### Build image (base)
 
-*latest*:
-
-```bash
-cd base && docker build \
-  --build-arg BASE_IMAGE=ubuntu \
-  --build-arg BASE_IMAGE_TAG=24.04 \
-  --build-arg CUDA_IMAGE=nvidia/cuda \
-  --build-arg CUDA_IMAGE_SUBTAG=base-ubuntu24.04 \
-  --build-arg CUDA_VERSION=13.1.1 \
-  --build-arg QGIS_VERSION=3.44.7 \
-  --build-arg OTB_VERSION=9.1.1 \
-  --build-arg PROC_SAGA_NG_VERSION=1.0.0 \
-  --build-arg PYTHON_VERSION=3.13.11 \
-  --build-arg GIT_VERSION=2.53.0 \
-  -t jupyterlab/cuda/qgis/base \
-  -f Dockerfile .
-```
+*latest*: Available dependencies in Ubuntu 24.04 not QGIS 4 ready (Qt6 or
+dependant package, Python or SIP to old)
 
 *ltr/version*:
 
 ```bash
-cd base && docker build \
+cd base
+docker build \
   --build-arg BASE_IMAGE=ubuntu \
-  --build-arg BASE_IMAGE_TAG=22.04 \
+  --build-arg BASE_IMAGE_TAG=24.04 \
   --build-arg CUDA_IMAGE=nvidia/cuda \
-  --build-arg CUDA_IMAGE_SUBTAG=base-ubuntu22.04 \
-  --build-arg CUDA_VERSION=12.9.1 \
-  --build-arg QGIS_VERSION=3.40.15 \
+  --build-arg CUDA_IMAGE_SUBTAG=base-ubuntu24.04 \
+  --build-arg CUDA_VERSION=13.2.0 \
+  --build-arg QGIS_VERSION=3.44.8 \
   --build-arg OTB_VERSION=9.1.1 \
-  --build-arg PYTHON_VERSION=3.12.12 \
+  --build-arg PROC_SAGA_NG_VERSION=1.0.0 \
+  --build-arg PYTHON_VERSION=3.13.11 \
   --build-arg GIT_VERSION=2.53.0 \
   -t jupyterlab/cuda/qgis/base:ltr \
   -f Dockerfile .
@@ -212,7 +199,7 @@ which also relies on VirtualGL (EGL backend) for direct access to the GPU.
 
 1. Multi-arch: `linux/amd64`, `linux/arm64/v8`  
    :information_source: No GPU acceleration on Apple M series.
-1. Derived from [`nvidia/cuda:13.1.1-base-ubuntu24.04`](https://hub.docker.com/r/nvidia/cuda/tags?page=1&name=13.1.1-base-ubuntu24.04)
+1. Derived from [`nvidia/cuda:13.2.0-base-ubuntu24.04`](https://hub.docker.com/r/nvidia/cuda/tags?page=1&name=13.2.0-base-ubuntu24.04)
 1. [VirtualGL](https://virtualgl.org): Fully GPU accelerated OpenGL applications
 1. Just Python – no [Conda](https://github.com/conda/conda) /
    [Mamba](https://github.com/mamba-org/mamba)

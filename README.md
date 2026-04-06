@@ -73,8 +73,9 @@ To install docker, follow the instructions for your platform:
 *latest*:
 
 ```bash
-cd base && docker build \
-  --build-arg QGIS_VERSION=3.44.7 \
+cd base
+docker build \
+  --build-arg QGIS_VERSION=4.0.0 \
   --build-arg OTB_VERSION=9.1.1 \
   --build-arg PROC_SAGA_NG_VERSION=1.0.0 \
   --build-arg PYTHON_VERSION=3.13.11 \
@@ -86,13 +87,13 @@ cd base && docker build \
 *ltr*:
 
 ```bash
-cd base && docker build \
-  --build-arg BASE_IMAGE_TAG=12 \
-  --build-arg QGIS_VERSION=3.40.15 \
-  --build-arg SAGA_VERSION=9.1.3 \
+cd base
+docker build \
+  --build-arg BASE_IMAGE_TAG=13 \
+  --build-arg QGIS_VERSION=3.44.8 \
   --build-arg OTB_VERSION=9.1.1 \
   --build-arg PROC_SAGA_NG_VERSION=1.0.0 \
-  --build-arg PYTHON_VERSION=3.12.12 \
+  --build-arg PYTHON_VERSION=3.13.11 \
   --build-arg GIT_VERSION=2.53.0 \
   -t jupyterlab/qgis/base:ltr \
   -f Dockerfile .
