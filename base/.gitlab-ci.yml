@@ -104,6 +104,7 @@ workflow:
           --build-arg CUDA_IMAGE_LICENSE \
           --build-arg CUDA_VERSION \
           --build-arg QGIS_VERSION \
+          --build-arg PDAL_VERSION \
           --build-arg SAGA_VERSION \
           --build-arg OTB_VERSION \
           --build-arg PROC_SAGA_NG_VERSION \

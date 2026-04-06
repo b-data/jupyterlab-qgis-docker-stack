@@ -4,6 +4,7 @@ ARG CUDA_IMAGE
 ARG CUDA_IMAGE_SUBTAG
 ARG CUDA_VERSION
 ARG QGIS_VERSION
+ARG PDAL_VERSION
 
 ARG SAGA_VERSION
 ARG OTB_VERSION
@@ -104,6 +105,7 @@ ARG CUDA_IMAGE
 ARG CUDA_IMAGE_SUBTAG
 ARG CUDA_VERSION
 ARG QGIS_VERSION
+ARG PDAL_VERSION
 ARG SAGA_VERSION
 ARG OTB_VERSION
 ARG PROC_SAGA_NG_VERSION
@@ -133,6 +135,7 @@ ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
     PARENT_IMAGE=${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} \
     NVIDIA_DRIVER_CAPABILITIES=${CUDA_IMAGE:+utility,graphics,video,display} \
     QGIS_VERSION=${QGIS_VERSION} \
+    PDAL_VERSION=${PDAL_VERSION} \
     SAGA_VERSION=${SAGA_VERSION} \
     OTB_VERSION=${OTB_VERSION} \
     NB_USER=${NB_USER} \
@@ -344,6 +347,8 @@ RUN export $(cat /etc/os-release | grep "^ID=debian" | xargs) \
     python3-pyqt5.qtsvg \
     python3-yaml \
     qttools5-dev-tools \
+    ## PDAL: Additional runtime dependencies
+    '^libhdf5-cpp-[0-9]+.*$' \
   && if $(grep -q "trixie" /etc/os-release); then \
     apt-get -y install --no-install-recommends \
       python3-pyqt5.sip; \
