@@ -520,6 +520,11 @@ RUN apt-get update \
   && apt-get -y install --no-install-recommends python3-pip \
   && export PIP_BREAK_SYSTEM_PACKAGES=1 \
   && /usr/bin/pip install qgis-plugin-manager \
+  ## Install PDAL Python support and plugins
+  && apt-get -y install --no-install-recommends python3-dev \
+  && /usr/bin/pip install pdal pdal-plugins \
+  && mv /usr/local/lib/python*/dist-packages/pdal* \
+    /usr/lib/python3/dist-packages \
   ## QGIS: Make sure qgis_mapserver and qgis_process find the qgis module
   && cp -a $(which qgis_mapserver) $(which qgis_mapserver)_ \
   && echo '#!/bin/bash' > $(which qgis_mapserver) \
@@ -531,7 +536,7 @@ RUN apt-get update \
     $(which qgis_process) \
   ## Clean up
   && if [ ! -z "$PYTHON_VERSION" ]; then \
-    apt-get -y purge python3-pip; \
+    apt-get -y purge python3-pip python3-dev; \
     apt-get -y autoremove; \
   fi \
   && rm -rf /tmp/* \
