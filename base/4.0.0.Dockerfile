@@ -326,6 +326,9 @@ RUN export $(cat /etc/os-release | grep "^ID=debian" | xargs) \
     ocl-icd-libopencl1 \
     ## https://github.com/qgis/QGIS/pull/63784
     pyqt6-dev-tools \
+    ## The shared Python runtime library is required to run QGIS
+    ## To integrate it in a lightweight manner, we install package
+    python3-pyqt6.qtqml \
     qml6-module-qtcharts \
     qml6-module-qtquick-controls \
     qml6-module-qtquick-effects \
