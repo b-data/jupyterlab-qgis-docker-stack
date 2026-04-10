@@ -62,8 +62,10 @@ platform:
 
 ### Build image (base)
 
-*latest*: Available dependencies in Ubuntu 24.04 not QGIS 4 ready (Qt6 or
-dependant package, Python or SIP to old)
+*latest*:
+
+Available dependencies in Ubuntu 24.04 not QGIS 4 ready (Qt6 or dependant
+package, Python or SIP to old).
 
 *ltr/version*:
 
