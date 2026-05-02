@@ -625,6 +625,7 @@ RUN export QT_QPA_PLATFORM=offscreen \
   && qgis-plugin-manager update \
   && cp -r /tmp/processing_saga_nextgen . \
   ## QGIS: Enable plugins
+  && qgis_process plugins enable processing_saga_nextgen \
   && qgis_process plugins enable grassprovider \
   && if [ "$(uname -m)" = "x86_64" ]; then \
     ## QGIS: Install and enable OTB plugin
