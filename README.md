@@ -75,7 +75,7 @@ To install docker, follow the instructions for your platform:
 ```bash
 cd base
 docker build \
-  --build-arg QGIS_VERSION=4.0.1 \
+  --build-arg QGIS_VERSION=4.0.2 \
   --build-arg PDAL_VERSION=2.10.1 \
   --build-arg OTB_VERSION=9.1.1 \
   --build-arg PYTHON_VERSION=3.14.4 \
@@ -90,7 +90,7 @@ docker build \
 cd base
 docker build \
   --build-arg BASE_IMAGE_TAG=13 \
-  --build-arg QGIS_VERSION=3.44.9 \
+  --build-arg QGIS_VERSION=3.44.10 \
   --build-arg PDAL_VERSION=2.10.1 \
   --build-arg OTB_VERSION=9.1.1 \
   --build-arg PYTHON_VERSION=3.13.11 \
