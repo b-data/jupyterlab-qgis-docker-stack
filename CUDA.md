@@ -80,7 +80,6 @@ docker build \
   --build-arg QGIS_VERSION=3.44.9 \
   --build-arg PDAL_VERSION=2.10.1 \
   --build-arg OTB_VERSION=9.1.1 \
-  --build-arg PROC_SAGA_NG_VERSION=1.0.0 \
   --build-arg PYTHON_VERSION=3.13.11 \
   --build-arg GIT_VERSION=2.54.0 \
   -t jupyterlab/cuda/qgis/base:ltr \

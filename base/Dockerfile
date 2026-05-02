@@ -9,8 +9,6 @@ ARG PDAL_VERSION
 ARG SAGA_VERSION
 ARG OTB_VERSION
 
-ARG PROC_SAGA_NG_VERSION
-
 ARG NB_USER=jovyan
 ARG NB_UID=1000
 ARG JUPYTERHUB_VERSION=5.4.4
@@ -85,6 +83,7 @@ FROM glcr.b-data.ch/saga-gis/saga-gissi${SAGA_VERSION:+/}${SAGA_VERSION:-:none}$
 FROM glcr.b-data.ch/python/psi${PYTHON_VERSION:+/}${PYTHON_VERSION:-:none}${PYTHON_VERSION:+/$BASE_IMAGE}${PYTHON_VERSION:+:$BASE_IMAGE_TAG} AS psi
 FROM glcr.b-data.ch/git/gsi${GIT_VERSION:+/}${GIT_VERSION:-:none}${GIT_VERSION:+/$BASE_IMAGE}${GIT_VERSION:+:$BASE_IMAGE_TAG} AS gsi
 FROM glcr.b-data.ch/orfeotoolbox/otbsi${OTB_VERSION:+/}${OTB_VERSION:-:none}${OTB_VERSION:+/$BASE_IMAGE}${OTB_VERSION:+:$BASE_IMAGE_TAG} AS otbsi
+FROM glcr.b-data.ch/qgis-plugins/processing-saga-nextgen:1.0.0-qgis${QGIS_VERSION%%.*} AS processing-saga-nextgen
 
 FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} AS base-cuda
 
@@ -108,7 +107,6 @@ ARG QGIS_VERSION
 ARG PDAL_VERSION
 ARG SAGA_VERSION
 ARG OTB_VERSION
-ARG PROC_SAGA_NG_VERSION
 ARG NB_USER
 ARG NB_UID
 ARG JUPYTERHUB_VERSION
@@ -617,6 +615,7 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 ## Copy files as late as possible to avoid cache busting
 COPY --from=files /files /
 COPY --from=files /files/var/backups/skel ${HOME}
+COPY --from=processing-saga-nextgen --chown=${NB_UID}:${NB_GID} / /tmp
 
   ## QGIS: Install plugin 'Processing Saga NextGen Provider'
 RUN export QT_QPA_PLATFORM=offscreen \
@@ -624,6 +623,7 @@ RUN export QT_QPA_PLATFORM=offscreen \
   && cd ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
   && qgis-plugin-manager init \
   && qgis-plugin-manager update \
+  && cp -r /tmp/processing_saga_nextgen . \
   ## QGIS: Enable plugins
   && qgis_process plugins enable grassprovider \
   && if [ "$(uname -m)" = "x86_64" ]; then \
