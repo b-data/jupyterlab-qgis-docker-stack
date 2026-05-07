@@ -622,11 +622,6 @@ RUN export QT_QPA_PLATFORM=offscreen \
   && qgis-plugin-manager update \
   ## QGIS: Enable plugins
   && qgis_process plugins enable grassprovider \
-  && if [ "$(uname -m)" = "x86_64" ]; then \
-    ## QGIS: Install and enable OTB plugin
-    qgis-plugin-manager install 'OrfeoToolbox Provider'; \
-    qgis_process plugins enable orfeoToolbox_provider; \
-  fi \
   && rm -rf .cache_qgis_plugin_manager \
   ## QGIS Processing Executor: Workaround for the missing --profiles-path option
   ## https://github.com/qgis/QGIS/issues/44783
