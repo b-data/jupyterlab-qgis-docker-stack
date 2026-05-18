@@ -50,8 +50,11 @@ Topmost entry = Tag `latest`
 
 ### Bugs
 
-* Version 4: `qgis_process` is enabling plugins at the default location
-  * Cross reference: <https://github.com/qgis/QGIS/issues/44783>
+* Version 4:
+  * `qgis_mapserver` is unable to start the server with the default settings
+    * Cross reference: <https://github.com/qgis/QGIS/issues/66015>
+  * `qgis_process` is enabling plugins at the default (QGIS3) location
+    * Cross reference: <https://github.com/qgis/QGIS/issues/44783>
 * Version 3.44.5: Folder `~/processing` is not created at startup
   * Cross reference: <https://github.com/qgis/QGIS/issues/64029>
 
