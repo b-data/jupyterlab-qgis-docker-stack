@@ -13,6 +13,11 @@ Images considered stable for QGIS versions ≥ 3.28.4.
 
 ![Screenshot](assets/screenshot.png)
 
+Due to ongoing DDoS attacks, access to b-data's IT infrastructure has been
+blocked for all Chinese servers.  
+:information_source: For any requests to unblock individual Chinese IPs or CIDR
+blocks, please contact <olivier.benz@b-data.ch>.
+
 **Features**
 
 * **JupyterLab**: A web-based interactive development environment for Jupyter
