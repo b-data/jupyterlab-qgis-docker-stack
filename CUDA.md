@@ -8,6 +8,11 @@ Images available for QGIS versions ≥ 3.34.0.
 
 ![CUDA screenshot](assets/cuda-screenshot.png)
 
+Due to ongoing DDoS attacks, access to b-data's IT infrastructure has been
+blocked for all Chinese servers.  
+:information_source: For any requests to unblock individual Chinese IPs or CIDR
+blocks, please contact <olivier.benz@b-data.ch>.
+
 **Features**
 
 The same as the
