@@ -81,7 +81,7 @@ docker build \
   --build-arg CUDA_IMAGE_SUBTAG=base-ubuntu24.04 \
   --build-arg CUDA_VERSION=13.3.0 \
   --build-arg QGIS_VERSION=3.44.11 \
-  --build-arg PDAL_VERSION=2.10.1 \
+  --build-arg PDAL_VERSION=2.10.2 \
   --build-arg OTB_VERSION=9.1.1 \
   --build-arg PYTHON_VERSION=3.13.11 \
   --build-arg GIT_VERSION=2.54.0 \
