@@ -12,7 +12,7 @@ workflow:
         BASE_IMAGE: "$CUDA_BASE_IMAGE"
         BASE_IMAGE_TAG: "$CUDA_BASE_IMAGE_TAG"
         CUDA_IMAGE_SUBTAG: "base-$BASE_IMAGE$BASE_IMAGE_TAG"
-        CUDA_VERSION: "13.2.1"
+        CUDA_VERSION: "13.3.0"
         OTB_VERSION: "9.1.1"
         PYTHON_VERSION: "3.14.5"
     - if: $CI_COMMIT_BRANCH == "ltr" && $CUDA_BASE_IMAGE != "ubuntu"
@@ -25,7 +25,7 @@ workflow:
         BASE_IMAGE: "$CUDA_BASE_IMAGE"
         BASE_IMAGE_TAG: "24.04"
         CUDA_IMAGE_SUBTAG: "base-$BASE_IMAGE$BASE_IMAGE_TAG"
-        CUDA_VERSION: "13.2.1"
+        CUDA_VERSION: "13.3.0"
         OTB_VERSION: "9.1.1"
         PYTHON_VERSION: "3.13.11"
     - if: $CI_COMMIT_BRANCH
