@@ -623,11 +623,6 @@ RUN export QT_QPA_PLATFORM=offscreen \
   ## QGIS: Enable plugins
   && qgis_process plugins enable grassprovider \
   && rm -rf .cache_qgis_plugin_manager \
-  ## QGIS Processing Executor: Workaround for the missing --profiles-path option
-  ## https://github.com/qgis/QGIS/issues/44783
-  && mv ${HOME}/.local/share/QGIS/QGIS3 ${HOME}/.local/share/QGIS/QGIS4 \
-  && mv ${HOME}/.local/share/QGIS/QGIS4/profiles/default/QGIS/QGIS3.ini \
-    ${HOME}/.local/share/QGIS/QGIS4/profiles/default/QGIS/QGIS4.ini \
   ## Clean up
   && rm -rf /tmp/* \
   && rm -rf \
@@ -638,8 +633,7 @@ RUN export QT_QPA_PLATFORM=offscreen \
   ## Record population timestamp
   && date -uIseconds > ${HOME}/.populated \
   ## Create backup of home directory
-  && cp -a ${HOME}/. /var/backups/skel \
-  && rm -rf /var/backups/skel/.local/share/QGIS/QGIS3
+  && cp -a ${HOME}/. /var/backups/skel
 
 ENV PYTHONPATH=${PYTHONPATH:+$PYTHONPATH:}${OTB_VERSION:+/usr/local/lib/otb/python}
 
