@@ -42,16 +42,16 @@ COPY scripts /files
 
 RUN if [ "$(uname -m)" = "x86_64" ]; then \
     ## QGIS: Set OTB application folder and OTB folder
-    qgis3Ini="/files/var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini"; \
-    echo "\n[Processing]" >> ${qgis3Ini}; \
+    qgis4Ini="/files/var/backups/skel/.local/share/QGIS/QGIS4/profiles/default/QGIS/QGIS4.ini"; \
+    echo "\n[Processing]" >> ${qgis4Ini}; \
     if [ -z "${OTB_VERSION}" ]; then \
       echo "Configuration\OTB_APP_FOLDER=/usr/lib/otb/applications" >> \
-        ${qgis3Ini}; \
-      echo "Configuration\OTB_FOLDER=/usr\n" >> ${qgis3Ini}; \
+        ${qgis4Ini}; \
+      echo "Configuration\OTB_FOLDER=/usr\n" >> ${qgis4Ini}; \
     else \
       echo "Configuration\OTB_APP_FOLDER=/usr/local/lib/otb/applications" >> \
-        ${qgis3Ini}; \
-      echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis3Ini}; \
+        ${qgis4Ini}; \
+      echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis4Ini}; \
     fi \
   fi \
   ## Copy content of skel directory to backup
@@ -616,8 +616,8 @@ COPY --from=files /files /
 COPY --from=files /files/var/backups/skel ${HOME}
 
 RUN export QT_QPA_PLATFORM=offscreen \
-  && mkdir -p ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
-  && cd ${HOME}/.local/share/QGIS/QGIS3/profiles/default/python/plugins \
+  && mkdir -p ${HOME}/.local/share/QGIS/QGIS4/profiles/default/python/plugins \
+  && cd ${HOME}/.local/share/QGIS/QGIS4/profiles/default/python/plugins \
   && qgis-plugin-manager init \
   && qgis-plugin-manager update \
   ## QGIS: Enable plugins
