@@ -41,6 +41,7 @@ Topmost entry = Tag `ltr`
 
 | QGIS    | SAGA  | CUDA   | cuBLAS    | cuDNN    | NCCL   | Linux distro |
 |:--------|:------|:-------|:----------|:---------|:-------|:-------------|
+| 3.44.13 | 9.3.1 | 13.3.1 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
 | 3.44.12 | 9.3.1 | 13.3.1 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
 | 3.44.11 | 9.3.1 | 13.3.0 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
 | 3.44.10 | 9.3.1 | 13.2.1 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
