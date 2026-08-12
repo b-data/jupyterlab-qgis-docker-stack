@@ -6,6 +6,7 @@ Topmost entry = Tag `latest`
 
 | QGIS    | PDAL   | SAGA  | OTB[^1] | Jupyter Hub | Jupyter Lab | Python  | Git    | Linux distro |
 |:--------|:-------|:------|:--------|:------------|:------------|:--------|:-------|:-------------|
+| 4.2.1   | 2.10.2 | 9.8.0 | 9.1.1   | 5.5.0       | 4.6.2       | 3.14.6  | 2.55.0 | Debian 13    |
 | 4.2.0   | 2.10.2 | 9.8.0 | 9.1.1   | 5.5.0       | 4.6.2       | 3.14.6  | 2.55.0 | Debian 13    |
 | 4.0.3   | 2.10.2 | 9.8.0 | 9.1.1   | 5.5.0       | 4.6.1       | 3.14.6  | 2.55.0 | Debian 13    |
 | 4.0.2   | 2.10.1 | 9.8.0 | 9.1.1   | 5.4.6       | 4.5.7       | 3.14.5  | 2.54.0 | Debian 13    |
@@ -52,7 +53,7 @@ Topmost entry = Tag `latest`
 
 ### Bugs
 
-* Version 4:
+* Versions 4.0.{0,1,2,3}:
   * `qgis_mapserver` is unable to start the server with the default settings
     * Cross reference: <https://github.com/qgis/QGIS/issues/66015>
   * `qgis_process` is enabling plugins at the default (QGIS3) location
@@ -66,6 +67,7 @@ Topmost entry = Tag `ltr`
 
 | QGIS    | PDAL   | SAGA  | OTB[^1] | Jupyter Hub | Jupyter Lab | Python  | Git    | Linux distro |
 |:--------|:-------|:------|:--------|:------------|:------------|:--------|:-------|:-------------|
+| 3.44.13 | 2.10.2 | 9.8.0 | 9.1.1   | 5.5.0       | 4.6.2       | 3.13.11 | 2.55.0 | Debian 13    |
 | 3.44.12 | 2.10.2 | 9.8.0 | 9.1.1   | 5.5.0       | 4.6.2       | 3.13.11 | 2.55.0 | Debian 13    |
 | 3.44.11 | 2.10.2 | 9.8.0 | 9.1.1   | 5.5.0       | 4.6.1       | 3.13.11 | 2.55.0 | Debian 13    |
 | 3.44.10 | 2.10.1 | 9.8.0 | 9.1.1   | 5.4.6       | 4.5.7       | 3.13.11 | 2.54.0 | Debian 13    |

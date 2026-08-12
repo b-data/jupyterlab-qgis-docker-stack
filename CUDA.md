@@ -80,7 +80,7 @@ docker build \
   --build-arg CUDA_IMAGE=nvidia/cuda \
   --build-arg CUDA_IMAGE_SUBTAG=base-ubuntu24.04 \
   --build-arg CUDA_VERSION=13.3.1 \
-  --build-arg QGIS_VERSION=3.44.12 \
+  --build-arg QGIS_VERSION=3.44.13 \
   --build-arg PDAL_VERSION=2.10.2 \
   --build-arg OTB_VERSION=9.1.1 \
   --build-arg PYTHON_VERSION=3.13.11 \
