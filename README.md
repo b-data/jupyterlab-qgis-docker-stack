@@ -83,7 +83,7 @@ docker build \
   --build-arg QGIS_VERSION=4.2.1 \
   --build-arg PDAL_VERSION=2.10.2 \
   --build-arg OTB_VERSION=9.1.1 \
-  --build-arg PYTHON_VERSION=3.14.6 \
+  --build-arg PYTHON_VERSION=3.14.7 \
   --build-arg GIT_VERSION=2.55.0 \
   -t jupyterlab/qgis/base \
   -f Dockerfile .
