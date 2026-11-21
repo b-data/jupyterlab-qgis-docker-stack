@@ -544,7 +544,7 @@ RUN apt-get update \
   && echo "PYTHONPATH=/usr/lib/python3/dist-packages $(which qgis_process)_ \"\${@}\"" >> \
     $(which qgis_process) \
   ## Clean up
-  && if [ ! -z "$PYTHON_VERSION" ]; then \
+  && if [ -n "$PYTHON_VERSION" ]; then \
     apt-get -y purge python3-pip python3-dev; \
     apt-get -y autoremove; \
   fi \
