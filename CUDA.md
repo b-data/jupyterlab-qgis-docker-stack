@@ -64,8 +64,22 @@ platform:
 
 *latest*:
 
-Available dependencies in Ubuntu 24.04 not QGIS 4 ready (Qt6 or dependant
-package, Python or SIP to old).
+```bash
+cd base
+docker build \
+  --build-arg BASE_IMAGE=ubuntu \
+  --build-arg BASE_IMAGE_TAG=24.04 \
+  --build-arg CUDA_IMAGE=nvidia/cuda \
+  --build-arg CUDA_IMAGE_SUBTAG=base-ubuntu24.04 \
+  --build-arg CUDA_VERSION=13.5.0 \
+  --build-arg QGIS_VERSION=4.4.0 \
+  --build-arg PDAL_VERSION=2.10.2 \
+  --build-arg OTB_VERSION=9.1.1 \
+  --build-arg PYTHON_VERSION=3.14.10 \
+  --build-arg GIT_VERSION=2.56.1 \
+  -t jupyterlab/cuda/qgis/base \
+  -f Dockerfile .
+```
 
 *ltr/version*:
 
@@ -77,7 +91,7 @@ docker build \
   --build-arg CUDA_IMAGE=nvidia/cuda \
   --build-arg CUDA_IMAGE_SUBTAG=base-ubuntu24.04 \
   --build-arg CUDA_VERSION=13.5.0 \
-  --build-arg QGIS_VERSION=3.44.15 \
+  --build-arg QGIS_VERSION=3.44.16 \
   --build-arg PDAL_VERSION=2.10.2 \
   --build-arg OTB_VERSION=9.1.1 \
   --build-arg PYTHON_VERSION=3.13.11 \
