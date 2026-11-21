@@ -43,12 +43,8 @@ COPY scripts /files
 RUN if [ "$(uname -m)" = "x86_64" ]; then \
     ## QGIS: Set OTB application folder and OTB folder
     qgis3Ini="/files/var/backups/skel/.local/share/QGIS/QGIS3/profiles/default/QGIS/QGIS3.ini"; \
-    echo "\n[Processing]" >> ${qgis3Ini}; \
-    if [ -z "${OTB_VERSION}" ]; then \
-      echo "Configuration\OTB_APP_FOLDER=/usr/lib/otb/applications" >> \
-        ${qgis3Ini}; \
-      echo "Configuration\OTB_FOLDER=/usr\n" >> ${qgis3Ini}; \
-    else \
+    if [ -n "${OTB_VERSION}" ]; then \
+      echo "\n[Processing]" >> ${qgis3Ini}; \
       echo "Configuration\OTB_APP_FOLDER=/usr/local/lib/otb/applications" >> \
         ${qgis3Ini}; \
       echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis3Ini}; \
@@ -85,16 +81,35 @@ FROM glcr.b-data.ch/git/gsi${GIT_VERSION:+/}${GIT_VERSION:-:none}${GIT_VERSION:+
 FROM glcr.b-data.ch/orfeotoolbox/otbsi${OTB_VERSION:+/}${OTB_VERSION:-:none}${OTB_VERSION:+/$BASE_IMAGE}${OTB_VERSION:+:$BASE_IMAGE_TAG} AS otbsi
 FROM glcr.b-data.ch/qgis-plugins/processing-saga-nextgen:1.0.0-qgis${QGIS_VERSION%%.*} AS processing-saga-nextgen
 
-FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} AS base-cuda
+FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} AS pre-env1
+
+FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} AS pre-env1-cuda
 
 ## For use with the NVIDIA Container Runtime
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 ENV NVIDIA_PRODUCT_NAME=CUDA
 
-FROM ${BASE_IMAGE}:${BASE_IMAGE_TAG} AS base
+FROM pre-env1${CUDA_IMAGE:+-cuda} AS pre-env2
 
-FROM base${CUDA_IMAGE:+-cuda}
+FROM pre-env1${CUDA_IMAGE:+-cuda} AS pre-env2-saga
+
+ARG SAGA_VERSION
+
+ENV SAGA_VERSION=${SAGA_VERSION}
+
+FROM pre-env2${SAGA_VERSION:+-saga} AS pre-env3
+
+FROM pre-env2${SAGA_VERSION:+-saga} AS pre-env3-otb
+
+ARG OTB_VERSION
+
+ENV OTB_VERSION=${OTB_VERSION} \
+    GDAL_DRIVER_PATH=disable \
+    OTB_APPLICATION_PATH=/usr/local/lib/otb/applications \
+    OTB_INSTALL_DIR=/usr/local
+
+FROM pre-env3${OTB_VERSION:+-otb} AS build
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -105,8 +120,6 @@ ARG CUDA_IMAGE_SUBTAG
 ARG CUDA_VERSION
 ARG QGIS_VERSION
 ARG PDAL_VERSION
-ARG SAGA_VERSION
-ARG OTB_VERSION
 ARG NB_USER
 ARG NB_UID
 ARG JUPYTERHUB_VERSION
@@ -134,8 +147,6 @@ ENV BASE_IMAGE=${BASE_IMAGE}:${BASE_IMAGE_TAG} \
     NVIDIA_DRIVER_CAPABILITIES=${CUDA_IMAGE:+utility,graphics,video,display} \
     QGIS_VERSION=${QGIS_VERSION} \
     PDAL_VERSION=${PDAL_VERSION} \
-    SAGA_VERSION=${SAGA_VERSION} \
-    OTB_VERSION=${OTB_VERSION} \
     NB_USER=${NB_USER} \
     NB_UID=${NB_UID} \
     JUPYTERHUB_VERSION=${JUPYTERHUB_VERSION} \
@@ -163,11 +174,6 @@ COPY --from=psi /usr/local /usr/local
 COPY --from=saga-gissi /usr /usr
 ## Install Orfeo Toolbox
 COPY --from=otbsi /usr/local /usr/local
-ENV GDAL_DRIVER_PATH=${OTB_VERSION:+disable} \
-    OTB_APPLICATION_PATH=${OTB_VERSION:+/usr/local/lib/otb/applications} \
-    OTB_INSTALL_DIR=${OTB_VERSION:+/usr/local}
-ENV OTB_APPLICATION_PATH=${OTB_APPLICATION_PATH:-/usr/lib/otb/applications} \
-    OTB_INSTALL_DIR=${OTB_INSTALL_DIR:-/usr}
 
 USER root
 
@@ -403,9 +409,8 @@ RUN export $(cat /etc/os-release | grep "^ID=debian" | xargs) \
       libmuparserx4.* \
       '^libopencv-core[0-9][0-9.][0-9][a-z]?$' \
       '^libopencv-ml[0-9][0-9.][0-9][a-z]?$' \
-      libtinyxml-dev \
-      $(test -z "${OTB_VERSION}" && echo "otb-* monteverdi"); \
-    if [ ! -z "${OTB_VERSION}" ]; then \
+      libtinyxml-dev; \
+    if [ -n "${OTB_VERSION}" ]; then \
       if [ "$(echo ${OTB_VERSION} | cut -c 1)" -lt "8" ]; then \
         apt-get -y install --no-install-recommends \
           '^libopenthreads[0-9]+$' \
@@ -642,7 +647,13 @@ RUN export QT_QPA_PLATFORM=offscreen \
   ## Create backup of home directory
   && cp -a ${HOME}/. /var/backups/skel
 
-ENV PYTHONPATH=${PYTHONPATH:+$PYTHONPATH:}${OTB_VERSION:+/usr/local/lib/otb/python}
+FROM build AS post-env
+
+FROM build AS post-env-otb
+
+ENV PYTHONPATH=${PYTHONPATH:+$PYTHONPATH:}/usr/local/lib/otb/python
+
+FROM post-env${OTB_VERSION:+-otb} AS base
 
 ARG JUPYTER_PORT=8888
 ENV JUPYTER_PORT=${JUPYTER_PORT}
