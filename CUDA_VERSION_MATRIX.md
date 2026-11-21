@@ -6,7 +6,7 @@ Topmost entry = Tag `latest`
 
 | QGIS    | SAGA  | CUDA   | cuBLAS    | cuDNN    | NCCL   | Linux distro |
 |:--------|:------|:-------|:----------|:---------|:-------|:-------------|
-| 4.4.0   | 9.3.1 | 13.5.0 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
+| 4.4.0   | 9.9.3 | 13.5.0 | n/a       | n/a      | n/a    | Ubuntu 26.04 |
 | 3.44.7  | 9.3.1 | 13.1.1 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
 | 3.44.6  | 9.3.1 | 13.1.0 | n/a       | n/a      | n/a    | Ubuntu 24.04 |
 | 3.44.5  | 9.3.1 | 13.1.0 | n/a       | n/a      | n/a    | Ubuntu 24.04 |

@@ -68,9 +68,9 @@ platform:
 cd base
 docker build \
   --build-arg BASE_IMAGE=ubuntu \
-  --build-arg BASE_IMAGE_TAG=24.04 \
+  --build-arg BASE_IMAGE_TAG=26.04 \
   --build-arg CUDA_IMAGE=nvidia/cuda \
-  --build-arg CUDA_IMAGE_SUBTAG=base-ubuntu24.04 \
+  --build-arg CUDA_IMAGE_SUBTAG=base-ubuntu26.04 \
   --build-arg CUDA_VERSION=13.5.0 \
   --build-arg QGIS_VERSION=4.4.0 \
   --build-arg PDAL_VERSION=2.10.2 \
@@ -215,7 +215,7 @@ which also relies on VirtualGL (EGL backend) for direct access to the GPU.
 
 1. Multi-arch: `linux/amd64`, `linux/arm64/v8`  
    :information_source: No GPU acceleration on Apple M series.
-1. Derived from [`nvidia/cuda:13.5.0-base-ubuntu24.04`](https://hub.docker.com/r/nvidia/cuda/tags?page=1&name=13.5.0-base-ubuntu24.04)
+1. Derived from [`nvidia/cuda:13.5.0-base-ubuntu26.04`](https://hub.docker.com/r/nvidia/cuda/tags?page=1&name=13.5.0-base-ubuntu26.04)
 1. [VirtualGL](https://virtualgl.org): Fully GPU accelerated OpenGL applications
 1. Just Python – no [Conda](https://github.com/conda/conda) /
    [Mamba](https://github.com/mamba-org/mamba)
