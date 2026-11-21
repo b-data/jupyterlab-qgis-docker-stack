@@ -301,6 +301,8 @@ RUN export $(cat /etc/os-release | grep "^ID=debian" | xargs) \
     '^libgsl[0-9]+$' \
     libjs-jquery \
     libjs-leaflet \
+    libopenjp2-tools \
+    libopenjpip-dec-server \
     '^libprotobuf-lite[0-9]+$' \
     libqca-qt6-plugins \
     '^libqscintilla2-qt6-[0-9]+$' \
@@ -316,6 +318,7 @@ RUN export $(cat /etc/os-release | grep "^ID=debian" | xargs) \
     libqt6widgets6 \
     libqt6xml6 \
     '^libsfcgal[0-9]+$' \
+    '^libtbb[0-9]+$' \
     '^libspatialindex[0-9]+$' \
     '^libzip[0-9]+$' \
     ocl-icd-libopencl1 \
@@ -334,6 +337,8 @@ RUN export $(cat /etc/os-release | grep "^ID=debian" | xargs) \
     qt6-3d-scene2d-plugin \
     qt6-image-formats-plugins \
     qt6-svg-plugins \
+    qt6-wayland \
+    wayland-protocols \
     ## QGIS: Python 3 Support
     gdal-bin \
     libfcgi0ldbl \
