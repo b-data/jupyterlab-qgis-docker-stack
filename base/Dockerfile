@@ -445,6 +445,12 @@ RUN export $(cat /etc/os-release | grep "^ID=debian" | xargs) \
   && if [ ! -f "/usr/lib/websockify/rebind.so" ]; then \
     ln -rs /usr/lib/websockify/rebind*.so /usr/lib/websockify/rebind.so; \
   fi \
+  ## System Python version ≥ 3.14: Revert default start-method (forkserver) to fork
+  && if [ "${BASE_IMAGE%:*}" = "ubuntu" ] && dpkg --compare-versions "${BASE_IMAGE#*:}" ge "26"; then \
+    ## https://github.com/novnc/websockify/issues/643
+    sed -i "s/^import multiprocessing/import multiprocessing\nmultiprocessing.set_start_method('fork', force=True)/g" \
+      /usr/lib/python3/dist-packages/websockify/websockifyserver.py; \
+  fi \
   ## GRASS GIS: Configure dynamic linker run time bindings
   && echo "$(grass --config path)/lib" | tee /etc/ld.so.conf.d/libgrass.conf \
   && ldconfig \
