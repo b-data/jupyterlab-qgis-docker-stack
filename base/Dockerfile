@@ -23,6 +23,7 @@ FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CU
 ARG BASE_IMAGE
 ARG BASE_IMAGE_TAG
 ARG CUDA_IMAGE
+ARG QGIS_VERSION
 
 ARG OTB_VERSION
 
@@ -42,14 +43,16 @@ COPY conf/xfce /files
 COPY conf${CUDA_IMAGE:+/cuda}/xfce /files
 COPY scripts /files
 
-RUN if [ "$(uname -m)" = "x86_64" ]; then \
-    ## QGIS: Set OTB application folder and OTB folder
-    qgis4Ini="/files/var/backups/skel/.local/share/QGIS/QGIS4/profiles/default/QGIS/QGIS4.ini"; \
+RUN mv /files/var/backups/skel/.local/share/QGIS/QGIS3 \
+    "/files/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}" \
+  && qgisIni="/files/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/QGIS/QGIS${QGIS_VERSION%%.*}.ini" \
+  && if [ "$(uname -m)" = "x86_64" ]; then \
     if [ -n "${OTB_VERSION}" ]; then \
-      echo "\n[Processing]" >> ${qgis4Ini}; \
+      ## QGIS: Set OTB application folder and OTB folder
+      echo "\n[Processing]" >> ${qgisIni}; \
       echo "Configuration\OTB_APP_FOLDER=/usr/local/lib/otb/applications" >> \
-        ${qgis4Ini}; \
-      echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis4Ini}; \
+        ${qgisIni}; \
+      echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgisIni}; \
     fi \
   fi \
   ## Use custom /etc/xdg/xfce4/panel/default.xml
@@ -640,8 +643,8 @@ COPY --from=files /files /
 COPY --from=files /files/var/backups/skel ${HOME}
 
 RUN export QT_QPA_PLATFORM=offscreen \
-  && mkdir -p ${HOME}/.local/share/QGIS/QGIS4/profiles/default/python/plugins \
-  && cd ${HOME}/.local/share/QGIS/QGIS4/profiles/default/python/plugins \
+  && mkdir -p ${HOME}/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins \
+  && cd ${HOME}/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins \
   && qgis-plugin-manager init \
   && qgis-plugin-manager update \
   ## QGIS: Enable plugins
