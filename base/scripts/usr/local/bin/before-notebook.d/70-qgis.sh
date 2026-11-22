@@ -17,9 +17,11 @@ if [ "$(id -u)" == 0 ] ; then
 
   # Copy plugin 'Processing Saga NextGen Provider'
   run_user_group rm -rf "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/processing_saga_nextgen"
-  run_user_group cp -a --no-preserve=ownership \
-    "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/processing_saga_nextgen" \
-    "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins"
+  if [[ -d "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/processing_saga_nextgen" ]]; then
+    run_user_group cp -a --no-preserve=ownership \
+      "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/processing_saga_nextgen" \
+      "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins"
+  fi
 
   # Copy plugin 'OrfeoToolbox Provider'
   if [[ ! -d "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider" ]]; then
@@ -27,6 +29,10 @@ if [ "$(id -u)" == 0 ] ; then
       run_user_group cp -a --no-preserve=ownership \
         "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider" \
         "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins"
+    fi
+  else
+    if [[ ! -d "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider" ]]; then
+      run_user_group rm -rf "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider"
     fi
   fi
 else
@@ -41,14 +47,20 @@ else
 
   # Copy plugin 'Processing Saga NextGen Provider'
   rm -rf "$HOME/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/processing_saga_nextgen"
-  cp -a "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/processing_saga_nextgen" \
-    "$HOME/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins"
+  if [[ -d "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/processing_saga_nextgen" ]]; then
+    cp -a "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/processing_saga_nextgen" \
+      "$HOME/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins"
+  fi
 
   # Copy plugin 'OrfeoToolbox Provider'
   if [[ ! -d "$HOME/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider" ]]; then
     if [[ -d "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider" ]]; then
       cp -a "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider" \
         "$HOME/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins"
+    fi
+  else
+    if [[ ! -d "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider" ]]; then
+      rm -rf "$HOME/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider"
     fi
   fi
 fi
