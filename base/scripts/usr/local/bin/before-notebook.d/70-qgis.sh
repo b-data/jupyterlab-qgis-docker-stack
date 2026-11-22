@@ -15,6 +15,9 @@ if [ "$(id -u)" == 0 ] ; then
 
   run_user_group mkdir -p "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins"
 
+  # Remove plugin 'Processing Saga NextGen Provider'
+  run_user_group rm -rf "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/processing_saga_nextgen"
+
   # Copy plugin 'OrfeoToolbox Provider'
   if [[ ! -d "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider" ]]; then
     if [[ -d "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider" ]]; then
@@ -36,6 +39,9 @@ else
   fi
 
   mkdir -p "$HOME/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins"
+
+  # Remove plugin 'Processing Saga NextGen Provider'
+  rm -rf "$HOME/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/processing_saga_nextgen"
 
   # Copy plugin 'OrfeoToolbox Provider'
   if [[ ! -d "$HOME/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider" ]]; then
