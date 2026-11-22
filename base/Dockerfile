@@ -20,6 +20,8 @@ ARG VIRTUALGL_VERSION=${CUDA_IMAGE:+3.1.5}
 
 FROM ${CUDA_IMAGE:-$BASE_IMAGE}:${CUDA_IMAGE:+$CUDA_VERSION}${CUDA_IMAGE:+-}${CUDA_IMAGE_SUBTAG:-$BASE_IMAGE_TAG} AS files
 
+ARG BASE_IMAGE
+ARG BASE_IMAGE_TAG
 ARG CUDA_IMAGE
 
 ARG OTB_VERSION
@@ -49,6 +51,12 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then \
         ${qgis3Ini}; \
       echo "Configuration\OTB_FOLDER=/usr/local\n" >> ${qgis3Ini}; \
     fi \
+  fi \
+  ## Use custom /etc/xdg/xfce4/panel/default.xml
+  ## for Ubuntu 26.04 (resolute) and later
+  && if [ "${BASE_IMAGE}" = "debian" ] \
+    || ([ "${BASE_IMAGE}" = "ubuntu" ] && dpkg --compare-versions "${BASE_IMAGE_TAG}" lt "26"); then \
+    rm -rf /files/etc/xdg/xfce4/panel; \
   fi \
   ## Copy content of skel directory to backup
   && cp -a /files/etc/skel/. /files/var/backups/skel \
