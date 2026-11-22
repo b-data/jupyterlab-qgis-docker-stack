@@ -22,6 +22,10 @@ if [ "$(id -u)" == 0 ] ; then
         "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider" \
         "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins"
     fi
+  else
+    if [[ ! -d "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider" ]]; then
+      run_user_group rm -rf "/home/$NB_USER${DOMAIN:+@$DOMAIN}/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider"
+    fi
   fi
 else
   # Put inital QGIS settings in place
@@ -38,6 +42,10 @@ else
     if [[ -d "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider" ]]; then
       cp -a "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider" \
         "$HOME/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins"
+    fi
+  else
+    if [[ ! -d "/var/backups/skel/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider" ]]; then
+      rm -rf "$HOME/.local/share/QGIS/QGIS${QGIS_VERSION%%.*}/profiles/default/python/plugins/orfeoToolbox_provider"
     fi
   fi
 fi
